@@ -51,6 +51,38 @@ export const VISION_TIMELINE: VisionMilestone[] = [
   },
 ]
 
+/** Leadership team — names and roles only, verified from magppie.com (§7).
+ *  No bios, no invented detail. */
+export const VISION_LEADERSHIP: { name: string; role: string }[] = [
+  { name: 'Vinod Jain', role: 'Founder' },
+  { name: 'Kishor Rico', role: 'Director, US Operations' },
+  { name: 'Fernando Rico', role: 'Director, Market Development' },
+  { name: 'Riccardo Remedi', role: 'Director, Magppie Europe' },
+  { name: 'Ishat Jain', role: 'Director, Marketing' },
+  { name: 'Vikas Jain', role: 'Director, Innovations' },
+  { name: 'Sanjay Khandelwal', role: 'Director' },
+  { name: 'Stacy McCarthy', role: 'Design Consultant' },
+  { name: 'Chaitanya Chavda', role: 'Technical Director, USA' },
+  { name: 'Christoph Hoeynck', role: 'Director, Germany' },
+  { name: 'Susan Sadolin', role: 'Sales Director, USA and Denmark' },
+]
+
+/** Global presence — verified from magppie.com (§7). Retail stores are
+ *  covered separately in the BD store directory. */
+export const VISION_GLOBAL_PRESENCE: { label: string; place: string }[] = [
+  { label: 'US Headquarters', place: 'Gainesville, Florida' },
+  { label: 'US Factory', place: 'Alachua, Florida' },
+  { label: 'Texas Office', place: 'Mansfield' },
+  { label: 'India Headquarters', place: 'Delhi' },
+  { label: 'India Factory', place: 'IMT Manesar, Haryana' },
+]
+
+/** Third-party citation for the KBIS 2026 award beat (§7). */
+export const VISION_AWARD_CITATION = {
+  label: 'Designers Today: Caesarstone, Magppie and LG win top honors at KBIS Innovation Hour',
+  url: 'https://www.designerstoday.com/kitchen-bath/caesarstone-magppie-and-lg-win-top-honors-at-kbis-innovation-hour/',
+}
+
 export const VISION_WHY_STONE = {
   heading: 'Why stone, not wood',
   lines: [

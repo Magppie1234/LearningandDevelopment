@@ -242,7 +242,7 @@ function ComparisonMatrix() {
                     key={c}
                     className={cn(
                       'font-semibold px-3 py-2.5 text-center',
-                      i === 0 ? 'text-ink-primary bg-accent-gold/10' : 'text-ink-secondary',
+                      i === 0 ? 'text-ink-primary bg-accent-copper/10' : 'text-ink-secondary',
                     )}
                   >
                     {c}
@@ -255,7 +255,7 @@ function ComparisonMatrix() {
                 <tr key={row.attr} className="border-b-[0.5px] border-[rgba(0,59,70,0.06)] last:border-0">
                   <td className="text-ink-secondary px-4 py-2.5">{row.attr}</td>
                   {row.vals.map((v, i) => (
-                    <td key={i} className={cn('text-center px-3 py-2.5', i === 0 && 'bg-accent-gold/10')}>
+                    <td key={i} className={cn('text-center px-3 py-2.5', i === 0 && 'bg-accent-copper/10')}>
                       <CmpCell v={v} />
                     </td>
                   ))}
@@ -266,9 +266,40 @@ function ComparisonMatrix() {
         </div>
       </div>
       <p className="text-[11px] text-ink-tertiary px-1">— = not covered in the source material.</p>
+
+      {/* Hardware load-bearing (consolidated spec §3): both values verified —
+          patented hardware >100 kg (FAQ §5.A Q15), drawer daily-load rating
+          up to 60 kg (Module 3 pillar). Nothing invented. */}
+      <div className={cn(CARD, 'p-5')}>
+        <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-tertiary mb-3">
+          Hardware load-bearing
+        </p>
+        <div className="space-y-2.5">
+          {[
+            { label: 'Patented hardware capacity', pct: 100, suffix: '100+ kg', primary: true },
+            { label: 'Drawer daily-load rating', pct: 60, suffix: 'up to 60 kg', primary: false },
+          ].map((b) => (
+            <div key={b.label} className="flex items-center gap-3">
+              <span className="w-44 shrink-0 text-[12.5px] text-ink-secondary">{b.label}</span>
+              <div className="flex-1 h-2.5 rounded-full bg-[rgba(0,59,70,0.06)] overflow-hidden">
+                <div
+                  className={cn('h-full rounded-full', b.primary ? 'bg-accent-copper' : 'bg-accent-silver')}
+                  style={{ width: `${b.pct}%` }}
+                />
+              </div>
+              <span className="w-20 text-right text-[12.5px] font-semibold text-ink-primary tabular-nums">
+                {b.suffix}
+              </span>
+            </div>
+          ))}
+        </div>
+        <p className="mt-3 text-[12px] text-ink-tertiary">
+          Manufactured in the same European facilities as Blum and Grass.
+        </p>
+      </div>
+
       <div className="flex flex-wrap gap-1.5">
         <Chip>Engineered, not natural</Chip>
-        <Chip>Hardware load-bearing 100+ kg</Chip>
         <Chip>Baked at 1,300°C</Chip>
       </div>
     </div>
@@ -463,7 +494,7 @@ function EscalationFlow() {
 
       <div className="flex flex-col items-center mt-3">
         <ArrowDown size={16} className="text-ink-tertiary mb-1.5" />
-        <div className="rounded-[10px] border border-accent-gold bg-accent-gold/10 px-4 py-2 text-[13px] font-semibold text-ink-primary">
+        <div className="rounded-[10px] border border-accent-gold bg-accent-copper/10 px-4 py-2 text-[13px] font-semibold text-ink-primary">
           → Hand off to a human consultant immediately
         </div>
       </div>

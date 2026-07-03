@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
@@ -28,6 +28,7 @@ import { ProgressRing, statusFromProgress } from '@/components/AcademyProgressCa
 import BdVideoPlayer from '@/components/BdVideoPlayer'
 import BdModuleVisual, { bdModuleHasVisual, bdModuleVisualLabel } from '@/components/BdModuleVisuals'
 import BdDiagnosticBanner from '@/components/BdDiagnostic'
+import BdFaqAccordion, { bdModuleHasFaq } from '@/components/BdFaqAccordion'
 
 const COMP_COLOR: Record<string, string> = {
   'Product Knowledge': 'var(--status-ontrack)',
@@ -217,21 +218,56 @@ function Quiz({ module, onDone }: { module: BdModule; onDone: () => void }) {
 }
 
 /* ───────────────── module reader ───────────────── */
-function ModuleView({ module, onBack }: { module: BdModule; onBack: () => void }) {
+function ModuleView({
+  module,
+  onBack,
+  onOpenModule,
+}: {
+  module: BdModule
+  onBack: () => void
+  onOpenModule?: (id: string) => void
+}) {
   const markViewed = useBdProgress((s) => s.markViewed)
   const overrides = useBdTitles((s) => s.overrides)
   const title = bdEffectiveTitle(overrides, module.id, module.title)
   const [tab, setTab] = useState<'read' | 'quiz'>('read')
 
+  // Deep links like ?module=bd-m5#module-visual (dashboard "Explore visually",
+  // §8) land before this SPA content exists — scroll to the anchor post-render.
+  useEffect(() => {
+    if (window.location.hash === '#module-visual') {
+      const t = setTimeout(
+        () => document.getElementById('module-visual')?.scrollIntoView({ behavior: 'smooth' }),
+        150,
+      )
+      return () => clearTimeout(t)
+    }
+  }, [module.id])
+
   return (
     <div className="max-w-[760px] mx-auto">
-      <button
-        type="button"
-        onClick={onBack}
-        className="inline-flex items-center gap-1.5 text-sm text-ink-tertiary hover:text-ink-primary transition-colors mb-4"
-      >
-        <ArrowLeft size={15} /> All modules
-      </button>
+      {/* §5 navigation: persistent back arrow + breadcrumb trail */}
+      <div className="flex items-center gap-3 mb-4">
+        <button
+          type="button"
+          onClick={onBack}
+          aria-label="Back to all modules"
+          className="shrink-0 w-8 h-8 rounded-full border border-[rgba(0,59,70,0.15)] flex items-center justify-center text-ink-secondary hover:text-ink-primary hover:bg-black/[0.03] transition-colors"
+        >
+          <ArrowLeft size={16} />
+        </button>
+        <nav aria-label="Breadcrumb" className="text-[12px] text-ink-tertiary truncate">
+          <Link href="/academies" className="hover:text-ink-primary transition-colors">
+            Academies
+          </Link>
+          <span className="mx-1.5">→</span>
+          <Link href="/academy/business-development" className="hover:text-ink-primary transition-colors">
+            Business Development
+          </Link>
+          <span className="mx-1.5">→</span>
+          <span className="text-ink-primary font-medium">Module {module.number}</span>
+        </nav>
+      </div>
 
       <div className="flex items-center gap-2 mb-1">
         <span className="text-[11px] font-medium text-ink-tertiary">Module {module.number}</span>
@@ -275,11 +311,21 @@ function ModuleView({ module, onBack }: { module: BdModule; onBack: () => void }
             ))}
 
             {bdModuleHasVisual(module.id) && (
-              <div className="pt-2">
+              <div className="pt-2 scroll-mt-20" id="module-visual">
                 <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-tertiary mb-3">
                   {bdModuleVisualLabel(module.id)}
                 </p>
                 <BdModuleVisual moduleId={module.id} />
+              </div>
+            )}
+
+            {/* §4: full FAQ bank as click-to-expand accordion (M7/M8/M4/M10) */}
+            {bdModuleHasFaq(module.id) && (
+              <div className="pt-4">
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-tertiary mb-3">
+                  Full FAQ bank — click a question to expand
+                </p>
+                <BdFaqAccordion moduleId={module.id} onOpenModule={onOpenModule} />
               </div>
             )}
 
@@ -319,7 +365,17 @@ export default function BdAcademy() {
   const overrides = useBdTitles((s) => s.overrides)
 
   const active = BD_MODULES.find((m) => m.id === activeId) ?? null
-  if (active) return <ModuleView module={active} onBack={() => setActiveId(null)} />
+  if (active)
+    return (
+      <ModuleView
+        module={active}
+        onBack={() => setActiveId(null)}
+        onOpenModule={(id) => {
+          setActiveId(id)
+          window.scrollTo(0, 0)
+        }}
+      />
+    )
 
   return (
     <div className="max-w-[900px] mx-auto space-y-8">

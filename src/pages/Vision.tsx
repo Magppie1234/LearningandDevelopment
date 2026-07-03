@@ -10,7 +10,11 @@ import {
   VISION_WHY_STONE,
   VISION_PROMISE,
   VISION_VIDEO,
+  VISION_LEADERSHIP,
+  VISION_GLOBAL_PRESENCE,
+  VISION_AWARD_CITATION,
 } from '@/data/vision'
+import { ExternalLink, MapPin } from 'lucide-react'
 
 /**
  * Vision Corner — scroll-driven story section. Beats reveal progressively on
@@ -323,6 +327,22 @@ function TimelineBeat() {
                   </p>
                   <p className="mt-1 text-[15px] font-semibold text-[#f3ede2]">{m.title}</p>
                   <p className="mt-1 text-sm leading-relaxed text-[#f3ede2]/65">{m.detail}</p>
+                  {/* §7: third-party citation on the KBIS award beat */}
+                  {m.year === 'Feb 2026' && (
+                    <a
+                      href={VISION_AWARD_CITATION.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={cn(
+                        'mt-2 inline-flex items-center gap-1.5 text-[12px] underline-offset-2 hover:underline',
+                        leftSide && 'sm:flex-row-reverse',
+                      )}
+                      style={{ color: GOLD }}
+                    >
+                      <ExternalLink size={11} className="shrink-0" />
+                      <span>{VISION_AWARD_CITATION.label}</span>
+                    </a>
+                  )}
                 </motion.div>
               </div>
             )
@@ -408,6 +428,72 @@ function PromiseBeat() {
   )
 }
 
+/* ───────────── Beat 6 — Leadership (names + roles only, §7) ───────────── */
+function LeadershipBeat() {
+  return (
+    <section className="bg-parchment px-6 sm:px-12 py-20 sm:py-28">
+      <div className="max-w-[860px] mx-auto">
+        <motion.h2 {...reveal} className="text-center font-serif text-3xl sm:text-4xl text-ink-primary">
+          The people behind it
+        </motion.h2>
+        <div className="mt-12 grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-7">
+          {VISION_LEADERSHIP.map((p, i) => (
+            <motion.div
+              key={p.name}
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.5, delay: (i % 3) * 0.08 }}
+              className="text-center"
+            >
+              <p className="text-[15px] font-semibold text-ink-primary">{p.name}</p>
+              <p className="mt-0.5 text-[12.5px] text-ink-tertiary">{p.role}</p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+/* ───────────── Beat 7 — Global presence (§7) ───────────── */
+function GlobalPresenceBeat() {
+  return (
+    <section
+      className="px-6 sm:px-12 py-20 sm:py-28"
+      style={{ background: `linear-gradient(180deg, ${NAVY} 0%, ${NAVY_SOFT} 100%)` }}
+    >
+      <div className="max-w-[820px] mx-auto">
+        <motion.h2 {...reveal} className="text-center font-serif text-3xl sm:text-4xl text-[#f3ede2]">
+          Two continents, one standard
+        </motion.h2>
+        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {VISION_GLOBAL_PRESENCE.map((g, i) => (
+            <motion.div
+              key={g.label}
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.5, delay: i * 0.07 }}
+              className="rounded-[12px] border border-white/10 bg-white/[0.04] px-4 py-4 flex items-start gap-3"
+            >
+              <MapPin size={16} className="shrink-0 mt-0.5" style={{ color: GOLD }} />
+              <div>
+                <p className="text-[13.5px] font-semibold text-[#f3ede2]">{g.label}</p>
+                <p className="text-[12.5px] text-[#f3ede2]/60">{g.place}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+        <motion.p {...reveal} className="mt-8 text-center text-[12.5px] text-[#f3ede2]/50">
+          Retail stores across Delhi, Mohali, Mumbai, Surat and Florida are listed in the store
+          directory.
+        </motion.p>
+      </div>
+    </section>
+  )
+}
+
 export default function Vision() {
   // Escape the portal shell's padding so beats run full-bleed.
   return (
@@ -416,6 +502,8 @@ export default function Vision() {
       <FounderBeat />
       <VideoBeat />
       <TimelineBeat />
+      <LeadershipBeat />
+      <GlobalPresenceBeat />
       <WhyStoneBeat />
       <PromiseBeat />
     </div>
