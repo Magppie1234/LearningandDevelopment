@@ -15,7 +15,14 @@
     --m-ink-primary: 58 42 28;
     --m-ink-secondary: 107 84 64;
     --m-ink-tertiary: 156 138 118;
-    --m-accent-gold: 176 125 79;
+    /* Accent duo (§4 copper/silver update — tied to SilverStone's silver +
+       copper nano-particles). Copper = primary actions / active states /
+       progress; silver = certified / complete / accomplished-but-secondary.
+       --m-accent-gold stays as a DEPRECATED alias of copper so audited
+       primary-role legacy call sites resolve to the new primary accent. */
+    --m-accent-copper: 184 112 63; /* #B8703F */
+    --m-accent-silver: 168 174 184; /* #A8AEB8 */
+    --m-accent-gold: 184 112 63;
     --m-surface-warm: 232 223 207;
 
     /* Progress-status tokens (AcademyProgressCard & status badges).
@@ -63,14 +70,17 @@
   }
 
   /* "Obsidian" dark mode (gap analysis §3.4) — near-black surfaces, warm
-     ivory text, gold accents; matches the main Magppie site's dark language. */
+     ivory text, copper accents; matches the main Magppie site's dark language. */
   .dark {
     --m-parchment: 14 15 18;
     --m-cream: 22 24 29;
     --m-ink-primary: 236 231 221;
     --m-ink-secondary: 184 176 162;
     --m-ink-tertiary: 125 120 109;
-    --m-accent-gold: 201 160 107;
+    /* Dark variants are lightened for contrast on near-black, not inverted. */
+    --m-accent-copper: 200 130 85; /* #C88255 */
+    --m-accent-silver: 176 182 192; /* #B0B6C0 */
+    --m-accent-gold: 200 130 85;
     --m-surface-warm: 32 34 40;
 
     --status-ontrack: #3dcf9f;

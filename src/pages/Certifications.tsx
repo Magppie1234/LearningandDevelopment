@@ -348,7 +348,8 @@ export default function Certifications() {
       >
         <div className="p-10 flex items-center justify-between gap-8">
           <div className="flex-1">
-            <p className="text-[11px] font-semibold uppercase tracking-[2px] text-[#c19a6b] mb-3">
+            {/* §4: copper primary accent (dark-surface variant #C88255 on navy) */}
+            <p className="text-[11px] font-semibold uppercase tracking-[2px] text-[#C88255] mb-3">
               CERTIFICATION PROGRAM
             </p>
             <h1
@@ -373,17 +374,17 @@ export default function Certifications() {
               Level {userProgress.currentLevel} — {userProgress.currentLevelName}
             </p>
             <div className="flex items-center gap-4 mt-4">
-              <ProgressRing size={80} progress={userProgress.overallProgress} color="#c19a6b" label="" />
+              <ProgressRing size={80} progress={userProgress.overallProgress} color="#C88255" label="" />
               <div>
                 <p className="text-[13px]" style={{ color: '#f8f5f0' }}>
                   {userProgress.levelsCompleted} of {userProgress.totalLevels} Levels Complete
                 </p>
-                <p className="text-xs mt-1 text-[#c19a6b]">
+                <p className="text-xs mt-1 text-[#C88255]">
                   Next: Level {userProgress.currentLevel + 1} — {userProgress.nextLevel}
                 </p>
               </div>
             </div>
-            <button className="mt-4 w-full py-2.5 rounded-full text-sm font-semibold transition-all hover:-translate-y-px bg-[#c19a6b] text-[#003b46] hover:brightness-95">
+            <button className="mt-4 w-full py-2.5 rounded-full text-sm font-semibold transition-all hover:-translate-y-px bg-[#B8703F] text-[#f8f5f0] hover:brightness-95">
               Continue Progress <ChevronRight size={14} className="inline ml-1" />
             </button>
           </motion.div>
@@ -396,7 +397,7 @@ export default function Certifications() {
           {/* Connector line */}
           <div className="absolute top-[36px] left-[5%] right-[5%] h-1 bg-[#ede9e1] rounded-full" />
           <motion.div
-            className="absolute top-[36px] left-[5%] h-1 bg-[#c19a6b] rounded-full"
+            className="absolute top-[36px] left-[5%] h-1 bg-[#B8703F] rounded-full"
             initial={{ width: 0 }}
             animate={{ width: '55%' }}
             transition={{ duration: 1.2, ease: easeOut, delay: 0.3 }}
@@ -435,7 +436,7 @@ export default function Certifications() {
                     level.status === 'completed'
                       ? 'text-[#7a8a7a]'
                       : level.status === 'in-progress'
-                        ? 'text-[#c19a6b]'
+                        ? 'text-[#B8703F]'
                         : 'text-[#b0c4c7]'
                   }`}
                 >

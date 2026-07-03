@@ -9,6 +9,7 @@ import {
   VISION_TIMELINE,
   VISION_WHY_STONE,
   VISION_PROMISE,
+  VISION_VIDEO,
 } from '@/data/vision'
 
 /**
@@ -20,7 +21,10 @@ import {
 
 const NAVY = '#062a33'
 const NAVY_SOFT = '#0b3947'
-const GOLD = '#c9a06b'
+// §4 copper/silver update: Vision accents move from gold to copper. These
+// beats are permanently dark, so we use the dark-surface copper variant
+// (#C88255, same as the dark-mode --m-accent-copper) for legibility on navy.
+const GOLD = '#C88255'
 
 const reveal = {
   initial: { opacity: 0, y: 36 },
@@ -157,6 +161,109 @@ function FounderBeat() {
           )}
         </motion.div>
       </div>
+    </section>
+  )
+}
+
+/* ──────────── Beat 2.5 — Flagship film (video slot, §3) ────────────
+   Slot + data model only: multi-language variants live in VISION_VIDEO
+   (same shape as the BD module videos). Until a real file exists this
+   renders a "film coming soon" state with the draft narration script
+   visible — never an empty player, never filler footage. */
+function VideoBeat() {
+  const [scriptOpen, setScriptOpen] = useState(false)
+  const hasVideo = VISION_VIDEO.variants.length > 0
+  const [langCode, setLangCode] = useState(VISION_VIDEO.variants[0]?.languageCode ?? 'en')
+  const active = VISION_VIDEO.variants.find((v) => v.languageCode === langCode)
+
+  return (
+    <section
+      className="px-6 sm:px-12 py-20 sm:py-28"
+      style={{ background: `linear-gradient(165deg, ${NAVY_SOFT} 0%, ${NAVY} 100%)` }}
+    >
+      <motion.div {...reveal} className="max-w-[880px] mx-auto">
+        <p className="text-[11px] font-medium tracking-[0.35em] mb-3 text-center" style={{ color: GOLD }}>
+          THE MAGPPIE FILM
+        </p>
+        <h2 className="font-serif text-2xl sm:text-4xl text-center text-[#f3ede2] mb-10">
+          {VISION_VIDEO.title}
+        </h2>
+
+        {hasVideo && active ? (
+          <>
+            <div className="aspect-video rounded-2xl overflow-hidden bg-black shadow-elevated">
+              <video key={active.languageCode} controls className="w-full h-full" src={active.videoUrl}>
+                {active.subtitleUrl && (
+                  <track
+                    kind="subtitles"
+                    src={active.subtitleUrl}
+                    srcLang={active.languageCode}
+                    label={active.languageLabel}
+                    default
+                  />
+                )}
+              </video>
+            </div>
+            {VISION_VIDEO.variants.length > 1 && (
+              <div className="mt-4 flex justify-center gap-1.5">
+                {VISION_VIDEO.variants.map((v) => (
+                  <button
+                    key={v.languageCode}
+                    type="button"
+                    onClick={() => setLangCode(v.languageCode)}
+                    className={cn(
+                      'rounded-lg px-3 py-1 text-[12px] font-medium transition-colors',
+                      v.languageCode === langCode
+                        ? 'text-[#062a33]'
+                        : 'text-[#f3ede2]/70 hover:text-[#f3ede2]',
+                    )}
+                    style={v.languageCode === langCode ? { backgroundColor: GOLD } : undefined}
+                  >
+                    {v.languageLabel}
+                  </button>
+                ))}
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="rounded-2xl border border-[#f3ede2]/15 overflow-hidden">
+            <div className="aspect-video flex flex-col items-center justify-center gap-3 bg-black/25">
+              <span
+                className="w-14 h-14 rounded-full flex items-center justify-center border"
+                style={{ borderColor: GOLD }}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill={GOLD} aria-hidden>
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </span>
+              <p className="text-sm font-semibold text-[#f3ede2]">Film coming soon</p>
+              <p className="text-[13px] text-[#f3ede2]/60">
+                In production — how it started, and how it’s going
+              </p>
+            </div>
+            <div className="border-t border-[#f3ede2]/10 px-5 sm:px-8 py-5">
+              <button
+                type="button"
+                onClick={() => setScriptOpen((s) => !s)}
+                className="text-[12px] font-medium tracking-wide transition-opacity hover:opacity-80"
+                style={{ color: GOLD }}
+              >
+                {scriptOpen ? 'Hide the narration script' : 'Read the narration script'}
+              </button>
+              {VISION_VIDEO.scriptIsDraft && (
+                <span className="ml-3 inline-block rounded-full border border-[#f3ede2]/25 px-2 py-0.5 text-[10px] tracking-wide text-[#f3ede2]/60">
+                  Draft copy — pending leadership review
+                </span>
+              )}
+              {scriptOpen && (
+                <p className="mt-4 text-[13.5px] leading-relaxed text-[#f3ede2]/80 whitespace-pre-line">
+                  {VISION_VIDEO.script}
+                </p>
+              )}
+            </div>
+          </div>
+        )}
+      </motion.div>
     </section>
   )
 }
@@ -307,6 +414,7 @@ export default function Vision() {
     <div className="-m-4 sm:-m-8">
       <MissionBeat />
       <FounderBeat />
+      <VideoBeat />
       <TimelineBeat />
       <WhyStoneBeat />
       <PromiseBeat />

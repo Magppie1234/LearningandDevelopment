@@ -342,7 +342,8 @@ export default function Home() {
 
   const kpiData = [
     { icon: Users, iconColor: 'text-surface-blue', number: '1,850', label: 'Employees Trained', trend: '+12% this quarter' },
-    { icon: Award, iconColor: 'text-accent-gold', number: '4,200', label: 'Certifications Earned', trend: '+8% this month' },
+    // Certifications = accomplished → silver (§4 accent reclassification)
+    { icon: Award, iconColor: 'text-accent-silver', number: '4,200', label: 'Certifications Earned', trend: '+8% this month' },
     { icon: BookOpen, iconColor: 'text-surface-olive', number: '12,400', label: 'Courses Completed', trend: '+15% this quarter' },
     { icon: Activity, iconColor: 'text-surface-blue', number: '1,623', label: 'Active Learners Now', trend: '94% engagement rate' },
   ]

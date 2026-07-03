@@ -60,6 +60,43 @@ export const VISION_WHY_STONE = {
   ],
 }
 
+/**
+ * Vision Corner flagship video slot (§3 of the visuals-expansion prompt).
+ * Same technical model as the BD module videos: N language variants, each
+ * { languageCode, videoUrl, subtitleUrl }, "coming soon" until a real file
+ * exists — no filler asset. The actual video is produced separately once the
+ * AI pipeline (style/voice/languages) is finalised; drop variants in here.
+ *
+ * The narration script below is a DRAFT assembled STRICTLY from lines already
+ * verified in this file and the approved BD training content — nothing new
+ * was invented. scriptIsDraft mirrors the founder-note noteIsPlaceholder
+ * pattern: the UI shows a "draft — pending review" chip while true.
+ *
+ * FLAGGED GAP: the brief's content arc mentions "the Satvic Movement wellness
+ * connection" — that connection appears in NO verified source in this repo,
+ * so it is deliberately absent from this script until source material with
+ * sign-off exists.
+ */
+import type { VideoVariant } from '@/data/bd-media'
+
+export const VISION_VIDEO: {
+  title: string
+  variants: VideoVariant[]
+  scriptIsDraft: boolean
+  script: string
+} = {
+  title: 'How it started, how it’s going',
+  variants: [], // no real file yet — slot renders its "coming soon" state
+  scriptIsDraft: true,
+  script: `“Our mission is to transform ordinary homes into wellness homes. Spaces that keep you, your family, and the planet safe.”
+
+How it started: Magppie Group has been in business for over 50 years. Magppie launched in 2000, introducing steel — and later stone-based design — to the Indian market. By 2007 it had expanded internationally across 35+ countries, opening its first international retail store in Sydney.
+
+The pivot: for the past 20+ years the focus has been kitchens and wardrobes — and the first SilverStone kitchen was installed in late 2016. In 2023 came the Wellness Kitchen category: the world’s first 100% stone modular kitchen.
+
+How it’s going: in February 2026, the “Most Unexpected” honor at KBIS Innovation Hour in Orlando, alongside Caesarstone and LG — and a store now open in Florida, USA. Every Wellness Kitchen carries a 25-year unconditional guarantee, with a complimentary service visit every year.`,
+}
+
 export const VISION_PROMISE = {
   heading: 'The long-term promise',
   stat: '25 years',

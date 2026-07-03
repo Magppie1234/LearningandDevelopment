@@ -1,7 +1,17 @@
 'use client'
 
 import { useState } from 'react'
-import { FileText, Bot, CheckCircle2, XCircle, Send, Loader2, ShieldAlert } from 'lucide-react'
+import {
+  FileText,
+  Bot,
+  CheckCircle2,
+  XCircle,
+  Send,
+  Loader2,
+  ShieldAlert,
+  Pencil,
+  RotateCcw,
+} from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { COMPETENCIES } from '@/data/competencies'
 import {
@@ -9,6 +19,8 @@ import {
   type ContentStatus,
   type DraftQuestion,
 } from '@/lib/admin-content-store'
+import { BD_MODULES } from '@/data/bd-academy'
+import { useBdTitles } from '@/lib/bd-title-store'
 import EmptyState from '@/components/EmptyState'
 
 const STATUS_STYLES: Record<ContentStatus, string> = {
@@ -235,6 +247,110 @@ function ReviewQueuePanel() {
   )
 }
 
+function BdTitlesPanel() {
+  const overrides = useBdTitles((s) => s.overrides)
+  const setTitle = useBdTitles((s) => s.setTitle)
+  const clearTitle = useBdTitles((s) => s.clearTitle)
+
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [draft, setDraft] = useState('')
+
+  function startEdit(moduleId: string, current: string) {
+    setEditingId(moduleId)
+    setDraft(current)
+  }
+  function save() {
+    if (editingId) setTitle(editingId, draft)
+    setEditingId(null)
+    setDraft('')
+  }
+
+  return (
+    <div className="bg-cream rounded-2xl border border-[rgba(0,59,70,0.08)] overflow-hidden">
+      <header className="px-5 py-4 border-b border-[rgba(0,59,70,0.06)]">
+        <p className="text-sm font-semibold text-ink-primary flex items-center gap-2">
+          <Pencil size={16} /> Business Development — course titles
+        </p>
+        <p className="text-[11px] text-ink-tertiary mt-0.5">
+          Rename any of the 10 BD courses here. Changes apply instantly to the academy — no code change needed.
+        </p>
+      </header>
+      <ul className="divide-y divide-[rgba(0,59,70,0.05)]">
+        {BD_MODULES.map((m) => {
+          const override = overrides[m.id]
+          const effective = override ?? m.title
+          const isEditing = editingId === m.id
+          return (
+            <li key={m.id} className="px-5 py-3.5 flex items-center gap-3">
+              <span className="shrink-0 text-[11px] font-medium text-ink-tertiary w-16">
+                Module {m.number}
+              </span>
+              {isEditing ? (
+                <div className="flex-1 flex items-center gap-2">
+                  <input
+                    value={draft}
+                    onChange={(e) => setDraft(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') save()
+                      if (e.key === 'Escape') setEditingId(null)
+                    }}
+                    autoFocus
+                    className="flex-1 bg-parchment border border-ink-primary rounded-lg px-3 py-1.5 text-sm focus:outline-none"
+                    placeholder={m.title}
+                  />
+                  <button
+                    type="button"
+                    onClick={save}
+                    className="text-[11px] font-medium rounded-full bg-ink-primary text-parchment px-3 py-1.5 hover:opacity-90 transition"
+                  >
+                    Save
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setEditingId(null)}
+                    className="text-[11px] font-medium rounded-full border border-[rgba(0,59,70,0.15)] px-3 py-1.5 hover:bg-black/[0.03] transition"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium text-ink-primary truncate">{effective}</p>
+                    {override && (
+                      <p className="text-[11px] text-ink-tertiary truncate mt-0.5">
+                        Renamed from “{m.title}”
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex gap-1.5 shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => startEdit(m.id, effective)}
+                      className="inline-flex items-center gap-1 text-[11px] font-medium rounded-full border border-[rgba(0,59,70,0.15)] px-2.5 py-1 hover:bg-black/[0.03] transition"
+                    >
+                      <Pencil size={11} /> Rename
+                    </button>
+                    {override && (
+                      <button
+                        type="button"
+                        onClick={() => clearTitle(m.id)}
+                        className="inline-flex items-center gap-1 text-[11px] font-medium rounded-full border border-[rgba(0,59,70,0.15)] px-2.5 py-1 hover:bg-black/[0.03] transition"
+                      >
+                        <RotateCcw size={11} /> Reset
+                      </button>
+                    )}
+                  </div>
+                </>
+              )}
+            </li>
+          )
+        })}
+      </ul>
+    </div>
+  )
+}
+
 export default function AdminContent() {
   return (
     <div className="max-w-[900px] mx-auto space-y-6">
@@ -245,6 +361,7 @@ export default function AdminContent() {
           assessment questions before they can reach employees.
         </p>
       </section>
+      <BdTitlesPanel />
       <VersionsPanel />
       <ReviewQueuePanel />
     </div>

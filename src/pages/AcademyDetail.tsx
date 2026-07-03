@@ -26,10 +26,14 @@ import {
   Crown,
   Medal,
   Award,
+  GraduationCap,
 } from 'lucide-react'
 import { getAcademyById, iconMap } from '@/data/academies'
 import type { Course, CourseStatus, CourseLevel } from '@/data/academies'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { BD_MODULES } from '@/data/bd-academy'
+import { useBdProgress } from '@/lib/bd-progress-store'
+import { useBdTitles, bdEffectiveTitle } from '@/lib/bd-title-store'
 
 /* ------------------------------------------------------------------ */
 /*  Sub-components                                                      */
@@ -416,6 +420,94 @@ function CurriculumTab({
 }
 
 /* ------------------------------------------------------------------ */
+/*  Tab: Curriculum — Business Development (real Magppie modules)        */
+/* ------------------------------------------------------------------ */
+
+function BdCurriculumTab({ academyColor }: { academyColor: string }) {
+  const results = useBdProgress((s) => s.results)
+  const overrides = useBdTitles((s) => s.overrides)
+  const [q, setQ] = useState('')
+
+  const modules = useMemo(() => {
+    if (!q.trim()) return BD_MODULES
+    const needle = q.toLowerCase()
+    return BD_MODULES.filter((m) =>
+      bdEffectiveTitle(overrides, m.id, m.title).toLowerCase().includes(needle) ||
+      m.competency.toLowerCase().includes(needle),
+    )
+  }, [q, overrides])
+
+  return (
+    <div className="space-y-5">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <h3 className="font-serif text-2xl font-normal text-ink-primary">Curriculum</h3>
+          <span className="text-sm text-ink-tertiary">{BD_MODULES.length} modules</span>
+        </div>
+        <Link
+          href="/academy/business-development/modules"
+          className="text-sm font-medium text-ink-secondary hover:text-ink-primary transition-colors"
+        >
+          Open full academy →
+        </Link>
+      </div>
+
+      <div className="relative w-[280px]">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-tertiary" size={15} />
+        <input
+          type="text"
+          placeholder="Search modules..."
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          className="w-full bg-cream border border-[rgba(0,59,70,0.12)] rounded-lg pl-9 pr-3 py-2 text-sm text-ink-primary placeholder:text-ink-tertiary focus:outline-none focus:border-ink-primary transition-all"
+        />
+      </div>
+
+      <div className="space-y-2">
+        {modules.map((m) => {
+          const r = results[m.id]
+          const status: CourseStatus = r?.passed
+            ? 'Completed'
+            : r?.viewed
+              ? 'In Progress'
+              : 'Not Started'
+          return (
+            <Link
+              key={m.id}
+              href={`/academy/business-development/modules?module=${m.id}`}
+              className="group flex items-center gap-4 bg-cream rounded-xl border border-[rgba(0,59,70,0.08)] px-5 py-4 hover:bg-[rgba(0,59,70,0.02)] hover:shadow-card transition-all"
+            >
+              <span className="text-xs font-medium text-ink-tertiary w-6 flex-shrink-0">
+                {String(m.number).padStart(2, '0')}
+              </span>
+              <div className="flex-1 min-w-0">
+                <h4 className="text-[15px] font-semibold text-ink-primary truncate">
+                  {bdEffectiveTitle(overrides, m.id, m.title)}
+                </h4>
+                <p className="text-xs text-ink-tertiary mt-0.5 truncate">{m.summary}</p>
+              </div>
+              <span
+                className="hidden sm:inline-block text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-md flex-shrink-0 text-ink-secondary"
+                style={{ backgroundColor: `${academyColor}22` }}
+              >
+                {m.competency}
+              </span>
+              <StatusDot status={status} />
+              <div className="hidden md:block flex-shrink-0">
+                <CourseActionButton status={status} />
+              </div>
+            </Link>
+          )
+        })}
+        {modules.length === 0 && (
+          <p className="text-sm text-ink-tertiary py-8 text-center">No modules match “{q}”.</p>
+        )}
+      </div>
+    </div>
+  )
+}
+
+/* ------------------------------------------------------------------ */
 /*  Tab: My Progress                                                    */
 /* ------------------------------------------------------------------ */
 
@@ -678,10 +770,11 @@ function LeaderboardTab({
   academyColor: string
 }) {
   const getRankIcon = (rank: number) => {
-    if (rank === 1) return <Crown size={16} className="text-accent-gold" />
+    // Rank markers are accomplishments (not actions) → silver per §4.
+    if (rank === 1) return <Crown size={16} className="text-accent-silver" />
     if (rank === 2) return <Medal size={16} className="text-surface-mid" />
     if (rank === 3)
-      return <Award size={16} className="text-accent-gold/60" />
+      return <Award size={16} className="text-accent-silver/60" />
     return (
       <span className="text-xs font-bold text-ink-tertiary w-4 text-center">
         {rank}
@@ -958,6 +1051,29 @@ export default function AcademyDetail() {
         </motion.div>
       </motion.section>
 
+      {/* BD-only: real Magppie sales training modules (10 modules + quizzes) */}
+      {academy.id === 'business-development' && (
+        <Link
+          href="/academy/business-development/modules"
+          className="group flex items-center justify-between gap-4 rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream px-6 py-5 hover:shadow-card transition-shadow"
+        >
+          <div className="flex items-center gap-4">
+            <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: 'var(--status-ontrack-bg)' }}>
+              <GraduationCap size={22} style={{ color: 'var(--status-ontrack)' }} />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-ink-primary">
+                Wellness sales foundations — 10 modules + quizzes
+              </p>
+              <p className="text-[13px] text-ink-tertiary mt-0.5">
+                Magppie’s approved sales training: brand story, SilverStone science, pricing, objection handling. Pass each quiz at 80% to complete.
+              </p>
+            </div>
+          </div>
+          <ArrowRight size={18} className="shrink-0 text-ink-tertiary group-hover:text-ink-primary transition-colors" />
+        </Link>
+      )}
+
       {/* Section 2: Tab Navigation */}
       <div className="sticky top-0 z-30 bg-parchment/95 backdrop-blur-sm border-b border-[rgba(0,59,70,0.08)] -mx-8 px-8">
         <div className="max-w-[1200px] mx-auto flex gap-0">
@@ -993,12 +1109,15 @@ export default function AcademyDetail() {
           transition={{ duration: 0.3 }}
           className="pb-8"
         >
-          {activeTab === 'curriculum' && (
-            <CurriculumTab
-              courses={academy.courses}
-              academyColor={academy.color}
-            />
-          )}
+          {activeTab === 'curriculum' &&
+            (academy.id === 'business-development' ? (
+              <BdCurriculumTab academyColor={academy.color} />
+            ) : (
+              <CurriculumTab
+                courses={academy.courses}
+                academyColor={academy.color}
+              />
+            ))}
           {activeTab === 'progress' && (
             <MyProgressTab
               courses={academy.courses}

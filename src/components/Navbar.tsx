@@ -159,10 +159,12 @@ export default function Navbar() {
                 collapsed && 'justify-center px-2'
               )}
             >
+              {/* §4: active nav state carries the copper primary accent */}
               <item.icon
                 size={20}
                 className={cn(
                   'flex-shrink-0',
+                  isActive && 'text-accent-copper',
                   !isActive && 'group-hover:text-ink-primary'
                 )}
               />

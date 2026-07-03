@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import SkillGapHeatmap from '@/components/SkillGapHeatmap';
 import SuccessionPanel from '@/components/SuccessionPanel';
+import { BdDiagnosticManagerPanel } from '@/components/BdDiagnostic';
 import {
   TrendingUp,
   TrendingDown,
@@ -247,6 +248,8 @@ export default function Analytics() {
 
       {/* ─────── Skill-gap heatmap + succession pipeline (§3.4) ─────── */}
       <SkillGapHeatmap />
+      {/* Manager view of the BD new-joiner diagnostic (§2) */}
+      <BdDiagnosticManagerPanel />
       <SuccessionPanel />
 
       {/* ─────── Section 3: Main Charts (2-Column) ─────── */}
