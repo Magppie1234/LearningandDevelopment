@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -32,6 +32,7 @@ import { getAcademyById, iconMap } from '@/data/academies'
 import type { Course, CourseStatus, CourseLevel } from '@/data/academies'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { BD_MODULES } from '@/data/bd-academy'
+import BdResourcesTab from '@/components/BdResourcesTab'
 import { useBdProgress } from '@/lib/bd-progress-store'
 import { useBdTitles, bdEffectiveTitle } from '@/lib/bd-title-store'
 
@@ -874,12 +875,20 @@ function LeaderboardTab({
 /*  Main Page Component                                                 */
 /* ------------------------------------------------------------------ */
 
+type AcademyTab = 'curriculum' | 'progress' | 'resources' | 'leaderboard' | 'discussions'
+const ACADEMY_TABS: AcademyTab[] = ['curriculum', 'progress', 'resources', 'leaderboard', 'discussions']
+
 export default function AcademyDetail() {
   const params = useParams<{ id: string }>()
   const id = params?.id
-  const [activeTab, setActiveTab] = useState<
-    'curriculum' | 'progress' | 'resources' | 'leaderboard' | 'discussions'
-  >('curriculum')
+  const [activeTab, setActiveTab] = useState<AcademyTab>('curriculum')
+
+  // Deep-linkable tabs (?tab=resources) — read after mount to avoid a
+  // hydration mismatch; lets curriculum/resources be linked directly.
+  useEffect(() => {
+    const t = new URLSearchParams(window.location.search).get('tab')
+    if (t && ACADEMY_TABS.includes(t as AcademyTab)) setActiveTab(t as AcademyTab)
+  }, [])
 
   const academy = getAcademyById(id || '')
 
@@ -1124,9 +1133,14 @@ export default function AcademyDetail() {
               academyColor={academy.color}
             />
           )}
-          {activeTab === 'resources' && (
-            <ResourcesTab resources={academy.resources} />
-          )}
+          {activeTab === 'resources' &&
+            (academy.id === 'business-development' ? (
+              // Real BD resources: generated reading packs + team uploads + video
+              // series, replacing the seed placeholder cards (BD only).
+              <BdResourcesTab />
+            ) : (
+              <ResourcesTab resources={academy.resources} />
+            ))}
           {activeTab === 'leaderboard' && (
             <LeaderboardTab
               leaderboard={academy.leaderboard}
