@@ -6,6 +6,7 @@ import { useParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import DiscussionsTab from '@/components/DiscussionsTab'
+import MonthlyQuiz from '@/pages/MonthlyQuiz'
 import {
   BookOpen,
   Clock,
@@ -785,7 +786,7 @@ export default function AcademyDetail() {
   const params = useParams<{ id: string }>()
   const id = params?.id
   const [activeTab, setActiveTab] = useState<
-    'curriculum' | 'progress' | 'resources' | 'leaderboard' | 'discussions'
+    'curriculum' | 'progress' | 'resources' | 'leaderboard' | 'discussions' | 'monthly-quiz'
   >('curriculum')
 
   const academy = getAcademyById(id || '')
@@ -814,8 +815,14 @@ export default function AcademyDetail() {
   }
 
   const IconComponent = iconMap[academy.icon] || BookOpen
+  // The Monthly Quiz is a Business Development Executive (BDE) drill grounded in
+  // the AI-Bot training script — surfaced only in the BD Academy for now.
+  const hasMonthlyQuiz = academy.id === 'business-development'
   const tabs = [
     { key: 'curriculum' as const, label: 'Curriculum' },
+    ...(hasMonthlyQuiz
+      ? [{ key: 'monthly-quiz' as const, label: 'Monthly Quiz' }]
+      : []),
     { key: 'progress' as const, label: 'My Progress' },
     { key: 'resources' as const, label: 'Resources' },
     { key: 'leaderboard' as const, label: 'Leaderboard' },
@@ -1014,6 +1021,7 @@ export default function AcademyDetail() {
               academyColor={academy.color}
             />
           )}
+          {activeTab === 'monthly-quiz' && <MonthlyQuiz />}
           {activeTab === 'discussions' && <DiscussionsTab academyId={academy.id} />}
         </motion.div>
       </AnimatePresence>
