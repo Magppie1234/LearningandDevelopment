@@ -107,7 +107,7 @@ export const iconMap: Record<string, LucideIcon> = {
 export const academies: Academy[] = [
   {
     id: 'business-development',
-    name: 'Business Development Academy',
+    name: 'Business Development Executive',
     description: 'Magppie’s approved sales training, end to end: brand story and company credibility, the SilverStone wellness science, the 7 safety pillars, awards and clientele, the full 8-stage sales pitch, the objection-handling playbook, pricing and process FAQs, and customer-communication standards. Ten modules, each with a quiz to pass at 80%.',
     shortDescription: 'Brand story, SilverStone science, pitch, objection handling, pricing',
     color: '#a7c4d4',

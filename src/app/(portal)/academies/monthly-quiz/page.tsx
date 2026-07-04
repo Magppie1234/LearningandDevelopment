@@ -14,7 +14,7 @@ export default function Page() {
           href="/academy/business-development"
           className="hover:text-ink-primary transition-colors"
         >
-          Business Development Academy
+          Business Development Executive
         </Link>
         <ChevronRight size={12} />
         <span className="text-ink-primary font-medium">Monthly Quiz</span>

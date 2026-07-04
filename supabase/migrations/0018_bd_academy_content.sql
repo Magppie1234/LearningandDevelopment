@@ -1,5 +1,5 @@
 -- ===========================================================================
--- 0018 — Business Development academy: module content + quiz (BD-only pass)
+-- 0018 — Business Development Executive: module content + quiz (BD-only pass)
 -- ---------------------------------------------------------------------------
 -- Adds the DB-side home for the 10 reviewed BD modules and their 30-question
 -- quiz. Source of truth for the actual content/questions is

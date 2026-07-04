@@ -122,7 +122,7 @@ for (const m of BD_MODULES) {
   // ── Page 1: cover ──
   doc.rect(0, 0, doc.page.width, 8).fill(COPPER)
   doc.moveDown(6)
-  doc.font('bold').fontSize(9).fillColor(COPPER).text('MAGPPIE L&D · BUSINESS DEVELOPMENT ACADEMY', { characterSpacing: 1.8 })
+  doc.font('bold').fontSize(9).fillColor(COPPER).text('MAGPPIE L&D · BUSINESS DEVELOPMENT EXECUTIVE', { characterSpacing: 1.8 })
   doc.moveDown(1)
   doc.font('bold').fontSize(26).fillColor(NAVY).text(`Module ${m.number}`)
   doc.font('bold').fontSize(20).fillColor(NAVY).text(m.title)

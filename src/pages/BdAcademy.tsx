@@ -428,7 +428,7 @@ export default function BdAcademy() {
           href="/academy/business-development"
           className="inline-flex items-center gap-1.5 text-sm text-ink-tertiary hover:text-ink-primary transition-colors mb-3"
         >
-          <ArrowLeft size={15} /> Business Development Academy
+          <ArrowLeft size={15} /> Business Development Executive
         </Link>
         <h1 className="font-serif text-4xl font-normal text-ink-primary">
           Wellness sales foundations

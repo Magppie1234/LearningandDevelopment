@@ -1,5 +1,5 @@
 /**
- * Business Development Academy — 10 modules + 30-question quiz bank.
+ * Business Development Executive — 10 modules + 30-question quiz bank.
  *
  * SOURCE OF TRUTH: BD_Academy_Modules_and_Quiz_Bank.md (human-reviewed,
  * approved). Content reframed from Magppie_AI_Bot_Master_Training_Document.pdf

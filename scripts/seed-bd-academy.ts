@@ -1,5 +1,5 @@
 /**
- * Seeds the Business Development academy modules + 30-question quiz from the
+ * Seeds the Business Development Executive modules + 30-question quiz from the
  * reviewed source of truth (src/data/bd-academy.ts) into Supabase
  * (academy_modules + assessment_items, per migration 0018).
  *

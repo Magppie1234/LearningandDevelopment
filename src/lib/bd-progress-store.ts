@@ -5,7 +5,7 @@ import { persist } from 'zustand/middleware'
 import { BD_MODULES } from '@/data/bd-academy'
 
 /**
- * Business Development academy progress (demo mode). A module is only
+ * Business Development Executive progress (demo mode). A module is only
  * "complete" once its quiz is passed at >= 80% — viewing the content alone
  * doesn't complete it. Persists locally; live mode would read/write
  * enrollments + quiz_attempts in Supabase.
