@@ -33,6 +33,8 @@ import type { Course, CourseStatus, CourseLevel } from '@/data/academies'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { BD_MODULES } from '@/data/bd-academy'
 import BdResourcesTab from '@/components/BdResourcesTab'
+import ReadinessCheck from '@/components/ReadinessCheck'
+import { readinessBankFor } from '@/data/readiness-banks'
 import { useBdProgress } from '@/lib/bd-progress-store'
 import { useBdTitles, bdEffectiveTitle } from '@/lib/bd-title-store'
 
@@ -1058,6 +1060,15 @@ export default function AcademyDetail() {
             </button>
           )}
         </motion.div>
+
+        {/* Readiness check — cross-academy self-assessment. Renders the retake
+            button and auto-pops the modal on first entry (only for academies
+            that have a question bank). Never gates content. */}
+        {readinessBankFor(academy.id) && (
+          <div className="mt-5">
+            <ReadinessCheck academySlug={academy.id} />
+          </div>
+        )}
       </motion.section>
 
       {/* BD-only: real Magppie sales training modules (10 modules + quizzes) */}

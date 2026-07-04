@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import SkillGapHeatmap from '@/components/SkillGapHeatmap';
 import SuccessionPanel from '@/components/SuccessionPanel';
 import { BdDiagnosticManagerPanel } from '@/components/BdDiagnostic';
+import { ReadinessAdminPanel } from '@/components/ReadinessCheck';
 import {
   TrendingUp,
   TrendingDown,
@@ -250,6 +251,11 @@ export default function Analytics() {
       <SkillGapHeatmap />
       {/* Manager view of the BD new-joiner diagnostic (§2) */}
       <BdDiagnosticManagerPanel />
+      {/* Readiness-check reporting — team-wide self-assessment gaps */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <ReadinessAdminPanel academySlug="business-development" />
+        <ReadinessAdminPanel academySlug="sales" />
+      </div>
       <SuccessionPanel />
 
       {/* ─────── Section 3: Main Charts (2-Column) ─────── */}
