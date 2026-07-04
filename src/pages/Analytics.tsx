@@ -161,7 +161,7 @@ function KPICard({ data, index }: { data: (typeof kpiData)[0]; index: number }) 
 function CustomTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ value: number; name: string; color: string }>; label?: string }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-[#003b46] text-[#f8f5f0] px-3 py-2 rounded-lg text-xs shadow-lg">
+    <div className="bg-stone-espresso text-stone-ivory px-3 py-2 rounded-lg text-xs shadow-lg">
       <p className="font-semibold mb-1">{label}</p>
       {payload.map((p, i) => (
         <p key={i} style={{ color: p.color }}>
@@ -224,16 +224,16 @@ export default function Analytics() {
         className="pb-4 border-b border-[rgba(0,59,70,0.08)] flex items-start justify-between"
       >
         <div>
-          <h1 className="font-serif text-5xl font-normal text-[#003b46]">Learning Analytics</h1>
-          <p className="text-lg text-[#1a4a4e] mt-2">Company-wide learning performance and insights</p>
+          <h1 className="font-serif text-5xl font-normal text-ink-primary">Learning Analytics</h1>
+          <p className="text-lg text-ink-secondary mt-2">Company-wide learning performance and insights</p>
         </div>
         <div className="flex items-center gap-3">
-          <button className="flex items-center gap-2 px-4 py-2.5 bg-[#ede9e1] rounded-lg text-sm text-[#003b46] border border-[rgba(0,59,70,0.08)] hover:bg-[#e8dfcf] transition-colors">
+          <button className="flex items-center gap-2 px-4 py-2.5 bg-card rounded-lg text-sm text-ink-primary border border-[rgba(0,59,70,0.08)] hover:bg-secondary transition-colors">
             <Calendar size={16} />
             Oct 1 – Oct 31, 2024
             <ChevronDown size={14} />
           </button>
-          <button className="flex items-center gap-2 px-4 py-2.5 bg-[#a7c4d4] rounded-lg text-sm text-[#003b46] font-medium hover:brightness-95 transition-all">
+          <button className="flex items-center gap-2 px-4 py-2.5 bg-accent-copper/15 rounded-lg text-sm text-ink-primary font-medium hover:brightness-95 transition-all">
             <Download size={16} />
             Export Report
           </button>
@@ -265,14 +265,14 @@ export default function Analytics() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.15 }}
-          className="bg-[#ede9e1] rounded-2xl p-6 border border-[rgba(0,59,70,0.08)]"
+          className="bg-card rounded-2xl p-6 border border-[rgba(0,59,70,0.08)]"
           style={{ boxShadow: '0 4px 20px rgba(0,59,70,0.08)' }}
         >
           <div className="mb-4">
-            <h3 className="font-sans text-lg font-semibold text-[#003b46]">
+            <h3 className="font-sans text-lg font-semibold text-ink-primary">
               Department Learning Readiness
             </h3>
-            <p className="text-xs text-[#4a6b6e] mt-1">Average score by department</p>
+            <p className="text-xs text-ink-tertiary mt-1">Average score by department</p>
           </div>
           <ResponsiveContainer width="100%" height={420}>
             <BarChart
@@ -293,7 +293,7 @@ export default function Analytics() {
                   if (!active || !payload?.length) return null;
                   const data = payload[0].payload as DepartmentReadiness;
                   return (
-                    <div className="bg-[#003b46] text-[#f8f5f0] px-3 py-2 rounded-lg text-xs shadow-lg">
+                    <div className="bg-stone-espresso text-stone-ivory px-3 py-2 rounded-lg text-xs shadow-lg">
                       <p className="font-semibold">{data.department}</p>
                       <p>Score: {data.score}</p>
                     </div>
@@ -319,15 +319,15 @@ export default function Analytics() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.2 }}
-          className="bg-[#ede9e1] rounded-2xl p-6 border border-[rgba(0,59,70,0.08)]"
+          className="bg-card rounded-2xl p-6 border border-[rgba(0,59,70,0.08)]"
           style={{ boxShadow: '0 4px 20px rgba(0,59,70,0.08)' }}
         >
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="font-sans text-lg font-semibold text-[#003b46]">
+              <h3 className="font-sans text-lg font-semibold text-ink-primary">
                 Learning Activity Trend
               </h3>
-              <p className="text-xs text-[#4a6b6e] mt-1">Last 6 months</p>
+              <p className="text-xs text-ink-tertiary mt-1">Last 6 months</p>
             </div>
           </div>
           {/* Tabs */}
@@ -338,8 +338,8 @@ export default function Analytics() {
                 onClick={() => setActivityTab(tab)}
                 className={`flex-1 py-1.5 px-3 rounded-md text-xs font-medium transition-all capitalize ${
                   activityTab === tab
-                    ? 'bg-[#003b46] text-[#f8f5f0]'
-                    : 'text-[#4a6b6e] hover:text-[#003b46]'
+                    ? 'bg-stone-espresso text-stone-ivory'
+                    : 'text-ink-tertiary hover:text-ink-primary'
                 }`}
               >
                 {tab}
@@ -379,10 +379,10 @@ export default function Analytics() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.25 }}
-          className="bg-[#ede9e1] rounded-2xl p-6 border border-[rgba(0,59,70,0.08)] flex flex-col items-center"
+          className="bg-card rounded-2xl p-6 border border-[rgba(0,59,70,0.08)] flex flex-col items-center"
           style={{ boxShadow: '0 4px 20px rgba(0,59,70,0.08)' }}
         >
-          <h3 className="font-sans text-lg font-semibold text-[#003b46] mb-4 self-start">
+          <h3 className="font-sans text-lg font-semibold text-ink-primary mb-4 self-start">
             Certification Coverage
           </h3>
           <ResponsiveContainer width="100%" height={200}>
@@ -407,7 +407,7 @@ export default function Analytics() {
                   if (!active || !payload?.length) return null;
                   const data = payload[0].payload as CertificationCoverage;
                   return (
-                    <div className="bg-[#003b46] text-[#f8f5f0] px-3 py-2 rounded-lg text-xs shadow-lg">
+                    <div className="bg-stone-espresso text-stone-ivory px-3 py-2 rounded-lg text-xs shadow-lg">
                       <p className="font-semibold">{data.level}</p>
                       <p>{data.percentage}%</p>
                     </div>
@@ -417,15 +417,15 @@ export default function Analytics() {
             </PieChart>
           </ResponsiveContainer>
           <div className="text-center -mt-4">
-            <p className="text-3xl font-bold text-[#003b46]">68%</p>
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-[#4a6b6e]">Covered</p>
+            <p className="text-3xl font-bold text-ink-primary">68%</p>
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-ink-tertiary">Covered</p>
           </div>
           {/* Legend */}
           <div className="flex flex-wrap justify-center gap-3 mt-4">
             {certificationCoverageData.map((item) => (
               <div key={item.level} className="flex items-center gap-1.5">
                 <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }} />
-                <span className="text-[11px] text-[#4a6b6e]">{item.level}</span>
+                <span className="text-[11px] text-ink-tertiary">{item.level}</span>
               </div>
             ))}
           </div>
@@ -436,10 +436,10 @@ export default function Analytics() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.3 }}
-          className="bg-[#ede9e1] rounded-2xl p-6 border border-[rgba(0,59,70,0.08)]"
+          className="bg-card rounded-2xl p-6 border border-[rgba(0,59,70,0.08)]"
           style={{ boxShadow: '0 4px 20px rgba(0,59,70,0.08)' }}
         >
-          <h3 className="font-sans text-lg font-semibold text-[#003b46] mb-4">
+          <h3 className="font-sans text-lg font-semibold text-ink-primary mb-4">
             By Department
           </h3>
           <div className="space-y-3">
@@ -451,8 +451,8 @@ export default function Analytics() {
                 transition={{ duration: 0.3, delay: i * 0.05 }}
               >
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs text-[#1a4a4e] w-28 truncate">{dept.department}</span>
-                  <span className="text-xs font-semibold text-[#003b46]">{dept.percentage}%</span>
+                  <span className="text-xs text-ink-secondary w-28 truncate">{dept.department}</span>
+                  <span className="text-xs font-semibold text-ink-primary">{dept.percentage}%</span>
                 </div>
                 <div className="h-1 bg-[rgba(0,59,70,0.08)] rounded-full overflow-hidden">
                   <motion.div
@@ -476,26 +476,26 @@ export default function Analytics() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.35 }}
-        className="bg-[#ede9e1] rounded-2xl p-6 border border-[rgba(0,59,70,0.08)]"
+        className="bg-card rounded-2xl p-6 border border-[rgba(0,59,70,0.08)]"
         style={{ boxShadow: '0 4px 20px rgba(0,59,70,0.08)' }}
       >
         <div className="mb-4">
-          <h3 className="font-sans text-lg font-semibold text-[#003b46]">
+          <h3 className="font-sans text-lg font-semibold text-ink-primary">
             Company Skill Gap Heatmap
           </h3>
-          <p className="text-xs text-[#4a6b6e] mt-1">Average proficiency by department</p>
+          <p className="text-xs text-ink-tertiary mt-1">Average proficiency by department</p>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr>
-                <th className="text-left text-[10px] font-semibold uppercase text-[#4a6b6e] pb-2 pr-2 w-32">
+                <th className="text-left text-[10px] font-semibold uppercase text-ink-tertiary pb-2 pr-2 w-32">
                   Department
                 </th>
                 {skillLabels.map((skill) => (
                   <th
                     key={skill}
-                    className="text-center text-[10px] font-semibold uppercase text-[#4a6b6e] pb-2 px-0.5"
+                    className="text-center text-[10px] font-semibold uppercase text-ink-tertiary pb-2 px-0.5"
                     style={{ minWidth: 60 }}
                   >
                     {skill}
@@ -511,7 +511,7 @@ export default function Analytics() {
                   animate={{ opacity: 1 }}
                   transition={{ delay: ri * 0.03 }}
                 >
-                  <td className="text-[11px] font-medium text-[#1a4a4e] pr-2 py-1">
+                  <td className="text-[11px] font-medium text-ink-secondary pr-2 py-1">
                     {row.department}
                   </td>
                   {(['productKnowledge', 'sales', 'quality', 'leadership', 'communication', 'technical', 'safety', 'digital'] as const).map(
@@ -547,19 +547,19 @@ export default function Analytics() {
         <div className="flex items-center gap-4 mt-4 justify-end">
           <div className="flex items-center gap-1.5">
             <div className="w-3 h-3 rounded" style={{ backgroundColor: '#7a8a7a' }} />
-            <span className="text-[10px] text-[#4a6b6e]">Strong (90–100)</span>
+            <span className="text-[10px] text-ink-tertiary">Strong (90–100)</span>
           </div>
           <div className="flex items-center gap-1.5">
             <div className="w-3 h-3 rounded" style={{ backgroundColor: '#a7c4d4' }} />
-            <span className="text-[10px] text-[#4a6b6e]">Good (75–89)</span>
+            <span className="text-[10px] text-ink-tertiary">Good (75–89)</span>
           </div>
           <div className="flex items-center gap-1.5">
             <div className="w-3 h-3 rounded" style={{ backgroundColor: '#b0c4c7' }} />
-            <span className="text-[10px] text-[#4a6b6e]">Developing (60–74)</span>
+            <span className="text-[10px] text-ink-tertiary">Developing (60–74)</span>
           </div>
           <div className="flex items-center gap-1.5">
             <div className="w-3 h-3 rounded" style={{ backgroundColor: 'rgba(196,160,160,0.5)' }} />
-            <span className="text-[10px] text-[#4a6b6e]">Gap (0–59)</span>
+            <span className="text-[10px] text-ink-tertiary">Gap (0–59)</span>
           </div>
         </div>
       </motion.div>
@@ -571,10 +571,10 @@ export default function Analytics() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.4 }}
-          className="bg-[#ede9e1] rounded-2xl p-6 border border-[rgba(0,59,70,0.08)]"
+          className="bg-card rounded-2xl p-6 border border-[rgba(0,59,70,0.08)]"
           style={{ boxShadow: '0 4px 20px rgba(0,59,70,0.08)' }}
         >
-          <h3 className="font-sans text-lg font-semibold text-[#003b46] mb-6">
+          <h3 className="font-sans text-lg font-semibold text-ink-primary mb-6">
             Leadership Pipeline
           </h3>
           <div className="space-y-4">
@@ -586,7 +586,7 @@ export default function Analytics() {
                 transition={{ duration: 0.4, delay: i * 0.2 }}
               >
                 <div className="flex items-center gap-3">
-                  <span className="text-xs font-medium text-[#4a6b6e] w-28 truncate">{tier.label}</span>
+                  <span className="text-xs font-medium text-ink-tertiary w-28 truncate">{tier.label}</span>
                   <div className="flex-1 h-10 bg-[rgba(0,59,70,0.06)] rounded-lg overflow-hidden relative">
                     <motion.div
                       className="h-full rounded-lg flex items-center justify-end pr-3"
@@ -595,10 +595,10 @@ export default function Analytics() {
                       animate={{ width: `${tier.width}%` }}
                       transition={{ duration: 0.6, delay: i * 0.2, ease: easeOut }}
                     >
-                      <span className="text-sm font-bold text-[#003b46]">{tier.count}</span>
+                      <span className="text-sm font-bold text-ink-primary">{tier.count}</span>
                     </motion.div>
                   </div>
-                  <span className="text-[11px] text-[#4a6b6e] w-12 text-right">
+                  <span className="text-[11px] text-ink-tertiary w-12 text-right">
                     {Math.round((tier.count / 45) * 100)}%
                   </span>
                 </div>
@@ -612,29 +612,29 @@ export default function Analytics() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.45 }}
-          className="bg-[#ede9e1] rounded-2xl p-6 border border-[rgba(0,59,70,0.08)]"
+          className="bg-card rounded-2xl p-6 border border-[rgba(0,59,70,0.08)]"
           style={{ boxShadow: '0 4px 20px rgba(0,59,70,0.08)' }}
         >
-          <h3 className="font-sans text-lg font-semibold text-[#003b46] mb-4">
+          <h3 className="font-sans text-lg font-semibold text-ink-primary mb-4">
             Promotion-Ready Employees
           </h3>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-[rgba(0,59,70,0.08)]">
-                  <th className="text-left text-[10px] font-semibold uppercase text-[#4a6b6e] pb-2 pr-2">
+                  <th className="text-left text-[10px] font-semibold uppercase text-ink-tertiary pb-2 pr-2">
                     Name
                   </th>
-                  <th className="text-left text-[10px] font-semibold uppercase text-[#4a6b6e] pb-2 px-2">
+                  <th className="text-left text-[10px] font-semibold uppercase text-ink-tertiary pb-2 px-2">
                     Role
                   </th>
-                  <th className="text-left text-[10px] font-semibold uppercase text-[#4a6b6e] pb-2 px-2">
+                  <th className="text-left text-[10px] font-semibold uppercase text-ink-tertiary pb-2 px-2">
                     Readiness
                   </th>
-                  <th className="text-left text-[10px] font-semibold uppercase text-[#4a6b6e] pb-2 px-2">
+                  <th className="text-left text-[10px] font-semibold uppercase text-ink-tertiary pb-2 px-2">
                     Skills
                   </th>
-                  <th className="text-left text-[10px] font-semibold uppercase text-[#4a6b6e] pb-2 pl-2">
+                  <th className="text-left text-[10px] font-semibold uppercase text-ink-tertiary pb-2 pl-2">
                     Certs
                   </th>
                 </tr>
@@ -650,14 +650,14 @@ export default function Analytics() {
                   >
                     <td className="py-2 pr-2">
                       <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 rounded-full bg-[#a7c4d4] flex items-center justify-center text-[10px] font-semibold text-[#003b46]">
+                        <div className="w-7 h-7 rounded-full bg-accent-copper/15 flex items-center justify-center text-[10px] font-semibold text-ink-primary">
                           {emp.initials}
                         </div>
-                        <span className="text-xs font-medium text-[#003b46]">{emp.name}</span>
+                        <span className="text-xs font-medium text-ink-primary">{emp.name}</span>
                       </div>
                     </td>
                     <td className="py-2 px-2">
-                      <span className="text-[11px] text-[#1a4a4e]">{emp.role}</span>
+                      <span className="text-[11px] text-ink-secondary">{emp.role}</span>
                     </td>
                     <td className="py-2 px-2">
                       <div className="flex items-center gap-2">
@@ -669,13 +669,13 @@ export default function Analytics() {
                             transition={{ duration: 0.6, delay: i * 0.05 }}
                           />
                         </div>
-                        <span className="text-[10px] font-semibold text-[#003b46]">{emp.readiness}%</span>
+                        <span className="text-[10px] font-semibold text-ink-primary">{emp.readiness}%</span>
                       </div>
                     </td>
-                    <td className="py-2 px-2 text-[11px] text-[#4a6b6e]">
+                    <td className="py-2 px-2 text-[11px] text-ink-tertiary">
                       {emp.skillsMet}/{emp.totalSkills}
                     </td>
-                    <td className="py-2 pl-2 text-[11px] text-[#4a6b6e]">
+                    <td className="py-2 pl-2 text-[11px] text-ink-tertiary">
                       {emp.certsEarned}/{emp.totalCerts}
                     </td>
                   </motion.tr>
@@ -693,10 +693,10 @@ export default function Analytics() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.5 }}
-          className="bg-[#ede9e1] rounded-2xl p-6 border border-[rgba(0,59,70,0.08)]"
+          className="bg-card rounded-2xl p-6 border border-[rgba(0,59,70,0.08)]"
           style={{ boxShadow: '0 4px 20px rgba(0,59,70,0.08)' }}
         >
-          <h3 className="font-sans text-lg font-semibold text-[#003b46] mb-5">
+          <h3 className="font-sans text-lg font-semibold text-ink-primary mb-5">
             Training ROI
           </h3>
           <div className="space-y-4">
@@ -711,7 +711,7 @@ export default function Analytics() {
                 <p className="text-3xl font-bold" style={{ color: metric.color }}>
                   <AnimatedCounter value={metric.value} />
                 </p>
-                <p className="text-[11px] text-[#4a6b6e] mt-1">{metric.subtext}</p>
+                <p className="text-[11px] text-ink-tertiary mt-1">{metric.subtext}</p>
                 <div className="flex items-center gap-1 mt-2">
                   {metric.trendDirection === 'down' ? (
                     <TrendingDown size={14} className="text-[#7a8a7a]" />
@@ -720,7 +720,7 @@ export default function Analytics() {
                   )}
                   <span className="text-[11px] font-medium text-[#7a8a7a]">{metric.trend}</span>
                   {metric.trendLabel && (
-                    <span className="text-[10px] text-[#4a6b6e]"> {metric.trendLabel}</span>
+                    <span className="text-[10px] text-ink-tertiary"> {metric.trendLabel}</span>
                   )}
                 </div>
               </motion.div>
@@ -733,14 +733,14 @@ export default function Analytics() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.55 }}
-          className="bg-[#ede9e1] rounded-2xl p-6 border border-[rgba(0,59,70,0.08)]"
+          className="bg-card rounded-2xl p-6 border border-[rgba(0,59,70,0.08)]"
           style={{ boxShadow: '0 4px 20px rgba(0,59,70,0.08)' }}
         >
           <div className="mb-4">
-            <h3 className="font-sans text-lg font-semibold text-[#003b46]">
+            <h3 className="font-sans text-lg font-semibold text-ink-primary">
               Course Effectiveness
             </h3>
-            <p className="text-xs text-[#4a6b6e] mt-1">Top performing courses</p>
+            <p className="text-xs text-ink-tertiary mt-1">Top performing courses</p>
           </div>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart
@@ -761,7 +761,7 @@ export default function Analytics() {
                   if (!active || !payload?.length) return null;
                   const data = payload[0].payload as CourseEffectiveness;
                   return (
-                    <div className="bg-[#003b46] text-[#f8f5f0] px-3 py-2 rounded-lg text-xs shadow-lg">
+                    <div className="bg-stone-espresso text-stone-ivory px-3 py-2 rounded-lg text-xs shadow-lg">
                       <p className="font-semibold">{data.course}</p>
                       <p>Effectiveness: {data.effectiveness}%</p>
                     </div>
@@ -771,7 +771,7 @@ export default function Analytics() {
               <Bar dataKey="effectiveness" fill="#a7c4d4" radius={[0, 4, 4, 0]} barSize={20} />
             </BarChart>
           </ResponsiveContainer>
-          <p className="text-[10px] text-[#4a6b6e] mt-3 italic">
+          <p className="text-[10px] text-ink-tertiary mt-3 italic">
             Effectiveness = Completion rate × Assessment score × Learner satisfaction
           </p>
         </motion.div>

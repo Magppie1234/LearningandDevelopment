@@ -22,8 +22,8 @@ function LeadershipCard({ positionId, title }: { positionId: string; title: stri
   }
 
   return (
-    <div className="min-w-[220px] flex-1 max-w-[280px] rounded-[12px] bg-ink-primary text-parchment px-5 py-4 transition-all duration-200 hover:shadow-elevated hover:-translate-y-0.5">
-      <p className="text-[11px] font-semibold uppercase tracking-wide text-parchment/60">
+    <div className="min-w-[220px] flex-1 max-w-[280px] rounded-[12px] bg-stone-espresso text-stone-ivory px-5 py-4 transition-all duration-200 hover:shadow-elevated hover:-translate-y-0.5">
+      <p className="text-[11px] font-semibold uppercase tracking-wide text-stone-ivory/60">
         {title}
       </p>
       <div className="mt-2 flex flex-wrap gap-1.5">
@@ -31,7 +31,7 @@ function LeadershipCard({ positionId, title }: { positionId: string; title: stri
           <PositionEditor position={position} align="center">
             <button
               type="button"
-              className="rounded-full border border-dashed border-parchment/30 px-3 py-1.5 text-xs font-medium text-parchment/70 hover:border-parchment/60 hover:text-parchment transition-colors"
+              className="rounded-full border border-dashed border-parchment/30 px-3 py-1.5 text-xs font-medium text-stone-ivory/70 hover:border-parchment/60 hover:text-stone-ivory transition-colors"
             >
               + Add Person
             </button>
@@ -58,7 +58,7 @@ function LeadershipCard({ positionId, title }: { positionId: string; title: stri
             <button
               type="button"
               aria-label="Add another person"
-              className="rounded-full border border-dashed border-parchment/30 px-2 py-1 text-xs text-parchment/70 hover:border-parchment/60 hover:text-parchment transition-colors"
+              className="rounded-full border border-dashed border-parchment/30 px-2 py-1 text-xs text-stone-ivory/70 hover:border-parchment/60 hover:text-stone-ivory transition-colors"
             >
               +
             </button>

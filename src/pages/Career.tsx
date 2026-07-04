@@ -232,16 +232,16 @@ export default function Career() {
           }}
         />
         {/* Overlay */}
-        <div className="absolute inset-0 bg-ink-primary/85" />
+        <div className="absolute inset-0 bg-stone-charcoal/85" />
 
         <div className="relative z-10 p-10">
           <p className="text-accent-gold text-[11px] font-semibold uppercase tracking-[2px]">
             Career Development
           </p>
-          <h1 className="font-serif text-[52px] font-normal text-parchment mt-2 leading-tight">
+          <h1 className="font-serif text-[52px] font-normal text-stone-ivory mt-2 leading-tight">
             Your Career at Magppie
           </h1>
-          <p className="text-parchment/80 text-lg mt-3 max-w-[560px] leading-relaxed">
+          <p className="text-stone-ivory/80 text-lg mt-3 max-w-[560px] leading-relaxed">
             Visualize your career progression, identify skill gaps, and take
             actionable steps toward your next promotion.
           </p>
@@ -253,11 +253,11 @@ export default function Career() {
             transition={{ delay: 0.3, duration: 0.3 }}
             className="flex items-center gap-3 mt-5"
           >
-            <span className="text-parchment/70 text-[13px] font-medium">
+            <span className="text-stone-ivory/70 text-[13px] font-medium">
               Current Track:
             </span>
             <div
-              className="flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium text-parchment cursor-pointer"
+              className="flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium text-stone-ivory cursor-pointer"
               style={{ background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(10px)' }}
             >
               Sales &rarr; Management
@@ -351,17 +351,17 @@ export default function Career() {
             </p>
 
             {/* Promotion Readiness Score — computed via lib/prs.ts (35/25/25/15) */}
-            <div className="mt-4 bg-ink-primary rounded-xl p-5 text-center">
+            <div className="mt-4 bg-stone-espresso rounded-xl p-5 text-center">
               <p className="text-[10px] font-semibold uppercase text-accent-gold tracking-wide">
                 Readiness Score
               </p>
               <div className="flex items-center justify-center gap-4 mt-3">
                 <ReadinessRing pct={demoPrsScore} />
                 <div className="text-left">
-                  <p className="text-[48px] font-bold text-parchment leading-none">
+                  <p className="text-[48px] font-bold text-stone-ivory leading-none">
                     {demoPrsScore}
                   </p>
-                  <span className="inline-block bg-surface-sage text-parchment text-[11px] font-semibold px-2.5 py-0.5 rounded-full mt-2">
+                  <span className="inline-block bg-surface-sage text-stone-ivory text-[11px] font-semibold px-2.5 py-0.5 rounded-full mt-2">
                     {demoPrsBand}
                   </span>
                 </div>
@@ -369,16 +369,16 @@ export default function Career() {
               <div className="mt-4 space-y-1.5 text-left">
                 {(Object.keys(demoPrsPoints) as PrsComponent[]).map((key) => (
                   <div key={key} className="flex items-center justify-between gap-3">
-                    <span className="text-[11px] text-parchment/70">
+                    <span className="text-[11px] text-stone-ivory/70">
                       {PRS_COMPONENT_LABELS[key]}
                     </span>
-                    <span className="text-[11px] font-semibold text-parchment tabular-nums">
+                    <span className="text-[11px] font-semibold text-stone-ivory tabular-nums">
                       {demoPrsPoints[key].earned} / {demoPrsPoints[key].max}
                     </span>
                   </div>
                 ))}
               </div>
-              <p className="text-[11px] text-parchment/70 mt-3">
+              <p className="text-[11px] text-stone-ivory/70 mt-3">
                 Promotion threshold: 75
               </p>
             </div>

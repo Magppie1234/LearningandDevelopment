@@ -20,7 +20,7 @@ function DepartmentBody({ department }: { department: OrgPosition }) {
   )
 
   return (
-    <div className="rounded-2xl bg-white/60 border border-[rgba(0,59,70,0.06)] p-4">
+    <div className="rounded-2xl bg-card/60 border border-[rgba(0,59,70,0.06)] p-4">
       <p className="text-sm font-semibold text-ink-primary mb-3">{department.title}</p>
       <div className="flex gap-4 overflow-x-auto pb-1">
         {roles.map((role) => (

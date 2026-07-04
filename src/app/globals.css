@@ -25,6 +25,19 @@
     --m-accent-gold: 184 112 63;
     --m-surface-warm: 232 223 207;
 
+    /* "Warm Stone" — Kitchen Command Center palette (RGB triplets).
+       The material Magppie actually sells: sintered stone + warm metal, at
+       real contrast — deliberately NOT blue-black. These are FIXED across
+       light/dark (the kitchen scene is a warm-dark material surface in both
+       themes); the primary copper accent reuses the existing --m-accent-copper
+       rather than introducing a near-duplicate token. */
+    --stone-charcoal: 43 36 32; /* #2B2420 base dark surface */
+    --stone-espresso: 61 49 40; /* #3D3128 secondary dark surface */
+    --stone-brass: 184 147 90; /* #B8935A secondary accent (sparingly) */
+    --stone-sage: 124 139 111; /* #7C8B6F progress / wellness cue only */
+    --stone-ivory: 245 239 230; /* #F5EFE6 light neutral (text on dark) */
+    --stone-ink: 28 23 18; /* #1C1712 body text on light surfaces */
+
     /* Progress-status tokens (AcademyProgressCard & status badges).
        Light values per the modernization spec; dark values below are
        contrast-checked, not inverted. */
@@ -69,19 +82,19 @@
     --sidebar-ring: 28 45% 45%;
   }
 
-  /* "Obsidian" dark mode (gap analysis §3.4) — near-black surfaces, warm
-     ivory text, copper accents; matches the main Magppie site's dark language. */
+  /* "Warm Stone" dark mode — the default theme. Warm charcoal/espresso
+     surfaces (NOT blue-black), ivory text, copper accents; matches the Kitchen
+     Command Center landing so every page reads as one warm-dark material set. */
   .dark {
-    --m-parchment: 14 15 18;
-    --m-cream: 22 24 29;
-    --m-ink-primary: 236 231 221;
-    --m-ink-secondary: 184 176 162;
-    --m-ink-tertiary: 125 120 109;
-    /* Dark variants are lightened for contrast on near-black, not inverted. */
-    --m-accent-copper: 200 130 85; /* #C88255 */
+    --m-parchment: 26 21 18; /* #1A1512 — page & sidebar base */
+    --m-cream: 43 36 32; /* #2B2420 — charcoal card/surface (matches scene) */
+    --m-ink-primary: 245 239 230; /* #F5EFE6 ivory */
+    --m-ink-secondary: 201 191 178; /* #C9BFB2 */
+    --m-ink-tertiary: 154 143 128; /* #9A8F80 */
+    --m-accent-copper: 200 130 85; /* #C88255 — pops on charcoal */
     --m-accent-silver: 176 182 192; /* #B0B6C0 */
     --m-accent-gold: 200 130 85;
-    --m-surface-warm: 32 34 40;
+    --m-surface-warm: 61 49 40; /* #3D3128 espresso */
 
     --status-ontrack: #3dcf9f;
     --status-ontrack-bg: rgba(61, 207, 159, 0.14);
@@ -94,27 +107,57 @@
     --status-overdue-fg: hsl(4 85% 78%);
     --ring-track: rgba(255, 255, 255, 0.1);
 
-    --background: 220 12% 6%;
-    --foreground: 40 25% 90%;
-    --card: 222 12% 10%;
-    --card-foreground: 40 25% 90%;
-    --popover: 222 12% 10%;
-    --popover-foreground: 40 25% 90%;
-    --primary: 33 45% 60%;
-    --primary-foreground: 220 12% 8%;
-    --secondary: 222 10% 16%;
-    --secondary-foreground: 40 25% 88%;
-    --muted: 222 10% 16%;
-    --muted-foreground: 36 10% 60%;
-    --accent: 33 45% 60%;
-    --accent-foreground: 220 12% 8%;
-    --border: 222 10% 20%;
-    --input: 222 10% 22%;
-    --ring: 33 45% 60%;
+    /* shadcn primitives — warm hue (~24°) instead of blue (~220°). */
+    --background: 26 16% 9%; /* warm near-black */
+    --foreground: 40 30% 92%; /* ivory */
+    --card: 24 15% 14%; /* charcoal */
+    --card-foreground: 40 30% 92%;
+    --popover: 24 15% 14%;
+    --popover-foreground: 40 30% 92%;
+    --primary: 24 48% 56%; /* copper */
+    --primary-foreground: 26 20% 10%;
+    --secondary: 26 12% 19%; /* espresso */
+    --secondary-foreground: 40 25% 90%;
+    --muted: 26 10% 19%;
+    --muted-foreground: 36 12% 64%;
+    --accent: 24 48% 56%; /* copper */
+    --accent-foreground: 26 20% 10%;
+    --destructive: 4 65% 55%;
+    --destructive-foreground: 40 30% 94%;
+    --border: 28 12% 23%;
+    --input: 28 12% 25%;
+    --ring: 24 55% 60%;
+    /* Sidebar also goes warm-dark (removes the light-sidebar seam). */
+    --sidebar-background: 26 16% 11%;
+    --sidebar-foreground: 40 28% 90%;
+    --sidebar-primary: 24 48% 56%;
+    --sidebar-primary-foreground: 26 20% 10%;
+    --sidebar-accent: 26 12% 18%;
+    --sidebar-accent-foreground: 40 25% 90%;
+    --sidebar-border: 28 12% 22%;
+    --sidebar-ring: 24 55% 60%;
   }
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  /* Warm ambient depth in the default dark theme — soft copper/brass glows
+     bled in from the corners so pages feel lit, not flat. Fixed so it stays
+     put while content scrolls. Subtle enough not to touch text contrast. */
+  .dark body {
+    background-image:
+      radial-gradient(
+        115% 85% at 100% -10%,
+        rgb(var(--m-accent-copper) / 0.07),
+        transparent 55%
+      ),
+      radial-gradient(
+        90% 70% at -10% 110%,
+        rgb(var(--stone-brass) / 0.05),
+        transparent 55%
+      );
+    background-attachment: fixed;
   }
 
   * {
@@ -129,5 +172,113 @@
   .hide-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+}
+
+/* ── Kitchen Command Center (dashboard landing scene) ──────────────────────
+   Interaction lives here so the JSX stays declarative. The "3D" is CSS-only:
+   perspective on the stage + a pointer-driven tilt (vars set in a later step).
+   No glass/backdrop-blur anywhere — label plates are solid stone surfaces. */
+.kcc-root {
+  perspective: 1400px;
+}
+.kcc-stage {
+  transform: rotateX(var(--kcc-rx, 0deg)) rotateY(var(--kcc-ry, 0deg));
+  transform-style: preserve-3d;
+  transition: transform 220ms ease-out;
+  will-change: transform;
+}
+
+.kcc-hotspot {
+  transition:
+    transform 180ms cubic-bezier(0.16, 1, 0.3, 1),
+    filter 180ms ease-out;
+  transform: translateZ(0);
+  /* Entrance uses `translate`/opacity (separate from `transform`) so the hover
+     `transform: scale()` still composes cleanly after the animation settles. */
+  animation: kcc-zone-in 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--kcc-delay, 0ms);
+}
+@keyframes kcc-zone-in {
+  from {
+    opacity: 0;
+    translate: 0 12px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+.kcc-hotspot:hover,
+.kcc-hotspot:focus-visible {
+  transform: translateZ(0) scale(1.035);
+  filter: drop-shadow(0 0 0.5rem rgb(var(--m-accent-copper) / 0.55));
+}
+.kcc-hotspot:active {
+  transform: translateZ(0) scale(0.98);
+}
+.kcc-hotspot:focus-visible {
+  outline: 2px solid rgb(var(--m-accent-copper));
+  outline-offset: 4px;
+}
+.kcc-plate {
+  transition: box-shadow 180ms ease-out;
+}
+.kcc-hotspot:hover .kcc-plate,
+.kcc-hotspot:focus-visible .kcc-plate {
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.45);
+}
+
+/* Mobile fallback tiles — same links, tidy grid, no perspective. */
+.kcc-tile {
+  transition:
+    background-color 150ms ease-out,
+    transform 120ms ease-out;
+}
+.kcc-tile:active {
+  transform: scale(0.98);
+}
+.kcc-tile:focus-visible {
+  outline: 2px solid rgb(var(--m-accent-copper));
+  outline-offset: 2px;
+}
+
+/* Single ambient detail: a slow, quiet steam wisp above the kettle. */
+.kcc-steam {
+  transform-origin: 1024px 236px;
+  animation: kcc-steam-rise 5.5s ease-in-out infinite;
+}
+@keyframes kcc-steam-rise {
+  0%,
+  100% {
+    opacity: 0.15;
+    transform: translateY(2px) scaleX(0.9);
+  }
+  50% {
+    opacity: 0.5;
+    transform: translateY(-6px) scaleX(1.05);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kcc-stage {
+    transform: none;
+    transition: none;
+  }
+  .kcc-hotspot {
+    transition: filter 120ms ease-out;
+    animation: none;
+    opacity: 1;
+    translate: none;
+  }
+  .kcc-hotspot:hover,
+  .kcc-hotspot:focus-visible {
+    transform: none;
+  }
+  .kcc-hotspot:active {
+    transform: none;
+  }
+  .kcc-steam {
+    animation: none;
   }
 }

@@ -154,7 +154,7 @@ function LevelBadgeSVG({
             y={size / 2 - 4}
             textAnchor="middle"
             dominantBaseline="central"
-            fill="#003b46"
+            fill="rgb(200 130 85)"
             fontSize={size * 0.3}
             fontWeight="700"
             fontFamily="Inter, sans-serif"
@@ -220,7 +220,7 @@ function ProgressRing({
           y={size / 2 - 2}
           textAnchor="middle"
           dominantBaseline="central"
-          fill="#003b46"
+          fill="rgb(200 130 85)"
           fontSize="24"
           fontWeight="700"
           fontFamily="Inter, sans-serif"
@@ -262,9 +262,9 @@ const iconMap: Record<string, React.ElementType> = {
 /* ────────────────────── Requirement Row ────────────────────── */
 function RequirementRow({ req, index }: { req: (typeof currentLevelRequirements)[0]; index: number }) {
   const statusColors = {
-    completed: 'bg-[#7a8a7a] text-white',
-    'in-progress': 'bg-[#a7c4d4] text-[#003b46]',
-    pending: 'bg-[#ede9e1] text-[#4a6b6e]',
+    completed: 'bg-[#7a8a7a] text-stone-ivory',
+    'in-progress': 'bg-accent-copper/15 text-ink-primary',
+    pending: 'bg-card text-ink-tertiary',
   };
 
   const statusLabels = {
@@ -292,13 +292,13 @@ function RequirementRow({ req, index }: { req: (typeof currentLevelRequirements)
           req.status === 'completed' ? 'bg-[#7a8a7a]' : 'border border-[#4a6b6e]'
         }`}
       >
-        {req.status === 'completed' && <CheckCircle2 size={14} className="text-white" />}
+        {req.status === 'completed' && <CheckCircle2 size={14} className="text-stone-ivory" />}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm text-[#003b46] font-normal">{req.text}</p>
-        <p className="text-xs text-[#4a6b6e] mt-0.5">{req.detail}</p>
+        <p className="text-sm text-ink-primary font-normal">{req.text}</p>
+        <p className="text-xs text-ink-tertiary mt-0.5">{req.detail}</p>
         {req.status === 'in-progress' && (
-          <div className="w-full h-1.5 bg-[#ede9e1] rounded-full mt-2 overflow-hidden">
+          <div className="w-full h-1.5 bg-card rounded-full mt-2 overflow-hidden">
             <motion.div
               className="h-full rounded-full"
               style={{ backgroundColor: barColors[req.status] }}
@@ -319,7 +319,7 @@ function RequirementRow({ req, index }: { req: (typeof currentLevelRequirements)
 /* ────────────────────── Process Step Icon ────────────────────── */
 function ProcessStepIcon({ iconName }: { iconName: string }) {
   const Icon = iconMap[iconName] || BookOpen;
-  return <Icon size={24} className="text-[#4a6b6e]" />;
+  return <Icon size={24} className="text-ink-tertiary" />;
 }
 
 /* ────────────────────── Main Page ────────────────────── */
@@ -343,7 +343,7 @@ export default function Certifications() {
         transition={{ duration: 0.5, ease: easeOut }}
         className="relative rounded-3xl overflow-hidden"
         style={{
-          background: 'linear-gradient(135deg, #003b46 0%, #1a4a4e 100%)',
+          background: 'linear-gradient(135deg, rgb(var(--stone-espresso)) 0%, rgb(var(--stone-charcoal)) 100%)',
         }}
       >
         <div className="p-10 flex items-center justify-between gap-8">
@@ -384,7 +384,7 @@ export default function Certifications() {
                 </p>
               </div>
             </div>
-            <button className="mt-4 w-full py-2.5 rounded-full text-sm font-semibold transition-all hover:-translate-y-px bg-[#B8703F] text-[#f8f5f0] hover:brightness-95">
+            <button className="mt-4 w-full py-2.5 rounded-full text-sm font-semibold transition-all hover:-translate-y-px bg-[#B8703F] text-stone-ivory hover:brightness-95">
               Continue Progress <ChevronRight size={14} className="inline ml-1" />
             </button>
           </motion.div>
@@ -395,7 +395,7 @@ export default function Certifications() {
       <section>
         <div className="relative mt-6">
           {/* Connector line */}
-          <div className="absolute top-[36px] left-[5%] right-[5%] h-1 bg-[#ede9e1] rounded-full" />
+          <div className="absolute top-[36px] left-[5%] right-[5%] h-1 bg-card rounded-full" />
           <motion.div
             className="absolute top-[36px] left-[5%] h-1 bg-[#B8703F] rounded-full"
             initial={{ width: 0 }}
@@ -423,14 +423,14 @@ export default function Certifications() {
                   />
                   {level.status === 'completed' && (
                     <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-[#7a8a7a] rounded-full flex items-center justify-center">
-                      <CheckCircle2 size={12} className="text-white" />
+                      <CheckCircle2 size={12} className="text-stone-ivory" />
                     </div>
                   )}
                 </div>
-                <p className="text-[11px] font-medium uppercase mt-3 text-[#4a6b6e]">
+                <p className="text-[11px] font-medium uppercase mt-3 text-ink-tertiary">
                   Level {level.id}
                 </p>
-                <p className="text-[13px] font-semibold text-[#003b46] mt-0.5">{level.name}</p>
+                <p className="text-[13px] font-semibold text-ink-primary mt-0.5">{level.name}</p>
                 <p
                   className={`text-[11px] mt-0.5 ${
                     level.status === 'completed'
@@ -459,14 +459,14 @@ export default function Certifications() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.2 }}
-          className="bg-[#ede9e1] rounded-2xl p-8 border border-[rgba(0,59,70,0.08)]"
+          className="bg-card rounded-2xl p-8 border border-[rgba(0,59,70,0.08)]"
           style={{ boxShadow: '0 4px 20px rgba(0,59,70,0.08)' }}
         >
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-sans text-lg font-semibold text-[#003b46]">
+            <h3 className="font-sans text-lg font-semibold text-ink-primary">
               Level {currentLevel.id} — {currentLevel.name} Requirements
             </h3>
-            <span className="text-[10px] font-semibold px-3 py-1 rounded-full bg-[#c19a6b] text-[#003b46]">
+            <span className="text-[10px] font-semibold px-3 py-1 rounded-full bg-accent-copper/25 text-ink-primary">
               {userProgress.overallProgress}% Complete
             </span>
           </div>
@@ -482,10 +482,10 @@ export default function Certifications() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.3 }}
-          className="bg-[#ede9e1] rounded-2xl p-8 border border-[rgba(0,59,70,0.08)] flex flex-col items-center"
+          className="bg-card rounded-2xl p-8 border border-[rgba(0,59,70,0.08)] flex flex-col items-center"
           style={{ boxShadow: '0 4px 20px rgba(0,59,70,0.08)' }}
         >
-          <h3 className="font-sans text-lg font-semibold text-[#003b46] mb-4 self-start">
+          <h3 className="font-sans text-lg font-semibold text-ink-primary mb-4 self-start">
             Your Progress
           </h3>
           <ProgressRing size={120} progress={userProgress.overallProgress} color="#c19a6b" label="To Level 4" />
@@ -494,7 +494,7 @@ export default function Certifications() {
           <div className="w-full mt-6 space-y-2">
             {currentLevelRequirements.map((req) => (
               <div key={req.id} className="flex items-center gap-2">
-                <span className="text-[10px] text-[#4a6b6e] w-16 truncate">{req.text.split(' ').slice(0, 2).join(' ')}</span>
+                <span className="text-[10px] text-ink-tertiary w-16 truncate">{req.text.split(' ').slice(0, 2).join(' ')}</span>
                 <div className="flex-1 h-2 bg-[rgba(0,59,70,0.06)] rounded-full overflow-hidden">
                   <motion.div
                     className="h-full rounded-full"
@@ -525,8 +525,8 @@ export default function Certifications() {
           </div>
 
           <div className="mt-4 p-4 rounded-xl bg-[rgba(0,59,70,0.04)] w-full">
-            <p className="text-[13px] text-[#1a4a4e]">{userProgress.nextAction}</p>
-            <button className="mt-3 py-2 px-5 rounded-full text-sm font-semibold transition-all hover:-translate-y-px bg-[#003b46] text-[#f8f5f0] hover:bg-[#1a4a4e]">
+            <p className="text-[13px] text-ink-secondary">{userProgress.nextAction}</p>
+            <button className="mt-3 py-2 px-5 rounded-full text-sm font-semibold transition-all hover:-translate-y-px bg-stone-espresso text-stone-ivory hover:bg-stone-charcoal">
               Schedule Mentorship <ChevronRight size={14} className="inline ml-1" />
             </button>
           </div>
@@ -536,8 +536,8 @@ export default function Certifications() {
       {/* ─────── Section 4: Earned Badges ─────── */}
       <section>
         <div className="flex items-center justify-between mb-6">
-          <h2 className="font-serif text-[28px] font-normal text-[#003b46]">Your Badges</h2>
-          <span className="text-sm font-medium text-[#4a6b6e]">
+          <h2 className="font-serif text-[28px] font-normal text-ink-primary">Your Badges</h2>
+          <span className="text-sm font-medium text-ink-tertiary">
             {completedBadges.length} earned
           </span>
         </div>
@@ -554,18 +554,18 @@ export default function Certifications() {
                 key={badge.id}
                 variants={scaleIn}
                 whileHover={{ scale: 1.05, transition: { duration: 0.3 } }}
-                className="bg-[#ede9e1] rounded-2xl p-5 flex flex-col items-center text-center border border-[rgba(0,59,70,0.08)] transition-shadow hover:shadow-lg cursor-pointer"
+                className="bg-card rounded-2xl p-5 flex flex-col items-center text-center border border-[rgba(0,59,70,0.08)] transition-shadow hover:shadow-lg cursor-pointer"
                 style={{ boxShadow: '0 4px 20px rgba(0,59,70,0.08)' }}
               >
                 <div
                   className="w-16 h-16 rounded-full flex items-center justify-center"
-                  style={{ background: `linear-gradient(135deg, ${badge.color}, #fff)` }}
+                  style={{ background: `linear-gradient(135deg, ${badge.color}, rgb(var(--stone-espresso)))` }}
                 >
-                  <Icon size={28} className="text-[#003b46]" />
+                  <Icon size={28} className="text-ink-primary" />
                 </div>
-                <p className="text-sm font-semibold text-[#003b46] mt-3">{badge.name}</p>
-                <p className="text-[11px] text-[#4a6b6e] mt-1">{badge.description}</p>
-                <p className="text-[10px] text-[#4a6b6e] mt-2">Earned {badge.earnedDate}</p>
+                <p className="text-sm font-semibold text-ink-primary mt-3">{badge.name}</p>
+                <p className="text-[11px] text-ink-tertiary mt-1">{badge.description}</p>
+                <p className="text-[10px] text-ink-tertiary mt-2">Earned {badge.earnedDate}</p>
               </motion.div>
             );
           })}
@@ -574,7 +574,7 @@ export default function Certifications() {
 
       {/* ─────── Section 5: Certification Process ─────── */}
       <section>
-        <h2 className="font-serif text-[28px] font-normal text-[#003b46] mb-6">
+        <h2 className="font-serif text-[28px] font-normal text-ink-primary mb-6">
           How Certification Works
         </h2>
         <motion.div
@@ -590,21 +590,21 @@ export default function Certifications() {
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ duration: 0.4, delay: i * 0.2, ease: easeSpring }}
-                  className="w-9 h-9 rounded-full bg-[#003b46] flex items-center justify-center flex-shrink-0"
+                  className="w-9 h-9 rounded-full bg-stone-espresso flex items-center justify-center flex-shrink-0"
                 >
                   <span className="text-sm font-bold" style={{ color: '#f8f5f0' }}>
                     {step.id}
                   </span>
                 </motion.div>
-                <p className="text-sm font-semibold text-[#003b46] mt-3">{step.title}</p>
+                <p className="text-sm font-semibold text-ink-primary mt-3">{step.title}</p>
                 <ProcessStepIcon iconName={step.icon} />
-                <p className="text-xs text-[#4a6b6e] mt-2 leading-relaxed px-2">
+                <p className="text-xs text-ink-tertiary mt-2 leading-relaxed px-2">
                   {step.description}
                 </p>
               </div>
               {i < processSteps.length - 1 && (
                 <motion.div
-                  className="absolute top-[18px] left-[60%] right-[-20%] h-0.5 bg-[#ede9e1]"
+                  className="absolute top-[18px] left-[60%] right-[-20%] h-0.5 bg-card"
                   initial={{ scaleX: 0 }}
                   animate={{ scaleX: 1 }}
                   transition={{ duration: 0.4, delay: i * 0.2 + 0.2 }}
@@ -618,32 +618,32 @@ export default function Certifications() {
 
       {/* ─────── Section 6: Leaderboard ─────── */}
       <section>
-        <h3 className="font-sans text-lg font-semibold text-[#003b46] mb-4">
+        <h3 className="font-sans text-lg font-semibold text-ink-primary mb-4">
           Certification Leaders
         </h3>
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.4 }}
-          className="bg-[#ede9e1] rounded-2xl border border-[rgba(0,59,70,0.08)] overflow-hidden"
+          className="bg-card rounded-2xl border border-[rgba(0,59,70,0.08)] overflow-hidden"
           style={{ boxShadow: '0 4px 20px rgba(0,59,70,0.08)' }}
         >
           <table className="w-full">
             <thead>
               <tr className="bg-[rgba(0,59,70,0.04)]">
-                <th className="text-left text-[11px] font-semibold uppercase text-[#4a6b6e] px-5 py-3">
+                <th className="text-left text-[11px] font-semibold uppercase text-ink-tertiary px-5 py-3">
                   Rank
                 </th>
-                <th className="text-left text-[11px] font-semibold uppercase text-[#4a6b6e] px-5 py-3">
+                <th className="text-left text-[11px] font-semibold uppercase text-ink-tertiary px-5 py-3">
                   Employee
                 </th>
-                <th className="text-left text-[11px] font-semibold uppercase text-[#4a6b6e] px-5 py-3">
+                <th className="text-left text-[11px] font-semibold uppercase text-ink-tertiary px-5 py-3">
                   Level
                 </th>
-                <th className="text-left text-[11px] font-semibold uppercase text-[#4a6b6e] px-5 py-3">
+                <th className="text-left text-[11px] font-semibold uppercase text-ink-tertiary px-5 py-3">
                   Badges
                 </th>
-                <th className="text-left text-[11px] font-semibold uppercase text-[#4a6b6e] px-5 py-3">
+                <th className="text-left text-[11px] font-semibold uppercase text-ink-tertiary px-5 py-3">
                   Certified Date
                 </th>
               </tr>
@@ -660,7 +660,7 @@ export default function Certifications() {
                   <td className="px-5 py-3">
                     <span
                       className={`text-sm font-bold ${
-                        entry.rank <= 3 ? 'text-[#c19a6b]' : 'text-[#003b46]'
+                        entry.rank <= 3 ? 'text-accent-copper' : 'text-ink-primary'
                       }`}
                     >
                       #{entry.rank}
@@ -668,27 +668,27 @@ export default function Certifications() {
                   </td>
                   <td className="px-5 py-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-[#a7c4d4] flex items-center justify-center text-xs font-semibold text-[#003b46]">
+                      <div className="w-8 h-8 rounded-full bg-accent-copper/15 flex items-center justify-center text-xs font-semibold text-ink-primary">
                         {entry.avatar}
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-[#003b46]">{entry.name}</p>
-                        <p className="text-[11px] text-[#4a6b6e]">{entry.department}</p>
+                        <p className="text-sm font-medium text-ink-primary">{entry.name}</p>
+                        <p className="text-[11px] text-ink-tertiary">{entry.department}</p>
                       </div>
                     </div>
                   </td>
                   <td className="px-5 py-3">
-                    <span className="text-xs font-medium text-[#003b46]">
+                    <span className="text-xs font-medium text-ink-primary">
                       Level {entry.level} — {entry.levelName}
                     </span>
                   </td>
                   <td className="px-5 py-3">
                     <div className="flex items-center gap-1.5">
-                      <Award size={14} className="text-[#c19a6b]" />
-                      <span className="text-sm font-medium text-[#003b46]">{entry.badges}</span>
+                      <Award size={14} className="text-accent-copper" />
+                      <span className="text-sm font-medium text-ink-primary">{entry.badges}</span>
                     </div>
                   </td>
-                  <td className="px-5 py-3 text-sm text-[#4a6b6e]">{entry.certifiedDate}</td>
+                  <td className="px-5 py-3 text-sm text-ink-tertiary">{entry.certifiedDate}</td>
                 </motion.tr>
               ))}
             </tbody>

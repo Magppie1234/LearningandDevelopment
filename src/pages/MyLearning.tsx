@@ -314,14 +314,14 @@ export default function MyLearning() {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: 'easeOut' }}
-        className="relative bg-ink-primary rounded-2xl p-8 overflow-hidden"
+        className="relative bg-stone-espresso rounded-2xl p-8 overflow-hidden"
       >
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <h2 className="font-serif text-[28px] font-normal text-parchment">
+            <h2 className="font-serif text-[28px] font-normal text-stone-ivory">
               Good morning, Sarah
             </h2>
-            <p className="text-parchment/70 text-base mt-1">
+            <p className="text-stone-ivory/70 text-base mt-1">
               Here&apos;s your learning progress for October 2024
             </p>
 
@@ -335,12 +335,11 @@ export default function MyLearning() {
               ].map((pill) => (
                 <div
                   key={pill.label}
-                  className="flex items-center gap-2 rounded-full px-5 py-2.5"
-                  style={{ background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(10px)' }}
+                  className="flex items-center gap-2 rounded-full px-5 py-2.5 bg-white/[0.08]"
                 >
-                  <pill.icon size={16} className="text-surface-blue flex-shrink-0" />
-                  <span className="text-parchment text-lg font-bold">{pill.num}</span>
-                  <span className="text-parchment/70 text-[11px] font-medium uppercase">
+                  <pill.icon size={16} className="text-accent-copper flex-shrink-0" />
+                  <span className="text-stone-ivory text-lg font-bold">{pill.num}</span>
+                  <span className="text-stone-ivory/70 text-[11px] font-medium uppercase">
                     {pill.label}
                   </span>
                 </div>

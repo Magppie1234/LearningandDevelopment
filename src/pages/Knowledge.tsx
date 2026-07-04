@@ -256,7 +256,7 @@ export default function Knowledge() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.3, ease: easeOut }}
-        className="rounded-3xl bg-gradient-to-r from-ink-primary to-ink-secondary p-8 mb-10"
+        className="rounded-3xl bg-gradient-to-r from-stone-espresso to-stone-charcoal p-8 mb-10"
       >
         <div className="flex flex-col lg:flex-row items-center gap-6">
           {/* Left */}
@@ -264,10 +264,10 @@ export default function Knowledge() {
             <div className="w-12 h-12 rounded-full bg-accent-gold flex items-center justify-center mb-4">
               <Sparkles size={24} className="text-ink-primary" />
             </div>
-            <h2 className="font-serif text-[28px] font-normal text-parchment mb-2">
+            <h2 className="font-serif text-[28px] font-normal text-stone-ivory mb-2">
               Can&apos;t Find What You Need?
             </h2>
-            <p className="text-base text-parchment/80 leading-relaxed max-w-[560px]">
+            <p className="text-base text-stone-ivory/80 leading-relaxed max-w-[560px]">
               Ask our AI Knowledge Assistant. It can search across all documents,
               answer questions about policies and procedures, and guide you to
               the right resources.
@@ -284,7 +284,7 @@ export default function Knowledge() {
               ].map((q) => (
                 <span
                   key={q}
-                  className="text-xs text-parchment/90 bg-parchment/20 backdrop-blur-sm px-3 py-1.5 rounded-full"
+                  className="text-xs text-stone-ivory/90 bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-full"
                 >
                   {q}
                 </span>

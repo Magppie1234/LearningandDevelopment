@@ -82,9 +82,21 @@ module.exports = {
         'surface-cream': 'rgb(var(--m-cream) / <alpha-value>)',
         'surface-mid': '#8a6f52',
         'surface-light': '#d8c9b0',
+        // "Warm Stone" — Kitchen Command Center palette (fixed across themes).
+        // Copper accent intentionally reuses accent-copper above.
+        stone: {
+          charcoal: 'rgb(var(--stone-charcoal) / <alpha-value>)',
+          espresso: 'rgb(var(--stone-espresso) / <alpha-value>)',
+          brass: 'rgb(var(--stone-brass) / <alpha-value>)',
+          sage: 'rgb(var(--stone-sage) / <alpha-value>)',
+          ivory: 'rgb(var(--stone-ivory) / <alpha-value>)',
+          ink: 'rgb(var(--stone-ink) / <alpha-value>)',
+        },
       },
       fontFamily: {
-        serif: ['Inter', 'system-ui', 'sans-serif'],
+        // Display serif for headings (already loaded in layout.tsx). Elegant,
+        // high-contrast — fits the premium Warm Stone look. Body stays Inter.
+        serif: ['"Cormorant Garamond"', 'Georgia', 'ui-serif', 'serif'],
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
