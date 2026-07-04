@@ -196,7 +196,7 @@ function ReadinessRing({ pct }: { pct: number }) {
           cy={size / 2}
           r={r}
           fill="none"
-          stroke="#c19a6b"
+          stroke="#C88255"
           strokeWidth={stroke}
           strokeLinecap="round"
           strokeDasharray={circ}
@@ -420,7 +420,7 @@ export default function Career() {
                 <Radar
                   name="Required"
                   dataKey="required"
-                  stroke="#c19a6b"
+                  stroke="#B8703F"
                   strokeWidth={2}
                   strokeDasharray="6 4"
                   fill="none"

@@ -51,6 +51,38 @@ export const VISION_TIMELINE: VisionMilestone[] = [
   },
 ]
 
+/** Leadership team — names and roles only, verified from magppie.com (§7).
+ *  No bios, no invented detail. */
+export const VISION_LEADERSHIP: { name: string; role: string }[] = [
+  { name: 'Vinod Jain', role: 'Founder' },
+  { name: 'Kishor Rico', role: 'Director, US Operations' },
+  { name: 'Fernando Rico', role: 'Director, Market Development' },
+  { name: 'Riccardo Remedi', role: 'Director, Magppie Europe' },
+  { name: 'Ishat Jain', role: 'Director, Marketing' },
+  { name: 'Vikas Jain', role: 'Director, Innovations' },
+  { name: 'Sanjay Khandelwal', role: 'Director' },
+  { name: 'Stacy McCarthy', role: 'Design Consultant' },
+  { name: 'Chaitanya Chavda', role: 'Technical Director, USA' },
+  { name: 'Christoph Hoeynck', role: 'Director, Germany' },
+  { name: 'Susan Sadolin', role: 'Sales Director, USA and Denmark' },
+]
+
+/** Global presence — verified from magppie.com (§7). Retail stores are
+ *  covered separately in the BD store directory. */
+export const VISION_GLOBAL_PRESENCE: { label: string; place: string }[] = [
+  { label: 'US Headquarters', place: 'Gainesville, Florida' },
+  { label: 'US Factory', place: 'Alachua, Florida' },
+  { label: 'Texas Office', place: 'Mansfield' },
+  { label: 'India Headquarters', place: 'Delhi' },
+  { label: 'India Factory', place: 'IMT Manesar, Haryana' },
+]
+
+/** Third-party citation for the KBIS 2026 award beat (§7). */
+export const VISION_AWARD_CITATION = {
+  label: 'Designers Today: Caesarstone, Magppie and LG win top honors at KBIS Innovation Hour',
+  url: 'https://www.designerstoday.com/kitchen-bath/caesarstone-magppie-and-lg-win-top-honors-at-kbis-innovation-hour/',
+}
+
 export const VISION_WHY_STONE = {
   heading: 'Why stone, not wood',
   lines: [
@@ -58,6 +90,43 @@ export const VISION_WHY_STONE = {
     'They release no formaldehyde into the home.',
     'That is the whole philosophy: materials that protect the people who live with them.',
   ],
+}
+
+/**
+ * Vision Corner flagship video slot (§3 of the visuals-expansion prompt).
+ * Same technical model as the BD module videos: N language variants, each
+ * { languageCode, videoUrl, subtitleUrl }, "coming soon" until a real file
+ * exists — no filler asset. The actual video is produced separately once the
+ * AI pipeline (style/voice/languages) is finalised; drop variants in here.
+ *
+ * The narration script below is a DRAFT assembled STRICTLY from lines already
+ * verified in this file and the approved BD training content — nothing new
+ * was invented. scriptIsDraft mirrors the founder-note noteIsPlaceholder
+ * pattern: the UI shows a "draft — pending review" chip while true.
+ *
+ * FLAGGED GAP: the brief's content arc mentions "the Satvic Movement wellness
+ * connection" — that connection appears in NO verified source in this repo,
+ * so it is deliberately absent from this script until source material with
+ * sign-off exists.
+ */
+import type { VideoVariant } from '@/data/bd-media'
+
+export const VISION_VIDEO: {
+  title: string
+  variants: VideoVariant[]
+  scriptIsDraft: boolean
+  script: string
+} = {
+  title: 'How it started, how it’s going',
+  variants: [], // no real file yet — slot renders its "coming soon" state
+  scriptIsDraft: true,
+  script: `“Our mission is to transform ordinary homes into wellness homes. Spaces that keep you, your family, and the planet safe.”
+
+How it started: Magppie Group has been in business for over 50 years. Magppie launched in 2000, introducing steel — and later stone-based design — to the Indian market. By 2007 it had expanded internationally across 35+ countries, opening its first international retail store in Sydney.
+
+The pivot: for the past 20+ years the focus has been kitchens and wardrobes — and the first SilverStone kitchen was installed in late 2016. In 2023 came the Wellness Kitchen category: the world’s first 100% stone modular kitchen.
+
+How it’s going: in February 2026, the “Most Unexpected” honor at KBIS Innovation Hour in Orlando, alongside Caesarstone and LG — and a store now open in Florida, USA. Every Wellness Kitchen carries a 25-year unconditional guarantee, with a complimentary service visit every year.`,
 }
 
 export const VISION_PROMISE = {

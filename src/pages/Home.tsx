@@ -21,6 +21,7 @@ import { Progress } from '@/components/ui/progress'
 import { cn } from '@/lib/utils'
 import DailyNudgeCard from '@/components/DailyNudgeCard'
 import AcademyProgressCard from '@/components/AcademyProgressCard'
+import { ContinueWatchingCard, ExploreVisuallyStrip } from '@/components/DashboardMediaSections'
 import { academies, iconMap } from '@/data/academies'
 
 /* ───────── Animation helpers ───────── */
@@ -342,7 +343,8 @@ export default function Home() {
 
   const kpiData = [
     { icon: Users, iconColor: 'text-surface-blue', number: '1,850', label: 'Employees Trained', trend: '+12% this quarter' },
-    { icon: Award, iconColor: 'text-accent-gold', number: '4,200', label: 'Certifications Earned', trend: '+8% this month' },
+    // Certifications = accomplished → silver (§4 accent reclassification)
+    { icon: Award, iconColor: 'text-accent-silver', number: '4,200', label: 'Certifications Earned', trend: '+8% this month' },
     { icon: BookOpen, iconColor: 'text-surface-olive', number: '12,400', label: 'Courses Completed', trend: '+15% this quarter' },
     { icon: Activity, iconColor: 'text-surface-blue', number: '1,623', label: 'Active Learners Now', trend: '94% engagement rate' },
   ]
@@ -410,14 +412,16 @@ export default function Home() {
         transition={{ duration: 0.6 }}
         className="relative rounded-2xl overflow-hidden min-h-[480px] flex flex-col"
       >
-        {/* Background */}
+        {/* Background — real Magppie kitchen visual (magppie.com hero, §2),
+            with a left parchment gradient so the dark headline stays readable
+            over real photography. */}
         <div className="absolute inset-0">
           <img
-            src="/hero-dashboard-bg.jpg"
+            src="/hero-magppie-kitchen.jpg"
             alt=""
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-[rgba(248,245,240,0.15)]" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[rgba(248,245,240,0.92)] via-[rgba(248,245,240,0.55)] to-[rgba(248,245,240,0.08)]" />
           <div
             className="absolute inset-0 opacity-30"
             style={{
@@ -483,6 +487,10 @@ export default function Home() {
           <StatCard key={i} {...kpi} index={i} />
         ))}
       </section>
+
+      {/* ─── §8: Continue watching + Explore visually (academy-agnostic) ─── */}
+      <ContinueWatchingCard />
+      <ExploreVisuallyStrip />
 
       {/* ─── Section 3: Quick Access Cards ─── */}
       <section>

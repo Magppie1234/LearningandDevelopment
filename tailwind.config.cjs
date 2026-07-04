@@ -65,6 +65,11 @@ module.exports = {
           secondary: 'rgb(var(--m-ink-secondary) / <alpha-value>)',
           tertiary: 'rgb(var(--m-ink-tertiary) / <alpha-value>)',
         },
+        // §4 copper/silver accent duo (SilverStone story). Copper = primary
+        // actions/active/progress; silver = certified/complete/secondary.
+        'accent-copper': 'rgb(var(--m-accent-copper) / <alpha-value>)',
+        'accent-silver': 'rgb(var(--m-accent-silver) / <alpha-value>)',
+        // DEPRECATED alias — resolves to copper; prefer accent-copper in new code.
         'accent-gold': 'rgb(var(--m-accent-gold) / <alpha-value>)',
         'surface-blue': '#d8c4a8',
         'surface-olive': '#a89373',

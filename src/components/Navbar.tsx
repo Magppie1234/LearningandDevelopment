@@ -80,8 +80,11 @@ export default function Navbar() {
         />
         <div className="absolute left-0 top-0 h-full w-[280px] bg-parchment shadow-elevated flex flex-col">
           <div className="flex items-center justify-between px-5 h-16 border-b border-[rgba(0,59,70,0.08)]">
-            <span className="font-serif text-xl text-ink-primary flex items-center gap-2">
-              <Leaf className="text-surface-sage" size={20} /> Magppie
+            <span className="flex items-center gap-2">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/magppie-logo-navy.png" alt="Magppie" className="h-5 w-auto dark:hidden" />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/magppie-logo.png" alt="Magppie" className="h-5 w-auto hidden dark:block" />
             </span>
             <button
               type="button"
@@ -133,13 +136,18 @@ export default function Navbar() {
         {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
       </button>
 
-      {/* Logo */}
+      {/* Logo — real Magppie wordmark (§2). White original for dark mode,
+          navy-tinted variant for the light sidebar; collapsed shows the leaf. */}
       <div className={cn('flex items-center gap-2 px-5 h-16', collapsed && 'justify-center px-2')}>
-        <Leaf className="text-surface-sage flex-shrink-0" size={24} />
-        {!collapsed && (
-          <span className="font-serif text-2xl font-normal text-ink-primary">
-            Magppie
-          </span>
+        {collapsed ? (
+          <Leaf className="text-surface-sage flex-shrink-0" size={24} />
+        ) : (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/magppie-logo-navy.png" alt="Magppie" className="h-6 w-auto dark:hidden" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/magppie-logo.png" alt="Magppie" className="h-6 w-auto hidden dark:block" />
+          </>
         )}
       </div>
 
@@ -159,10 +167,12 @@ export default function Navbar() {
                 collapsed && 'justify-center px-2'
               )}
             >
+              {/* §4: active nav state carries the copper primary accent */}
               <item.icon
                 size={20}
                 className={cn(
                   'flex-shrink-0',
+                  isActive && 'text-accent-copper',
                   !isActive && 'group-hover:text-ink-primary'
                 )}
               />

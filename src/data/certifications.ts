@@ -119,16 +119,17 @@ export const currentLevelRequirements: Requirement[] = [
 
 export const earnedBadges: Badge[] = [
   { id: 1, name: 'First Course Complete', description: 'Completed your first course', earnedDate: 'Oct 2023', color: '#a7c4d4', icon: 'BookOpen' },
-  { id: 2, name: '7-Day Streak', description: 'Learned 7 days in a row', earnedDate: 'Nov 2023', color: '#c19a6b', icon: 'Flame' },
+  // §4: earned badges are accomplishments → gold entries reclassified to silver #A8AEB8
+  { id: 2, name: '7-Day Streak', description: 'Learned 7 days in a row', earnedDate: 'Nov 2023', color: '#A8AEB8', icon: 'Flame' },
   { id: 3, name: 'Level 1 Certified', description: 'Foundation certification earned', earnedDate: 'Oct 2023', color: '#7a8a7a', icon: 'Award' },
   { id: 4, name: 'Assessment Ace', description: 'Scored 90%+ on 3 assessments', earnedDate: 'Jan 2024', color: '#a7c4d4', icon: 'Target' },
   { id: 5, name: 'Team Mentor', description: 'Mentored a junior colleague', earnedDate: 'Mar 2024', color: '#8c8a6e', icon: 'Users' },
   { id: 6, name: 'Level 2 Certified', description: 'Intermediate certification earned', earnedDate: 'Mar 2024', color: '#7a8a7a', icon: 'Award' },
-  { id: 7, name: 'Course Collector', description: 'Completed 10 courses', earnedDate: 'May 2024', color: '#c19a6b', icon: 'Layers' },
+  { id: 7, name: 'Course Collector', description: 'Completed 10 courses', earnedDate: 'May 2024', color: '#A8AEB8', icon: 'Layers' },
   { id: 8, name: 'Perfect Attendance', description: '100% attendance in live sessions', earnedDate: 'Jun 2024', color: '#a7c4d4', icon: 'CheckCircle' },
   { id: 9, name: 'Level 3 Certified', description: 'Advanced certification earned', earnedDate: 'Aug 2024', color: '#7a8a7a', icon: 'Award' },
   { id: 10, name: 'Knowledge Sharer', description: 'Shared 5 resources with team', earnedDate: 'Sep 2024', color: '#8c8a6e', icon: 'Share2' },
-  { id: 11, name: 'Quiz Master', description: 'Perfect score on 5 quizzes', earnedDate: 'Sep 2024', color: '#c19a6b', icon: 'Zap' },
+  { id: 11, name: 'Quiz Master', description: 'Perfect score on 5 quizzes', earnedDate: 'Sep 2024', color: '#A8AEB8', icon: 'Zap' },
   { id: 12, name: '30-Day Streak', description: 'Learned 30 days in a row', earnedDate: 'Oct 2024', color: '#c4a0a0', icon: 'Flame' },
 ];
 
