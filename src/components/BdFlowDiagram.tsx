@@ -2,36 +2,65 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronDown, ArrowDown } from 'lucide-react'
+import { ChevronDown, ArrowDown, Quote } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { BD_MODULES } from '@/data/bd-academy'
+import { TRAINING_CHUNKS } from '@/data/training-doc'
 
 /**
- * Module 5 — vertical 8-stage pitch flow, click-to-expand. Content is taken
- * verbatim from the Module 5 list block already in bd-academy.ts (approved
- * source) — nothing paraphrased or invented here.
+ * Module 5 — vertical 8-stage pitch flow, click-to-expand. Each stage shows
+ * the short summary (from bd-academy.ts) AND the full verbatim call script —
+ * the exact Section 3 wording from the master training document, transcribed
+ * in training-doc.ts (isVerbatimScript). Nothing paraphrased or invented.
  */
+
+// The 8 pitch stages, in document order (Stage 1 → 8), verbatim.
+const PITCH_STAGES = TRAINING_CHUNKS.filter((c) => c.category === 'pitch_flow')
+
+const STAGE_TITLES = [
+  'Opening',
+  'Discovery & qualification',
+  'Problem agitation',
+  'Solution introduction',
+  'Product deep dive',
+  'Budget qualification',
+  'Pricing',
+  'WhatsApp handoff',
+]
+
+/** Pull the "(15 seconds)"-style timing out of the transcribed section title. */
+function timingOf(i: number): string | null {
+  const m = PITCH_STAGES[i]?.sectionTitle.match(/\(([^)]+)\)/)
+  return m ? m[1] : null
+}
+
+/** Break the single verbatim string into display lines: each spoken quote,
+ *  each [direction], Branch:/Why: label and bullet on its own line. */
+function scriptLines(content: string): { text: string; spoken: boolean }[] {
+  const marked = content
+    .replace(/\s*(\[[^\]]*\])\s*/g, '\n$1\n')
+    .replace(/\s*(Branch:|Why:)\s*/g, '\n$1 ')
+    .replace(/\s*•\s*/g, '\n• ')
+    .replace(/"\s+"/g, '"\n"')
+  return marked
+    .split('\n')
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .map((text) => ({ text, spoken: text.startsWith('"') }))
+}
+
 export function BdPitchFlowDiagram() {
   const module5 = BD_MODULES.find((m) => m.id === 'bd-m5')
   const listBlock = module5?.blocks.find((b) => b.kind === 'list')
   const stages = listBlock && listBlock.kind === 'list' ? listBlock.items : []
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
-  const STAGE_TITLES = [
-    'Opening',
-    'Discovery & qualification',
-    'Problem agitation',
-    'Solution introduction',
-    'Product deep dive',
-    'Budget qualification',
-    'Pricing',
-    'WhatsApp handoff',
-  ]
-
   return (
     <div className="max-w-[620px] mx-auto">
       {stages.map((detail, i) => {
         const isOpen = openIndex === i
+        const script = PITCH_STAGES[i] ? scriptLines(PITCH_STAGES[i].content) : []
+        const timing = timingOf(i)
         return (
           <div key={i}>
             <button
@@ -40,14 +69,14 @@ export function BdPitchFlowDiagram() {
               className={cn(
                 'w-full flex items-center gap-3 rounded-[12px] border-[0.5px] px-4 py-3 text-left transition-colors',
                 isOpen
-                  ? 'border-accent-gold bg-accent-gold/10'
+                  ? 'border-accent-copper bg-accent-copper/10'
                   : 'border-[rgba(0,59,70,0.14)] bg-cream hover:bg-[rgba(0,59,70,0.02)]',
               )}
             >
               <span
                 className={cn(
                   'shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-[12px] font-semibold',
-                  isOpen ? 'bg-accent-gold text-ink-primary' : 'bg-[rgba(0,59,70,0.08)] text-ink-secondary',
+                  isOpen ? 'bg-accent-copper text-parchment' : 'bg-[rgba(0,59,70,0.08)] text-ink-secondary',
                 )}
               >
                 {i + 1}
@@ -55,6 +84,7 @@ export function BdPitchFlowDiagram() {
               <span className="flex-1 text-sm font-medium text-ink-primary">
                 {STAGE_TITLES[i] ?? `Stage ${i + 1}`}
               </span>
+              {timing && <span className="text-[11px] text-ink-tertiary tabular-nums">{timing}</span>}
               <ChevronDown
                 size={16}
                 className={cn('text-ink-tertiary transition-transform', isOpen && 'rotate-180')}
@@ -70,9 +100,33 @@ export function BdPitchFlowDiagram() {
                   transition={{ duration: 0.2 }}
                   className="overflow-hidden"
                 >
-                  <p className="text-[13px] text-ink-secondary leading-relaxed px-4 py-3 ml-10">
-                    {detail}
-                  </p>
+                  <div className="ml-10 px-4 py-3 space-y-3">
+                    <p className="text-[13px] text-ink-secondary leading-relaxed">{detail}</p>
+
+                    {script.length > 0 && (
+                      <div className="rounded-[10px] border-[0.5px] border-accent-copper/30 bg-accent-copper/[0.05] p-3.5">
+                        <p className="flex items-center gap-1.5 text-[10.5px] font-semibold uppercase tracking-wide text-accent-copper mb-2.5">
+                          <Quote size={11} /> Full call script — say this word for word
+                        </p>
+                        <div className="space-y-1.5">
+                          {script.map((line, li) =>
+                            line.spoken ? (
+                              <p key={li} className="text-[13px] text-ink-primary leading-relaxed">
+                                {line.text}
+                              </p>
+                            ) : (
+                              <p
+                                key={li}
+                                className="text-[11.5px] italic text-ink-tertiary leading-relaxed"
+                              >
+                                {line.text}
+                              </p>
+                            ),
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -147,7 +201,7 @@ export function BdObjectionTreeDiagram() {
                   className={cn(
                     'w-full rounded-[12px] border-[0.5px] px-3 py-2.5 text-center transition-colors',
                     isOpen
-                      ? 'border-accent-gold bg-accent-gold/10'
+                      ? 'border-accent-copper bg-accent-copper/10'
                       : 'border-[rgba(0,59,70,0.14)] bg-cream hover:bg-[rgba(0,59,70,0.02)]',
                   )}
                 >
@@ -157,7 +211,7 @@ export function BdObjectionTreeDiagram() {
                 <div
                   className={cn(
                     'w-full rounded-[10px] px-3 py-2 text-center',
-                    isOpen ? 'bg-accent-gold/15' : 'bg-[rgba(0,59,70,0.04)]',
+                    isOpen ? 'bg-accent-copper/15' : 'bg-[rgba(0,59,70,0.04)]',
                   )}
                   style={isOpen ? { color: 'var(--status-ontrack-fg)', backgroundColor: 'var(--status-ontrack-bg)' } : undefined}
                 >
