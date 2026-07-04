@@ -19,7 +19,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Leaf,
-  LogOut,
   FileCog,
   Compass,
   Menu,
@@ -45,7 +44,7 @@ export default function Navbar() {
   const pathname = usePathname()
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
-  const { user, signOut } = useAuth()
+  const { user } = useAuth()
 
   const displayName =
     (user?.user_metadata?.full_name as string | undefined) ||
@@ -208,22 +207,12 @@ export default function Navbar() {
           )}
         </div>
         {!collapsed && (
-          <>
-            <div className="overflow-hidden flex-1">
-              <p className="text-sm font-semibold text-ink-primary truncate">
-                {displayName}
-              </p>
-              <p className="text-xs text-ink-tertiary truncate">{email}</p>
-            </div>
-            <button
-              onClick={signOut}
-              title="Sign out"
-              aria-label="Sign out"
-              className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-ink-tertiary hover:text-ink-primary hover:bg-[rgba(0,59,70,0.06)] transition-colors"
-            >
-              <LogOut size={16} />
-            </button>
-          </>
+          <div className="overflow-hidden flex-1">
+            <p className="text-sm font-semibold text-ink-primary truncate">
+              {displayName}
+            </p>
+            <p className="text-xs text-ink-tertiary truncate">{email}</p>
+          </div>
         )}
       </div>
     </nav>

@@ -1,10 +1,9 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
-import { Leaf, Search } from 'lucide-react'
+import { Search } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
-import Login from '@/components/Login'
 import PoojaWidget from '@/components/PoojaWidget'
 import { NotificationBell, ThemeToggle } from '@/components/HeaderControls'
 import { useAuth } from '@/lib/auth'
@@ -33,18 +32,8 @@ export default function PortalLayout({
 }: {
   children: React.ReactNode
 }) {
-  const { loading, session, user } = useAuth()
+  const { user } = useAuth()
   const pathname = usePathname()
-
-  if (loading) {
-    return (
-      <div className="flex min-h-[100dvh] items-center justify-center bg-parchment">
-        <Leaf className="animate-pulse text-surface-sage" size={36} />
-      </div>
-    )
-  }
-
-  if (!session) return <Login />
 
   const pageInfo = pageTitles[pathname ?? '/'] || { title: 'Page', breadcrumb: 'Home' }
   const displayName =
