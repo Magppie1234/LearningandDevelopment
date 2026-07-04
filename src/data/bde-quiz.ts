@@ -1333,14 +1333,22 @@ export interface UiStrings {
   pointsOnOffer: string
   start: string
   retake: string
-  practiseTitle: string
-  notScored: string
-  levelCount: (weekN: number, bankN: number) => string
-  practise: string
   leaderboard: string
   loading: string
   you: string
-  practiceLabel: string
+  rulesEyebrow: string
+  rulesTitle: string
+  rulesSubtitle: string
+  rulesQuestionsDetail: string
+  rulesLevelsDetail: string
+  rulesTimerDetail: string
+  rulesAutoSkipDetail: string
+  rulesLockTitle: string
+  rulesLockDetail: string
+  rulesScoringTitle: string
+  rulesScoringDetail: string
+  beginQuiz: string
+  back: string
   questionOf: (a: number, b: number) => string
   pressKeys: (n: number) => string
   selectThenSubmit: string
@@ -1389,14 +1397,22 @@ export const UI: Record<Language, UiStrings> = {
     pointsOnOffer: 'points on offer',
     start: 'Start',
     retake: 'Retake',
-    practiseTitle: 'Practise a single level',
-    notScored: 'not scored on the leaderboard',
-    levelCount: (w, b) => `${w} this month · ${b} in the bank`,
-    practise: 'Practise',
     leaderboard: "This month's BDE leaderboard",
     loading: 'Loading standings…',
     you: 'you',
-    practiceLabel: 'practice',
+    rulesEyebrow: 'Before you start',
+    rulesTitle: 'Quick rules',
+    rulesSubtitle: 'Read once, then dive in — the timer starts the moment question one appears.',
+    rulesQuestionsDetail: 'One deliberate run through the full monthly set, no pausing.',
+    rulesLevelsDetail: 'Easy, Medium, and Hard questions are mixed together — points scale with difficulty.',
+    rulesTimerDetail: 'Each question auto-advances when the clock runs out, marked as skipped.',
+    rulesAutoSkipDetail: 'An unanswered question counts as incorrect for scoring.',
+    rulesLockTitle: 'Answers lock on submit',
+    rulesLockDetail: "Once you submit a choice you can't change it — review it in your results instead.",
+    rulesScoringTitle: 'Best score counts',
+    rulesScoringDetail: 'Retake as many times as you like — only your best attempt each month counts toward the leaderboard.',
+    beginQuiz: 'Begin quiz',
+    back: 'Back',
     questionOf: (a, b) => `Question ${a} of ${b}`,
     pressKeys: (n) => `Press A–${String.fromCharCode(64 + n)} or 1–${n}`,
     selectThenSubmit: 'Select an option, then Submit',
@@ -1450,14 +1466,22 @@ export const UI: Record<Language, UiStrings> = {
     pointsOnOffer: 'पॉइंट दांव पर',
     start: 'शुरू करें',
     retake: 'दोबारा',
-    practiseTitle: 'एक ही स्तर का अभ्यास करें',
-    notScored: 'लीडरबोर्ड में नहीं गिना जाता',
-    levelCount: (w, b) => `इस महीने ${w} · बैंक में ${b}`,
-    practise: 'अभ्यास',
     leaderboard: 'इस महीने का BDE लीडरबोर्ड',
     loading: 'रैंकिंग लोड हो रही है…',
     you: 'आप',
-    practiceLabel: 'अभ्यास',
+    rulesEyebrow: 'शुरू करने से पहले',
+    rulesTitle: 'ज़रूरी नियम',
+    rulesSubtitle: 'एक बार पढ़ लें, फिर शुरू करें — पहला सवाल दिखते ही टाइमर चालू हो जाता है।',
+    rulesQuestionsDetail: 'इस महीने के पूरे सेट का एक सोचा-समझा राउंड, बिना रुके।',
+    rulesLevelsDetail: 'आसान, मध्यम और कठिन सवाल मिले-जुले आते हैं — पॉइंट कठिनाई के हिसाब से मिलते हैं।',
+    rulesTimerDetail: 'समय खत्म होने पर सवाल अपने-आप आगे बढ़ जाता है और स्किप माना जाता है।',
+    rulesAutoSkipDetail: 'बिना जवाब वाला सवाल स्कोरिंग में गलत माना जाता है।',
+    rulesLockTitle: 'सबमिट करते ही जवाब लॉक',
+    rulesLockDetail: 'एक बार जवाब सबमिट करने के बाद उसे बदला नहीं जा सकता — नतीजों में उसकी समीक्षा करें।',
+    rulesScoringTitle: 'बेस्ट स्कोर मायने रखता है',
+    rulesScoringDetail: 'जितनी बार चाहें दोबारा खेलें — हर महीने सिर्फ आपका बेस्ट स्कोर लीडरबोर्ड में गिना जाता है।',
+    beginQuiz: 'क्विज़ शुरू करें',
+    back: 'वापस',
     questionOf: (a, b) => `सवाल ${a} / ${b}`,
     pressKeys: (n) => `A–${String.fromCharCode(64 + n)} या 1–${n} दबाएँ`,
     selectThenSubmit: 'एक ऑप्शन चुनें, फिर सबमिट करें',

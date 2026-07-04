@@ -17,15 +17,14 @@ import {
   SkipForward,
   Layers,
   ListChecks,
+  Lock,
   Gauge,
-  ChevronRight,
   CornerDownLeft,
   Languages,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAuthOptional } from '@/lib/auth'
 import {
-  QUIZ_BANK,
   LEVEL_POINTS,
   LEVEL_LABELS_I18N,
   QUESTION_SECONDS,
@@ -47,7 +46,6 @@ import {
   completionStreak,
   lifetimeStats,
   monthlyLeaderboard,
-  type QuizScope,
   type AnsweredQuestion,
 } from '@/lib/quiz-store'
 
@@ -124,7 +122,7 @@ function TimerRing({ seconds }: { seconds: number }) {
 /*  Main component                                                     */
 /* ------------------------------------------------------------------ */
 
-type Phase = 'intro' | 'quiz' | 'results'
+type Phase = 'intro' | 'rules' | 'quiz' | 'results'
 
 export default function MonthlyQuiz() {
   const auth = useAuthOptional()
@@ -154,7 +152,6 @@ export default function MonthlyQuiz() {
     (lang === 'hi' ? 'आप' : 'You')
 
   const [phase, setPhase] = useState<Phase>('intro')
-  const [scope, setScope] = useState<QuizScope>('full')
   const [questions, setQuestions] = useState<QuizQuestion[]>([])
   const [current, setCurrent] = useState(0)
   const [selected, setSelected] = useState<number | null>(null)
@@ -180,23 +177,17 @@ export default function MonthlyQuiz() {
 
   /* ---- flow control -------------------------------------------------- */
 
-  const startQuiz = useCallback(
-    (nextScope: QuizScope) => {
-      const list =
-        nextScope === 'full' ? getMonthlyChallenge(monthIndex) : [...monthlySet[nextScope]]
-      setScope(nextScope)
-      setQuestions(list)
-      setCurrent(0)
-      setSelected(null)
-      setSubmitted(false)
-      setTimedOut(false)
-      setTimeLeft(QUESTION_SECONDS)
-      setAnswers([])
-      finishedRef.current = false
-      setPhase('quiz')
-    },
-    [monthIndex, monthlySet],
-  )
+  const startQuiz = useCallback(() => {
+    setQuestions(getMonthlyChallenge(monthIndex))
+    setCurrent(0)
+    setSelected(null)
+    setSubmitted(false)
+    setTimedOut(false)
+    setTimeLeft(QUESTION_SECONDS)
+    setAnswers([])
+    finishedRef.current = false
+    setPhase('quiz')
+  }, [monthIndex])
 
   // Pick (but do not lock) an option.
   const handleSelectOption = useCallback(
@@ -269,7 +260,7 @@ export default function MonthlyQuiz() {
       recordAttempt({
         monthId,
         monthIndex,
-        scope,
+        scope: 'full',
         completedAt: new Date().toISOString(),
         correctCount,
         totalQuestions: qs.length,
@@ -280,7 +271,7 @@ export default function MonthlyQuiz() {
       })
       setPhase('results')
     },
-    [recordAttempt, scope, monthId, monthIndex],
+    [recordAttempt, monthId, monthIndex],
   )
 
   const goNext = useCallback(() => {
@@ -436,7 +427,7 @@ export default function MonthlyQuiz() {
 
         {/* Full Challenge — primary CTA */}
         <button
-          onClick={() => startQuiz('full')}
+          onClick={() => setPhase('rules')}
           className="group w-full text-left bg-cream rounded-2xl border border-[rgba(0,59,70,0.1)] shadow-card hover:shadow-elevated hover:-translate-y-0.5 transition-all overflow-hidden"
         >
           <div className="h-1 w-full bg-gradient-to-r from-[#5f8a6b] via-[#b98a3e] to-[#a8503f]" />
@@ -474,43 +465,6 @@ export default function MonthlyQuiz() {
             </div>
           </div>
         </button>
-
-        {/* Practice by level */}
-        <section>
-          <div className="flex items-baseline justify-between mb-4">
-            <h4 className="text-sm font-semibold text-ink-primary">{t.practiseTitle}</h4>
-            <span className="text-xs text-ink-tertiary">{t.notScored}</span>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {(['easy', 'medium', 'hard'] as QuizLevel[]).map((lvl) => (
-              <button
-                key={lvl}
-                onClick={() => startQuiz(lvl)}
-                className="group relative bg-cream rounded-2xl border border-[rgba(0,59,70,0.1)] p-5 text-left shadow-card hover:shadow-elevated hover:-translate-y-0.5 transition-all"
-              >
-                <div
-                  className="absolute left-0 top-5 bottom-5 w-[3px] rounded-full"
-                  style={{ backgroundColor: LEVEL_ACCENT[lvl] }}
-                />
-                <div className="pl-3">
-                  <div className="flex items-center justify-between mb-3">
-                    <h5 className="text-base font-semibold text-ink-primary">{levelLabel(lvl)}</h5>
-                    <span className="text-xs font-bold tabular-nums" style={{ color: LEVEL_ACCENT[lvl] }}>
-                      {LEVEL_POINTS[lvl]} pts
-                    </span>
-                  </div>
-                  <p className="text-xs text-ink-tertiary mb-4">
-                    {t.levelCount(monthlySet[lvl].length, QUIZ_BANK[lvl].length)}
-                  </p>
-                  <span className="inline-flex items-center gap-1 text-sm font-medium text-ink-secondary group-hover:text-ink-primary transition-colors">
-                    {t.practise}
-                    <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
-                  </span>
-                </div>
-              </button>
-            ))}
-          </div>
-        </section>
 
         {/* Leaderboard */}
         <section className="bg-cream rounded-2xl border border-[rgba(0,59,70,0.1)] p-6 shadow-card">
@@ -568,6 +522,86 @@ export default function MonthlyQuiz() {
   }
 
   /* ================================================================== */
+  /*  RULES — shown once before every attempt, scored or retaken        */
+  /* ================================================================== */
+  if (phase === 'rules') {
+    const challenge = getMonthlyChallenge(monthIndex)
+    const maxFull = maxScoreFor(challenge)
+
+    const ruleItems = [
+      { icon: ListChecks, title: `${challenge.length} ${t.questions}`, detail: t.rulesQuestionsDetail },
+      { icon: Layers, title: t.levels, detail: t.rulesLevelsDetail },
+      { icon: Timer, title: t.perQuestion, detail: t.rulesTimerDetail },
+      { icon: SkipForward, title: t.autoSkip, detail: t.rulesAutoSkipDetail },
+      { icon: Lock, title: t.rulesLockTitle, detail: t.rulesLockDetail },
+      { icon: Trophy, title: t.rulesScoringTitle, detail: t.rulesScoringDetail },
+    ]
+
+    return (
+      <div className="max-w-[640px] mx-auto space-y-6">
+        <div className="bg-cream rounded-2xl border border-[rgba(0,59,70,0.1)] shadow-card overflow-hidden">
+          <div className="h-1 w-full bg-gradient-to-r from-[#5f8a6b] via-[#b98a3e] to-[#a8503f]" />
+          <div className="p-7 sm:p-8">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-accent-gold mb-2">
+                  {t.rulesEyebrow}
+                </p>
+                <h3 className="font-serif text-3xl text-ink-primary">{t.rulesTitle}</h3>
+                <p className="text-sm text-ink-secondary mt-2 leading-relaxed max-w-[440px]">
+                  {t.rulesSubtitle}
+                </p>
+              </div>
+              {LangToggle}
+            </div>
+
+            <div className="mt-6 space-y-3">
+              {ruleItems.map((r) => (
+                <div
+                  key={r.title}
+                  className="flex items-start gap-3 rounded-xl bg-parchment/60 border border-[rgba(0,59,70,0.08)] px-4 py-3"
+                >
+                  <span className="w-8 h-8 rounded-lg bg-[rgba(0,59,70,0.06)] flex items-center justify-center flex-shrink-0">
+                    <r.icon size={16} className="text-ink-secondary" />
+                  </span>
+                  <div>
+                    <p className="text-sm font-semibold text-ink-primary">{r.title}</p>
+                    <p className="text-xs text-ink-tertiary mt-0.5 leading-relaxed">{r.detail}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex items-center justify-between gap-4 mt-7 pt-6 border-t border-[rgba(0,59,70,0.08)]">
+              <div>
+                <p className="font-serif text-2xl text-ink-primary leading-none">{maxFull}</p>
+                <p className="text-[10px] uppercase tracking-wide text-ink-tertiary mt-1">
+                  {t.pointsOnOffer}
+                </p>
+              </div>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setPhase('intro')}
+                  className="inline-flex items-center gap-2 bg-transparent border border-[rgba(0,59,70,0.15)] text-ink-secondary px-5 py-3 rounded-full text-sm font-semibold hover:bg-[rgba(0,59,70,0.04)] transition-colors"
+                >
+                  {t.back}
+                </button>
+                <button
+                  onClick={startQuiz}
+                  className="inline-flex items-center gap-2 bg-ink-primary text-parchment px-6 py-3 rounded-full text-sm font-semibold hover:bg-ink-secondary transition-colors"
+                >
+                  {t.beginQuiz}
+                  <ArrowRight size={16} />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  /* ================================================================== */
   /*  QUIZ                                                              */
   /* ================================================================== */
   if (phase === 'quiz') {
@@ -580,7 +614,7 @@ export default function MonthlyQuiz() {
         {/* Top control strip */}
         <div className="flex items-center justify-between gap-3 mb-3">
           <span className="text-xs font-medium text-ink-secondary truncate">
-            {scope === 'full' ? t.fullChallenge : `${levelLabel(scope)} ${t.practiceLabel}`}
+            {t.fullChallenge}
             <span className="text-ink-tertiary"> · {t.questionOf(current + 1, questions.length)}</span>
           </span>
           {LangToggle}
@@ -816,7 +850,7 @@ export default function MonthlyQuiz() {
         <div className="h-1 w-full bg-gradient-to-r from-[#5f8a6b] via-[#b98a3e] to-[#a8503f]" />
         <div className="p-8 text-center">
           <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-tertiary mb-2">
-            {scope === 'full' ? t.fullChallenge : `${levelLabel(scope)} ${t.practiceLabel}`} · {monthLabel}
+            {t.fullChallenge} · {monthLabel}
           </p>
           <h3 className="font-serif text-3xl text-ink-primary">{verdict.title}</h3>
           <p className="text-sm text-ink-secondary mt-2">{verdict.note}</p>
@@ -850,7 +884,7 @@ export default function MonthlyQuiz() {
 
           <div className="flex flex-wrap justify-center gap-3 mt-8">
             <button
-              onClick={() => startQuiz(scope)}
+              onClick={() => setPhase('rules')}
               className="inline-flex items-center gap-2 bg-ink-primary text-parchment px-6 py-3 rounded-full text-sm font-semibold hover:bg-ink-secondary transition-colors"
             >
               <RotateCcw size={15} />

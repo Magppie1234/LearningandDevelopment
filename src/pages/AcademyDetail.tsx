@@ -6,7 +6,6 @@ import { useParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import DiscussionsTab from '@/components/DiscussionsTab'
-import MonthlyQuiz from '@/pages/MonthlyQuiz'
 import {
   BookOpen,
   Clock,
@@ -28,6 +27,7 @@ import {
   Medal,
   Award,
   GraduationCap,
+  ListChecks,
 } from 'lucide-react'
 import { getAcademyById, iconMap } from '@/data/academies'
 import type { Course, CourseStatus, CourseLevel } from '@/data/academies'
@@ -878,8 +878,8 @@ function LeaderboardTab({
 /*  Main Page Component                                                 */
 /* ------------------------------------------------------------------ */
 
-type AcademyTab = 'curriculum' | 'progress' | 'resources' | 'leaderboard' | 'discussions' | 'monthly-quiz'
-const ACADEMY_TABS: AcademyTab[] = ['curriculum', 'progress', 'resources', 'leaderboard', 'discussions', 'monthly-quiz']
+type AcademyTab = 'curriculum' | 'progress' | 'resources' | 'leaderboard' | 'discussions'
+const ACADEMY_TABS: AcademyTab[] = ['curriculum', 'progress', 'resources', 'leaderboard', 'discussions']
 
 export default function AcademyDetail() {
   const params = useParams<{ id: string }>()
@@ -920,14 +920,8 @@ export default function AcademyDetail() {
   }
 
   const IconComponent = iconMap[academy.icon] || BookOpen
-  // The Monthly Quiz is a Business Development Executive (BDE) drill grounded in
-  // the AI-Bot training script — surfaced only in the BD Academy for now.
-  const hasMonthlyQuiz = academy.id === 'business-development'
   const tabs = [
     { key: 'curriculum' as const, label: 'Curriculum' },
-    ...(hasMonthlyQuiz
-      ? [{ key: 'monthly-quiz' as const, label: 'Monthly Quiz' }]
-      : []),
     { key: 'progress' as const, label: 'My Progress' },
     { key: 'resources' as const, label: 'Resources' },
     { key: 'leaderboard' as const, label: 'Leaderboard' },
@@ -1102,6 +1096,30 @@ export default function AcademyDetail() {
         </Link>
       )}
 
+      {/* BD-only: Monthly Quiz — kept separate from the tab bar below since it's
+          a timed, scored monthly event rather than reference/browsing content. */}
+      {academy.id === 'business-development' && (
+        <Link
+          href="/academies/monthly-quiz"
+          className="group flex items-center justify-between gap-4 rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream px-6 py-5 hover:shadow-card transition-shadow"
+        >
+          <div className="flex items-center gap-4">
+            <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: `${academy.color}20` }}>
+              <ListChecks size={22} style={{ color: academy.color }} />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-ink-primary">
+                BDE Monthly Quiz
+              </p>
+              <p className="text-[13px] text-ink-tertiary mt-0.5">
+                A timed, scored knowledge drill refreshed every month — climb the leaderboard.
+              </p>
+            </div>
+          </div>
+          <ArrowRight size={18} className="shrink-0 text-ink-tertiary group-hover:text-ink-primary transition-colors" />
+        </Link>
+      )}
+
       {/* Section 2: Tab Navigation */}
       <div className="sticky top-0 z-30 bg-parchment/95 backdrop-blur-sm border-b border-[rgba(0,59,70,0.08)] -mx-8 px-8">
         <div className="max-w-[1200px] mx-auto flex gap-0">
@@ -1166,7 +1184,6 @@ export default function AcademyDetail() {
               academyColor={academy.color}
             />
           )}
-          {activeTab === 'monthly-quiz' && <MonthlyQuiz />}
           {activeTab === 'discussions' && <DiscussionsTab academyId={academy.id} />}
         </motion.div>
       </AnimatePresence>
