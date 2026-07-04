@@ -1,0 +1,17 @@
+{
+  "name": "Magppie Learning & Development Portal",
+  "short_name": "Magppie L&D",
+  "description": "Learning paths, academies, certifications and knowledge for Magppie employees — works offline for factory and installation teams.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f1e9",
+  "theme_color": "#3a2a1c",
+  "icons": [
+    {
+      "src": "/course-thumb-leadership.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any"
+    }
+  ]
+}
