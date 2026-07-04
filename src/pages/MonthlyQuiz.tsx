@@ -175,6 +175,22 @@ export default function MonthlyQuiz() {
   const streak = mounted ? completionStreak(attempts, monthIndex) : 0
   const life = mounted ? lifetimeStats(attempts) : null
 
+  // Shuffle option display order per question (the bank stores the correct
+  // answer at a fixed index) — recomputed only when the question changes, so
+  // it stays stable across re-renders (e.g. the per-second timer tick).
+  const optionOrder = useMemo(() => {
+    const q = questions[current]
+    if (!q) return []
+    const order = q.options.map((_, i) => i)
+    for (let i = order.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[order[i], order[j]] = [order[j], order[i]]
+    }
+    return order
+  }, [current, questions])
+  const optionOrderRef = useRef(optionOrder)
+  optionOrderRef.current = optionOrder
+
   /* ---- flow control -------------------------------------------------- */
 
   const startQuiz = useCallback(() => {
@@ -319,12 +335,15 @@ export default function MonthlyQuiz() {
           }
           return
         }
-        let idx = -1
-        if (/^[1-9]$/.test(e.key)) idx = parseInt(e.key, 10) - 1
-        else if (/^[a-dA-D]$/.test(e.key)) idx = e.key.toLowerCase().charCodeAt(0) - 97
-        if (idx >= 0 && idx < q.options.length) {
-          e.preventDefault()
-          handleSelectOption(idx)
+        let pos = -1
+        if (/^[1-9]$/.test(e.key)) pos = parseInt(e.key, 10) - 1
+        else if (/^[a-dA-D]$/.test(e.key)) pos = e.key.toLowerCase().charCodeAt(0) - 97
+        if (pos >= 0 && pos < q.options.length) {
+          const originalIndex = optionOrderRef.current[pos]
+          if (originalIndex !== undefined) {
+            e.preventDefault()
+            handleSelectOption(originalIndex)
+          }
         }
       } else if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight') {
         e.preventDefault()
@@ -672,17 +691,18 @@ export default function MonthlyQuiz() {
             <h4 className="text-xl font-semibold text-ink-primary leading-snug mb-6">{loc.question}</h4>
 
             <div className="space-y-2.5">
-              {loc.options.map((opt, i) => {
-                const isSelected = selected === i
-                const isRight = i === q.correctIndex
+              {optionOrder.map((originalIndex, pos) => {
+                const opt = loc.options[originalIndex]
+                const isSelected = selected === originalIndex
+                const isRight = originalIndex === q.correctIndex
                 const showRight = submitted && isRight
                 const showWrong = submitted && isSelected && !isRight
                 const showPending = !submitted && isSelected
 
                 return (
                   <button
-                    key={i}
-                    onClick={() => handleSelectOption(i)}
+                    key={originalIndex}
+                    onClick={() => handleSelectOption(originalIndex)}
                     disabled={submitted}
                     className={cn(
                       'w-full text-left flex items-center gap-3 rounded-xl border px-4 py-3.5 transition-all',
@@ -708,7 +728,7 @@ export default function MonthlyQuiz() {
                       ) : showWrong ? (
                         <XCircle size={16} />
                       ) : (
-                        String.fromCharCode(65 + i)
+                        String.fromCharCode(65 + pos)
                       )}
                     </span>
                     <span
