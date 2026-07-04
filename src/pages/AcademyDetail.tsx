@@ -894,11 +894,6 @@ export default function AcademyDetail() {
     if (t && ACADEMY_TABS.includes(t as AcademyTab)) setActiveTab(t as AcademyTab)
   }, [])
 
-  const [activeTab, setActiveTab] = useState<
-    'curriculum' | 'progress' | 'resources' | 'leaderboard' | 'discussions' | 'monthly-quiz'
-  >('curriculum')
-
-
   const academy = getAcademyById(id || '')
 
   if (!academy) {
