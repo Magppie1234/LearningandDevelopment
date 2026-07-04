@@ -152,3 +152,12 @@ export function useAuth(): AuthState {
   if (!ctx) throw new Error('useAuth must be used within an AuthProvider')
   return ctx
 }
+
+/**
+ * Non-throwing variant. Returns null when no AuthProvider is present — used by
+ * components under src/pages/, which Next also exposes as standalone (legacy
+ * Pages Router) routes that get prerendered without the portal's AuthProvider.
+ */
+export function useAuthOptional(): AuthState | null {
+  return useContext(AuthContext) ?? null
+}

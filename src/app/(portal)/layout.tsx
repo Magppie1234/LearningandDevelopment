@@ -16,6 +16,10 @@ const pageTitles: Record<string, { title: string; breadcrumb: string }> = {
   '/onboarding': { title: 'Onboarding', breadcrumb: 'Home / Onboarding' },
   '/my-learning': { title: 'My Learning', breadcrumb: 'Home / My Learning' },
   '/academies': { title: 'Academies', breadcrumb: 'Home / Academies' },
+  '/academies/monthly-quiz': {
+    title: 'BDE Monthly Quiz',
+    breadcrumb: 'Home / Academies / Monthly Quiz',
+  },
   '/knowledge': { title: 'Knowledge Center', breadcrumb: 'Home / Knowledge Center' },
   '/certifications': { title: 'Certifications', breadcrumb: 'Home / Certifications' },
   '/career': { title: 'Career Development', breadcrumb: 'Home / Career' },
