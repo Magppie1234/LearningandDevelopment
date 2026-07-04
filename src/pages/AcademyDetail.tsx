@@ -479,7 +479,7 @@ function BdCurriculumTab({ academyColor }: { academyColor: string }) {
             <Link
               key={m.id}
               href={`/academy/business-development/modules?module=${m.id}`}
-              className="group flex items-center gap-4 bg-cream rounded-xl border border-[rgba(0,59,70,0.08)] px-5 py-4 hover:bg-[rgba(0,59,70,0.02)] hover:shadow-card transition-all"
+              className="group flex items-center gap-4 bg-surface-warm rounded-xl border border-[rgba(0,59,70,0.10)] px-5 py-4 hover:bg-[#e2d6bf] hover:shadow-card transition-all"
             >
               <span className="text-xs font-medium text-ink-tertiary w-6 flex-shrink-0">
                 {String(m.number).padStart(2, '0')}
@@ -488,7 +488,6 @@ function BdCurriculumTab({ academyColor }: { academyColor: string }) {
                 <h4 className="text-[15px] font-semibold text-ink-primary truncate">
                   {bdEffectiveTitle(overrides, m.id, m.title)}
                 </h4>
-                <p className="text-xs text-ink-tertiary mt-0.5 truncate">{m.summary}</p>
               </div>
               <span
                 className="hidden sm:inline-block text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-md flex-shrink-0 text-ink-secondary"

@@ -5,6 +5,7 @@ import { Search } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import PoojaWidget from '@/components/PoojaWidget'
+import KitchenToolsBackdrop from '@/components/KitchenToolsBackdrop'
 import { NotificationBell, ThemeToggle } from '@/components/HeaderControls'
 import { useAuth } from '@/lib/auth'
 
@@ -51,6 +52,9 @@ export default function PortalLayout({
 
   return (
     <div className="min-h-[100dvh]">
+      {/* Site-wide floating kitchen tools (decorative, behind content) */}
+      <KitchenToolsBackdrop />
+
       {/* Fixed left sidebar (desktop) / slide-over (mobile) */}
       <Navbar />
 

@@ -160,6 +160,28 @@
     background-attachment: fixed;
   }
 
+  /* Light theme — "designer stone" surfaces instead of flat colors. The page
+     is a light honed-marble slab; card surfaces (bg-cream / bg-card) carry a
+     subtle stone grain blended over their own color so they read like polished
+     stone tiles. Procedural SVG textures (fractal noise) — no raster assets.
+     Dark theme keeps its warm ambient glow above; these apply in light only. */
+  :root:not(.dark) body {
+    background-color: #f3ede3;
+    /* One continuous marble slab (cover, not tiled) so veins never repeat. */
+    background-image: url('/stone-page-light.svg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+  :root:not(.dark) .bg-cream,
+  :root:not(.dark) .bg-card,
+  :root:not(.dark) .bg-surface-cream {
+    background-image: url('/stone-tile-light.svg');
+    background-size: 360px;
+    background-blend-mode: multiply;
+  }
+
   * {
     @apply border-border;
   }
@@ -172,6 +194,31 @@
   .hide-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+}
+
+/* ── Floating kitchen tools (decorative background, light theme) ───────────
+   Faint line-art utensils drifting slowly behind the curriculum list. Purely
+   ornamental (aria-hidden) and never interactive. Motion is a slow bob/rotate;
+   fully disabled under prefers-reduced-motion. */
+.kitchen-float {
+  animation: kitchen-drift var(--kf-dur, 14s) ease-in-out infinite;
+  animation-delay: var(--kf-delay, 0s);
+  transform-origin: center;
+  will-change: transform;
+}
+@keyframes kitchen-drift {
+  0%,
+  100% {
+    transform: translateY(0) rotate(var(--kf-rot, 0deg));
+  }
+  50% {
+    transform: translateY(-14px) rotate(calc(var(--kf-rot, 0deg) + 4deg));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kitchen-float {
+    animation: none;
   }
 }
 
