@@ -3,6 +3,7 @@
 import { FileText, Download, PlayCircle, Clock, FolderOpen } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { BD_RESOURCES, type BdResource } from '@/data/bd-resources'
+import BdDmTemplates from '@/components/BdDmTemplates'
 
 /**
  * BD academy Resources tab — real files instead of the seed placeholder
@@ -87,6 +88,9 @@ export default function BdResourcesTab() {
           </div>
         )}
       </section>
+
+      {/* ── DM templates (Module D, Section 6) — copyable reply cards ── */}
+      <BdDmTemplates />
 
       {/* ── Videos — kept separate ── */}
       <section>
