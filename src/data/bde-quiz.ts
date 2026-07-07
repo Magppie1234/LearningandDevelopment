@@ -38,6 +38,89 @@ export const LEVEL_POINTS: Record<QuizLevel, number> = {
   hard: 30,
 }
 
+/**
+ * Bonus scoring — kept separate from LEVEL_POINTS so the base score per level
+ * always sums to a clean cap (5 questions × 10/20/30 = 50/100/150, 300 total)
+ * for the results-screen points breakdown, while still rewarding speed and
+ * consistency on top.
+ */
+
+/** Extra points for a correct answer given in under half the time limit. */
+export const SPEED_BONUS: Record<QuizLevel, number> = {
+  easy: 2,
+  medium: 4,
+  hard: 6,
+}
+
+/** Flat bonus awarded once per attempt for reaching a correct-answer streak. */
+export const STREAK_BONUS = 5
+export const STREAK_THRESHOLD = 3
+
+type ScoredAnswer = {
+  level: QuizLevel
+  correct: boolean
+  timedOut?: boolean
+  timeSpent?: number
+}
+
+export interface ScoreBreakdown {
+  basePoints: number
+  speedBonus: number
+  streakBonus: number
+  /** basePoints + speedBonus + streakBonus */
+  total: number
+  fastCount: number
+  streakAchieved: boolean
+  longestStreak: number
+}
+
+/** Whether a correct, non-timed-out answer qualifies for the speed bonus. */
+function isFast(a: ScoredAnswer): boolean {
+  return a.correct && !a.timedOut && (a.timeSpent ?? QUESTION_SECONDS) <= QUESTION_SECONDS / 2
+}
+
+/**
+ * Pure scoring function shared by the live in-quiz running total, the results
+ * screen, and the attempt saved to the leaderboard — so all three always agree.
+ */
+export function computeScore(answers: ScoredAnswer[]): ScoreBreakdown {
+  let basePoints = 0
+  let speedBonus = 0
+  let fastCount = 0
+  let run = 0
+  let longestStreak = 0
+  for (const a of answers) {
+    if (a.correct) {
+      basePoints += LEVEL_POINTS[a.level]
+      if (isFast(a)) {
+        speedBonus += SPEED_BONUS[a.level]
+        fastCount += 1
+      }
+      run += 1
+      longestStreak = Math.max(longestStreak, run)
+    } else {
+      run = 0
+    }
+  }
+  const streakAchieved = longestStreak >= STREAK_THRESHOLD
+  const streakBonus = streakAchieved ? STREAK_BONUS : 0
+  return {
+    basePoints,
+    speedBonus,
+    streakBonus,
+    total: basePoints + speedBonus + streakBonus,
+    fastCount,
+    streakAchieved,
+    longestStreak,
+  }
+}
+
+/** Max attainable bonus for a list of questions (all correct, all fast, streak hit). */
+export function maxBonusFor(questions: QuizQuestion[]): number {
+  const speed = questions.reduce((sum, q) => sum + SPEED_BONUS[q.level], 0)
+  return speed + (questions.length >= STREAK_THRESHOLD ? STREAK_BONUS : 0)
+}
+
 export const LEVEL_LABELS: Record<QuizLevel, string> = {
   easy: 'Easy',
   medium: 'Medium',
@@ -1347,6 +1430,14 @@ export interface UiStrings {
   rulesLockDetail: string
   rulesScoringTitle: string
   rulesScoringDetail: string
+  rulesBonusTitle: string
+  rulesBonusDetail: string
+  bonusOnOffer: (n: number) => string
+  fastBonusHint: (n: number) => string
+  speedBonusLabel: string
+  streakBonusLabel: string
+  bonusLabel: string
+  pointsBreakdown: string
   beginQuiz: string
   back: string
   questionOf: (a: number, b: number) => string
@@ -1411,6 +1502,14 @@ export const UI: Record<Language, UiStrings> = {
     rulesLockDetail: "Once you submit a choice you can't change it — review it in your results instead.",
     rulesScoringTitle: 'Best score counts',
     rulesScoringDetail: 'Retake as many times as you like — only your best attempt each month counts toward the leaderboard.',
+    rulesBonusTitle: 'Bonus points',
+    rulesBonusDetail: 'Answer in under half the time for a speed bonus, and get 3 correct in a row for a one-time streak bonus.',
+    bonusOnOffer: (n) => `+ up to ${n} bonus`,
+    fastBonusHint: (n) => `+${n} if fast`,
+    speedBonusLabel: 'Speed bonus',
+    streakBonusLabel: 'Streak bonus',
+    bonusLabel: 'Bonus',
+    pointsBreakdown: 'Points breakdown',
     beginQuiz: 'Begin quiz',
     back: 'Back',
     questionOf: (a, b) => `Question ${a} of ${b}`,
@@ -1480,6 +1579,14 @@ export const UI: Record<Language, UiStrings> = {
     rulesLockDetail: 'एक बार जवाब सबमिट करने के बाद उसे बदला नहीं जा सकता — नतीजों में उसकी समीक्षा करें।',
     rulesScoringTitle: 'बेस्ट स्कोर मायने रखता है',
     rulesScoringDetail: 'जितनी बार चाहें दोबारा खेलें — हर महीने सिर्फ आपका बेस्ट स्कोर लीडरबोर्ड में गिना जाता है।',
+    rulesBonusTitle: 'बोनस पॉइंट',
+    rulesBonusDetail: 'आधे समय से पहले सही जवाब देने पर स्पीड बोनस, और लगातार 3 सही जवाब देने पर एक बार का स्ट्रीक बोनस मिलता है।',
+    bonusOnOffer: (n) => `+ ${n} तक बोनस`,
+    fastBonusHint: (n) => `+${n} अगर तेज़`,
+    speedBonusLabel: 'स्पीड बोनस',
+    streakBonusLabel: 'स्ट्रीक बोनस',
+    bonusLabel: 'बोनस',
+    pointsBreakdown: 'पॉइंट ब्रेकडाउन',
     beginQuiz: 'क्विज़ शुरू करें',
     back: 'वापस',
     questionOf: (a, b) => `सवाल ${a} / ${b}`,

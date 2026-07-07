@@ -1,13 +1,14 @@
 'use client'
 
-import { usePathname } from 'next/navigation'
-import { Search } from 'lucide-react'
+import { usePathname, useRouter } from 'next/navigation'
+import { ArrowLeft, Search } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import PoojaWidget from '@/components/PoojaWidget'
-import KitchenToolsBackdrop from '@/components/KitchenToolsBackdrop'
 import { NotificationBell, ThemeToggle } from '@/components/HeaderControls'
 import { useAuth } from '@/lib/auth'
+import { SidebarStateProvider, useSidebarState } from '@/lib/sidebar-state'
+import { cn } from '@/lib/utils'
 
 const pageTitles: Record<string, { title: string; breadcrumb: string }> = {
   '/': { title: 'Dashboard', breadcrumb: 'Home' },
@@ -16,6 +17,7 @@ const pageTitles: Record<string, { title: string; breadcrumb: string }> = {
   '/onboarding': { title: 'Onboarding', breadcrumb: 'Home / Onboarding' },
   '/my-learning': { title: 'My Learning', breadcrumb: 'Home / My Learning' },
   '/academies': { title: 'Academies', breadcrumb: 'Home / Academies' },
+  '/journey': { title: 'Process Flow', breadcrumb: 'Home / Process Flow' },
   '/academies/monthly-quiz': {
     title: 'BDE Monthly Quiz',
     breadcrumb: 'Home / Academies / Monthly Quiz',
@@ -33,8 +35,19 @@ export default function PortalLayout({
 }: {
   children: React.ReactNode
 }) {
+  return (
+    <SidebarStateProvider>
+      <PortalLayoutBody>{children}</PortalLayoutBody>
+    </SidebarStateProvider>
+  )
+}
+
+function PortalLayoutBody({ children }: { children: React.ReactNode }) {
+  const { collapsed } = useSidebarState()
   const { user } = useAuth()
   const pathname = usePathname()
+  const router = useRouter()
+  const isHome = (pathname ?? '/') === '/'
 
   const pageInfo = pageTitles[pathname ?? '/'] || { title: 'Page', breadcrumb: 'Home' }
   const displayName =
@@ -52,23 +65,39 @@ export default function PortalLayout({
 
   return (
     <div className="min-h-[100dvh]">
-      {/* Site-wide floating kitchen tools (decorative, behind content) */}
-      <KitchenToolsBackdrop />
-
       {/* Fixed left sidebar (desktop) / slide-over (mobile) */}
       <Navbar />
 
-      {/* Main content area - offset for sidebar on desktop only */}
-      <div className="lg:ml-[260px] min-h-[100dvh] flex flex-col">
+      {/* Main content area - offset for sidebar on desktop only. Margin tracks
+          the sidebar's actual collapsed/expanded width so the content reclaims
+          the freed-up space when the sidebar is minimised. */}
+      <div
+        className={cn(
+          'min-h-[100dvh] flex flex-col transition-[margin] duration-300',
+          collapsed ? 'lg:ml-[72px]' : 'lg:ml-[260px]',
+        )}
+      >
         {/* Top header */}
         <header className="sticky top-0 z-40 h-16 bg-parchment/95 backdrop-blur-sm border-b border-[rgba(0,59,70,0.08)] flex items-center justify-between px-4 sm:px-8">
-          <div className="min-w-0">
-            <h1 className="font-sans text-lg font-semibold text-ink-primary truncate">
-              {pageInfo.title}
-            </h1>
-            <p className="text-[11px] text-ink-tertiary mt-0.5 truncate">
-              {pageInfo.breadcrumb}
-            </p>
+          <div className="min-w-0 flex items-center gap-3">
+            {!isHome && (
+              <button
+                type="button"
+                onClick={() => router.back()}
+                aria-label="Go to previous page"
+                className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-ink-secondary hover:text-ink-primary hover:bg-[rgba(0,59,70,0.06)] transition-all"
+              >
+                <ArrowLeft size={18} />
+              </button>
+            )}
+            <div className="min-w-0">
+              <h1 className="font-sans text-lg font-semibold text-ink-primary truncate">
+                {pageInfo.title}
+              </h1>
+              <p className="text-[11px] text-ink-tertiary mt-0.5 truncate">
+                {pageInfo.breadcrumb}
+              </p>
+            </div>
           </div>
 
           <div className="flex items-center gap-1.5 sm:gap-3">

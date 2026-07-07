@@ -28,6 +28,8 @@ import {
   LEVEL_POINTS,
   LEVEL_LABELS_I18N,
   QUESTION_SECONDS,
+  SPEED_BONUS,
+  STREAK_THRESHOLD,
   UI,
   localize,
   getMonthlySet,
@@ -36,6 +38,8 @@ import {
   getMonthIndex,
   getMonthLabel,
   maxScoreFor,
+  maxBonusFor,
+  computeScore,
   type Language,
   type QuizLevel,
   type QuizQuestion,
@@ -263,16 +267,15 @@ export default function MonthlyQuiz() {
         medium: { correct: 0, total: 0 },
         hard: { correct: 0, total: 0 },
       }
-      let score = 0
       let correctCount = 0
       for (const a of finalAnswers) {
         byLevel[a.level].total += 1
         if (a.correct) {
           byLevel[a.level].correct += 1
           correctCount += 1
-          score += LEVEL_POINTS[a.level]
         }
       }
+      const breakdown = computeScore(finalAnswers)
       recordAttempt({
         monthId,
         monthIndex,
@@ -280,8 +283,10 @@ export default function MonthlyQuiz() {
         completedAt: new Date().toISOString(),
         correctCount,
         totalQuestions: qs.length,
-        score,
+        score: breakdown.total,
         maxScore: maxScoreFor(qs),
+        basePoints: breakdown.basePoints,
+        bonusPoints: breakdown.speedBonus + breakdown.streakBonus,
         byLevel,
         answers: finalAnswers,
       })
@@ -382,12 +387,19 @@ export default function MonthlyQuiz() {
   if (phase === 'intro') {
     const challenge = getMonthlyChallenge(monthIndex)
     const maxFull = maxScoreFor(challenge)
+    const maxBonus = maxBonusFor(challenge)
     const userPoints = best?.score ?? 0
+    const userHardAccuracy = best
+      ? best.byLevel.hard.total
+        ? Math.round((best.byLevel.hard.correct / best.byLevel.hard.total) * 100)
+        : 0
+      : 0
     const board = mounted
       ? monthlyLeaderboard(monthIndex, {
           name: displayName,
           initials: initialsOf(displayName),
           points: userPoints,
+          hardAccuracy: userHardAccuracy,
         })
       : []
 
@@ -476,6 +488,7 @@ export default function MonthlyQuiz() {
                 <p className="text-[10px] uppercase tracking-wide text-ink-tertiary mt-1.5">
                   {t.pointsOnOffer}
                 </p>
+                <p className="text-[10px] text-accent-gold font-medium mt-0.5">{t.bonusOnOffer(maxBonus)}</p>
               </div>
               <span className="inline-flex items-center gap-2 bg-ink-primary text-parchment px-6 py-3.5 rounded-full text-sm font-semibold group-hover:bg-ink-secondary transition-colors">
                 {best ? t.retake : t.start}
@@ -546,6 +559,7 @@ export default function MonthlyQuiz() {
   if (phase === 'rules') {
     const challenge = getMonthlyChallenge(monthIndex)
     const maxFull = maxScoreFor(challenge)
+    const maxBonus = maxBonusFor(challenge)
 
     const ruleItems = [
       { icon: ListChecks, title: `${challenge.length} ${t.questions}`, detail: t.rulesQuestionsDetail },
@@ -554,6 +568,7 @@ export default function MonthlyQuiz() {
       { icon: SkipForward, title: t.autoSkip, detail: t.rulesAutoSkipDetail },
       { icon: Lock, title: t.rulesLockTitle, detail: t.rulesLockDetail },
       { icon: Trophy, title: t.rulesScoringTitle, detail: t.rulesScoringDetail },
+      { icon: Flame, title: t.rulesBonusTitle, detail: t.rulesBonusDetail },
     ]
 
     return (
@@ -597,6 +612,7 @@ export default function MonthlyQuiz() {
                 <p className="text-[10px] uppercase tracking-wide text-ink-tertiary mt-1">
                   {t.pointsOnOffer}
                 </p>
+                <p className="text-[10px] text-accent-gold font-medium mt-0.5">{t.bonusOnOffer(maxBonus)}</p>
               </div>
               <div className="flex items-center gap-3">
                 <button
@@ -626,7 +642,8 @@ export default function MonthlyQuiz() {
   if (phase === 'quiz') {
     const q = questions[current]
     const loc = localize(q, lang)
-    const runningScore = answers.reduce((s, a) => s + (a.correct ? LEVEL_POINTS[a.level] : 0), 0)
+    const liveScore = computeScore(answers)
+    const runningScore = liveScore.total
 
     return (
       <div className="max-w-[720px] mx-auto">
@@ -647,6 +664,7 @@ export default function MonthlyQuiz() {
                   <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: LEVEL_ACCENT[q.level] }} />
                   {levelLabel(q.level)} · {LEVEL_POINTS[q.level]} pts
                 </span>
+                <span className="text-ink-tertiary/70"> · {t.fastBonusHint(SPEED_BONUS[q.level])}</span>
               </span>
               <span className="font-semibold text-ink-primary tabular-nums">{runningScore} {t.points.toLowerCase()}</span>
             </div>
@@ -778,6 +796,10 @@ export default function MonthlyQuiz() {
                 >
                   {(() => {
                     const isCorrect = selected === q.correctIndex && !timedOut
+                    const prevBreakdown = computeScore(answers.slice(0, -1))
+                    const afterBreakdown = computeScore(answers)
+                    const speedBonusThis = afterBreakdown.speedBonus - prevBreakdown.speedBonus
+                    const streakBonusThis = afterBreakdown.streakBonus - prevBreakdown.streakBonus
                     const tone = timedOut
                       ? { bg: 'bg-[#b98a3e]/10', border: 'border-[#b98a3e]/30', text: 'text-[#8a6420]' }
                       : isCorrect
@@ -792,7 +814,7 @@ export default function MonthlyQuiz() {
                             </>
                           ) : isCorrect ? (
                             <>
-                              <CheckCircle2 size={15} /> {t.correct} · +{LEVEL_POINTS[q.level]}
+                              <CheckCircle2 size={15} /> {t.correct} · +{LEVEL_POINTS[q.level] + speedBonusThis}
                             </>
                           ) : (
                             <>
@@ -800,6 +822,20 @@ export default function MonthlyQuiz() {
                             </>
                           )}
                         </p>
+                        {(speedBonusThis > 0 || streakBonusThis > 0) && (
+                          <div className="flex flex-wrap gap-1.5 mb-2">
+                            {speedBonusThis > 0 && (
+                              <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-accent-gold bg-accent-gold/10 rounded-full px-2 py-0.5">
+                                <Gauge size={11} /> {t.speedBonusLabel} +{speedBonusThis}
+                              </span>
+                            )}
+                            {streakBonusThis > 0 && (
+                              <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-accent-gold bg-accent-gold/10 rounded-full px-2 py-0.5">
+                                <Flame size={11} /> {t.streakBonusLabel} +{streakBonusThis}
+                              </span>
+                            )}
+                          </div>
+                        )}
                         <p className="text-sm text-ink-secondary leading-relaxed">{loc.explanation}</p>
                         <p className="text-[11px] text-ink-tertiary mt-2">
                           {t.source}: {q.source}
@@ -839,7 +875,8 @@ export default function MonthlyQuiz() {
   /*  RESULTS                                                           */
   /* ================================================================== */
   const correctCount = answers.filter((a) => a.correct).length
-  const score = answers.reduce((s, a) => (a.correct ? s + LEVEL_POINTS[a.level] : s), 0)
+  const scoreBreakdown = computeScore(answers)
+  const score = scoreBreakdown.total
   const maxScore = maxScoreFor(questions)
   const pct = questions.length ? Math.round((correctCount / questions.length) * 100) : 0
   const timedOutCount = answers.filter((a) => a.timedOut).length
@@ -875,31 +912,62 @@ export default function MonthlyQuiz() {
           <h3 className="font-serif text-3xl text-ink-primary">{verdict.title}</h3>
           <p className="text-sm text-ink-secondary mt-2">{verdict.note}</p>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8">
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 mt-8">
             <ResultStat value={`${score}`} sub={t.of(maxScore)} label={t.points} />
+            <ResultStat value={`+${scoreBreakdown.speedBonus + scoreBreakdown.streakBonus}`} label={t.bonusLabel} />
             <ResultStat value={`${correctCount}/${questions.length}`} label={t.correctLabel} />
             <ResultStat value={`${pct}%`} label={t.accuracyShort} />
             <ResultStat value={`${avgTime}s`} label={t.avgTime} />
           </div>
 
           <div className="flex flex-wrap justify-center gap-2 mt-6">
-            {(['easy', 'medium', 'hard'] as QuizLevel[])
-              .filter((lvl) => byLevel[lvl].total > 0)
-              .map((lvl) => (
-                <span
-                  key={lvl}
-                  className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full"
-                  style={{ backgroundColor: `${LEVEL_ACCENT[lvl]}15`, color: LEVEL_ACCENT[lvl] }}
-                >
-                  <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: LEVEL_ACCENT[lvl] }} />
-                  {levelLabel(lvl)}: {byLevel[lvl].correct}/{byLevel[lvl].total}
-                </span>
-              ))}
+            {scoreBreakdown.fastCount > 0 && (
+              <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full bg-accent-gold/10 text-accent-gold">
+                <Gauge size={12} /> {t.speedBonusLabel} +{scoreBreakdown.speedBonus}
+              </span>
+            )}
+            {scoreBreakdown.streakAchieved && (
+              <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full bg-accent-gold/10 text-accent-gold">
+                <Flame size={12} /> {t.streakBonusLabel} +{scoreBreakdown.streakBonus}
+              </span>
+            )}
             {timedOutCount > 0 && (
               <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full bg-[rgba(0,59,70,0.06)] text-ink-secondary">
                 <Timer size={12} /> {timedOutCount} {t.timedOut}
               </span>
             )}
+          </div>
+
+          {/* Points breakdown — base points earned per difficulty tier */}
+          <div className="mt-7 max-w-[420px] mx-auto space-y-2.5 text-left">
+            <p className="text-[10px] uppercase tracking-wide text-ink-tertiary text-center mb-1">
+              {t.pointsBreakdown}
+            </p>
+            {(['easy', 'medium', 'hard'] as QuizLevel[])
+              .filter((lvl) => byLevel[lvl].total > 0)
+              .map((lvl) => {
+                const earned = byLevel[lvl].correct * LEVEL_POINTS[lvl]
+                const cap = byLevel[lvl].total * LEVEL_POINTS[lvl]
+                const width = cap ? Math.round((earned / cap) * 100) : 0
+                return (
+                  <div key={lvl}>
+                    <div className="flex items-center justify-between text-xs mb-1">
+                      <span className="font-medium" style={{ color: LEVEL_ACCENT[lvl] }}>
+                        {levelLabel(lvl)}
+                      </span>
+                      <span className="text-ink-tertiary tabular-nums">
+                        {earned}/{cap} {t.points.toLowerCase()}
+                      </span>
+                    </div>
+                    <div className="h-2 rounded-full bg-[rgba(0,59,70,0.08)] overflow-hidden">
+                      <div
+                        className="h-full rounded-full transition-all"
+                        style={{ width: `${width}%`, backgroundColor: LEVEL_ACCENT[lvl] }}
+                      />
+                    </div>
+                  </div>
+                )
+              })}
           </div>
 
           <div className="flex flex-wrap justify-center gap-3 mt-8">

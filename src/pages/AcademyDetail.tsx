@@ -33,6 +33,9 @@ import { getAcademyById, iconMap } from '@/data/academies'
 import type { Course, CourseStatus, CourseLevel } from '@/data/academies'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { BD_MODULES } from '@/data/bd-academy'
+import { Block as BdBlock } from '@/pages/BdAcademy'
+import BdVideoPlayer from '@/components/BdVideoPlayer'
+import BdModuleVisual, { bdModuleHasVisual, bdModuleVisualLabel } from '@/components/BdModuleVisuals'
 import BdResourcesTab from '@/components/BdResourcesTab'
 import ReadinessCheck from '@/components/ReadinessCheck'
 import { readinessBankFor } from '@/data/readiness-banks'
@@ -429,8 +432,10 @@ function CurriculumTab({
 
 function BdCurriculumTab({ academyColor }: { academyColor: string }) {
   const results = useBdProgress((s) => s.results)
+  const markViewed = useBdProgress((s) => s.markViewed)
   const overrides = useBdTitles((s) => s.overrides)
   const [q, setQ] = useState('')
+  const [expandedId, setExpandedId] = useState<string | null>(null)
 
   const modules = useMemo(() => {
     if (!q.trim()) return BD_MODULES
@@ -440,6 +445,23 @@ function BdCurriculumTab({ academyColor }: { academyColor: string }) {
       m.competency.toLowerCase().includes(needle),
     )
   }, [q, overrides])
+
+  const openModule = BD_MODULES.find((m) => m.id === expandedId) ?? null
+
+  // Lock page scroll behind the overlay and let Escape close it.
+  useEffect(() => {
+    if (!openModule) return
+    const prevOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setExpandedId(null)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => {
+      document.body.style.overflow = prevOverflow
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [openModule])
 
   return (
     <div className="space-y-5">
@@ -475,18 +497,21 @@ function BdCurriculumTab({ academyColor }: { academyColor: string }) {
             : r?.viewed
               ? 'In Progress'
               : 'Not Started'
+          const title = bdEffectiveTitle(overrides, m.id, m.title)
           return (
-            <Link
+            <button
               key={m.id}
-              href={`/academy/business-development/modules?module=${m.id}`}
-              className="group flex items-center gap-4 bg-surface-warm rounded-xl border border-[rgba(0,59,70,0.10)] px-5 py-4 hover:bg-[#e2d6bf] hover:shadow-card transition-all"
+              type="button"
+              onClick={() => setExpandedId(m.id)}
+              aria-haspopup="dialog"
+              className="group w-full flex items-center gap-4 bg-surface-warm rounded-xl border border-[rgba(0,59,70,0.10)] px-5 py-4 hover:bg-[#e2d6bf] hover:shadow-card transition-all text-left"
             >
               <span className="text-xs font-medium text-ink-tertiary w-6 flex-shrink-0">
                 {String(m.number).padStart(2, '0')}
               </span>
               <div className="flex-1 min-w-0">
                 <h4 className="text-[15px] font-semibold text-ink-primary truncate">
-                  {bdEffectiveTitle(overrides, m.id, m.title)}
+                  {title}
                 </h4>
               </div>
               <span
@@ -496,16 +521,79 @@ function BdCurriculumTab({ academyColor }: { academyColor: string }) {
                 {m.competency}
               </span>
               <StatusDot status={status} />
-              <div className="hidden md:block flex-shrink-0">
-                <CourseActionButton status={status} />
-              </div>
-            </Link>
+              <span
+                aria-hidden
+                className="flex-shrink-0 w-8 h-8 rounded-full border border-[rgba(0,59,70,0.15)] flex items-center justify-center text-ink-secondary group-hover:text-ink-primary transition-colors"
+              >
+                <ChevronDown size={16} />
+              </span>
+            </button>
           )
         })}
         {modules.length === 0 && (
           <p className="text-sm text-ink-tertiary py-8 text-center">No modules match “{q}”.</p>
         )}
       </div>
+
+      {openModule && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={bdEffectiveTitle(overrides, openModule.id, openModule.title)}
+          className="fixed inset-0 z-[100] flex items-start justify-center bg-black/50 p-3 sm:p-8"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setExpandedId(null)
+          }}
+        >
+          <div className="w-full max-w-[900px] max-h-[calc(100dvh-1.5rem)] sm:max-h-[calc(100dvh-4rem)] overflow-y-auto rounded-2xl bg-card shadow-2xl">
+            <div className="sticky top-0 z-10 flex items-center gap-3 bg-card/95 backdrop-blur-sm border-b border-[rgba(0,59,70,0.1)] px-5 py-4">
+              <span className="text-xs font-medium text-ink-tertiary w-6 flex-shrink-0">
+                {String(openModule.number).padStart(2, '0')}
+              </span>
+              <h3 className="flex-1 min-w-0 truncate text-lg font-semibold text-ink-primary">
+                {bdEffectiveTitle(overrides, openModule.id, openModule.title)}
+              </h3>
+              <button
+                type="button"
+                onClick={() => setExpandedId(null)}
+                aria-label="Close"
+                className="flex-shrink-0 w-9 h-9 rounded-full border border-[rgba(0,59,70,0.15)] flex items-center justify-center text-ink-secondary hover:text-ink-primary hover:bg-black/[0.03] transition-colors"
+              >
+                <ChevronUp size={18} />
+              </button>
+            </div>
+
+            <div className="px-5 py-6">
+              <div className="max-w-[760px] mx-auto">
+                <p className="text-sm text-ink-secondary mb-4">{openModule.summary}</p>
+                <BdVideoPlayer module={openModule} />
+                <div className="mt-5 space-y-3.5">
+                  {openModule.blocks.map((b, i) => (
+                    <BdBlock key={i} block={b} />
+                  ))}
+                  {bdModuleHasVisual(openModule.id) && (
+                    <div className="pt-2">
+                      <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-tertiary mb-3">
+                        {bdModuleVisualLabel(openModule.id)}
+                      </p>
+                      <BdModuleVisual moduleId={openModule.id} />
+                    </div>
+                  )}
+                </div>
+                <div className="mt-6 flex items-center gap-3">
+                  <Link
+                    href={`/academy/business-development/modules?module=${openModule.id}`}
+                    onClick={() => markViewed(openModule.id)}
+                    className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-secondary hover:text-ink-primary transition-colors"
+                  >
+                    Take the quiz <ArrowRight size={14} />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

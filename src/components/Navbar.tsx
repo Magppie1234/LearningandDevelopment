@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/lib/auth'
+import { useSidebarState } from '@/lib/sidebar-state'
 import {
   Home,
   BookOpen,
@@ -16,6 +17,7 @@ import {
   BarChart3,
   Network,
   Footprints,
+  Workflow,
   ChevronLeft,
   ChevronRight,
   Leaf,
@@ -25,24 +27,34 @@ import {
   X,
 } from 'lucide-react'
 
-const navItems = [
-  { icon: Home, label: 'Home', path: '/' },
-  { icon: Compass, label: 'Our story', path: '/vision' },
-  { icon: Network, label: 'Organization Flow', path: '/organization-flow' },
-  { icon: Footprints, label: 'Onboarding', path: '/onboarding' },
-  { icon: BookOpen, label: 'My Learning', path: '/my-learning' },
-  { icon: GraduationCap, label: 'Academies', path: '/academies' },
-  { icon: Library, label: 'Knowledge Center', path: '/knowledge' },
-  { icon: Award, label: 'Certifications', path: '/certifications' },
-  { icon: Route, label: 'Career Path', path: '/career' },
-  { icon: Bot, label: 'AI Assistant', path: '/ai-assistant' },
-  { icon: BarChart3, label: 'Analytics', path: '/analytics' },
-  { icon: FileCog, label: 'Content Admin', path: '/admin/content' },
+/** Build-out status per section — shown as a colored dot beside the label. */
+type NavStatus = 'done' | 'in-progress' | 'todo'
+
+const STATUS_DOT: Record<NavStatus, string> = {
+  done: 'bg-emerald-500',
+  'in-progress': 'bg-amber-400',
+  todo: 'bg-red-500',
+}
+
+const navItems: { icon: typeof Home; label: string; path: string; status: NavStatus }[] = [
+  { icon: Home, label: 'Home', path: '/', status: 'done' },
+  { icon: Compass, label: 'Our story', path: '/vision', status: 'done' },
+  { icon: Network, label: 'Organization Flow', path: '/organization-flow', status: 'in-progress' },
+  { icon: Footprints, label: 'Onboarding', path: '/onboarding', status: 'todo' },
+  { icon: BookOpen, label: 'My Learning', path: '/my-learning', status: 'todo' },
+  { icon: GraduationCap, label: 'Academies', path: '/academies', status: 'in-progress' },
+  { icon: Workflow, label: 'Process Flow', path: '/journey', status: 'done' },
+  { icon: Library, label: 'Knowledge Center', path: '/knowledge', status: 'todo' },
+  { icon: Award, label: 'Certifications', path: '/certifications', status: 'todo' },
+  { icon: Route, label: 'Career Path', path: '/career', status: 'todo' },
+  { icon: Bot, label: 'AI Assistant', path: '/ai-assistant', status: 'todo' },
+  { icon: BarChart3, label: 'Analytics', path: '/analytics', status: 'todo' },
+  { icon: FileCog, label: 'Content Admin', path: '/admin/content', status: 'todo' },
 ]
 
 export default function Navbar() {
   const pathname = usePathname()
-  const [collapsed, setCollapsed] = useState(false)
+  const { collapsed, setCollapsed } = useSidebarState()
   const [mobileOpen, setMobileOpen] = useState(false)
   const { user } = useAuth()
 
@@ -108,7 +120,11 @@ export default function Navbar() {
                 )}
               >
                 <item.icon size={19} className="flex-shrink-0" />
-                <span className="text-sm font-medium">{item.label}</span>
+                <span className="text-sm font-medium flex-1">{item.label}</span>
+                <span
+                  className={cn('w-2 h-2 rounded-full flex-shrink-0', STATUS_DOT[item.status])}
+                  aria-hidden
+                />
               </Link>
             ))}
           </div>
@@ -130,7 +146,7 @@ export default function Navbar() {
       {/* Collapse toggle */}
       <button
         onClick={() => setCollapsed(!collapsed)}
-        className="absolute -right-3 top-6 w-6 h-6 rounded-full bg-ink-primary text-parchment flex items-center justify-center hover:bg-ink-secondary transition-colors"
+        className="absolute -right-3 top-3 w-6 h-6 rounded-full bg-ink-primary text-parchment flex items-center justify-center hover:bg-ink-secondary transition-colors"
       >
         {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
       </button>
@@ -167,18 +183,34 @@ export default function Navbar() {
               )}
             >
               {/* §4: active nav state carries the copper primary accent */}
-              <item.icon
-                size={20}
-                className={cn(
-                  'flex-shrink-0',
-                  isActive && 'text-accent-copper',
-                  !isActive && 'group-hover:text-ink-primary'
+              <span className="relative flex-shrink-0">
+                <item.icon
+                  size={20}
+                  className={cn(
+                    isActive && 'text-accent-copper',
+                    !isActive && 'group-hover:text-ink-primary'
+                  )}
+                />
+                {collapsed && (
+                  <span
+                    className={cn(
+                      'absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full ring-2 ring-parchment',
+                      STATUS_DOT[item.status]
+                    )}
+                    aria-hidden
+                  />
                 )}
-              />
+              </span>
               {!collapsed && (
-                <span className="text-sm font-medium whitespace-nowrap">
+                <span className="text-sm font-medium whitespace-nowrap flex-1">
                   {item.label}
                 </span>
+              )}
+              {!collapsed && (
+                <span
+                  className={cn('w-2 h-2 rounded-full flex-shrink-0', STATUS_DOT[item.status])}
+                  aria-hidden
+                />
               )}
             </Link>
           )

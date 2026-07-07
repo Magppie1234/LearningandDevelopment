@@ -51,7 +51,7 @@ function CompetencyChip({ competency }: { competency: string }) {
 }
 
 /* ───────────────── content block renderer ───────────────── */
-function Block({ block }: { block: ContentBlock }) {
+export function Block({ block }: { block: ContentBlock }) {
   switch (block.kind) {
     case 'heading':
       return <h3 className="font-semibold text-ink-primary mt-5 mb-1">{block.text}</h3>

@@ -197,28 +197,296 @@
   }
 }
 
-/* ── Floating kitchen tools (decorative background, light theme) ───────────
-   Faint line-art utensils drifting slowly behind the curriculum list. Purely
-   ornamental (aria-hidden) and never interactive. Motion is a slow bob/rotate;
-   fully disabled under prefers-reduced-motion. */
-.kitchen-float {
-  animation: kitchen-drift var(--kf-dur, 14s) ease-in-out infinite;
-  animation-delay: var(--kf-delay, 0s);
-  transform-origin: center;
-  will-change: transform;
+/* ── Process Flow (order-to-handover timeline) ─────────────────────────────
+   A simple, dense, readable vertical timeline. Plain "porcelain" panel that is
+   deliberately a different colour from the warm marble site background, so the
+   flow reads as its own surface. No animation, no mascot — just the process. */
+.kjt {
+  --kjt-ground: #eaedf0;
+  --kjt-panel: #ffffff;
+  --kjt-text: #232a2f;
+  --kjt-dim: rgba(35, 42, 47, 0.62);
+  --kjt-line: rgba(50, 62, 72, 0.16);
+  --kjt-ring: rgba(50, 62, 72, 0.2);
+  --kjt-chip: rgba(40, 52, 62, 0.06);
+  --seg: #b8935a;
+  position: relative;
+  color: var(--kjt-text);
+  background: var(--kjt-ground);
+  border: 1px solid rgba(50, 62, 72, 0.12);
+  border-radius: 22px;
+  box-shadow: 0 18px 50px rgba(30, 42, 54, 0.12);
+  padding: clamp(18px, 3vw, 30px) clamp(16px, 3vw, 30px);
+  overflow: hidden;
 }
-@keyframes kitchen-drift {
-  0%,
-  100% {
-    transform: translateY(0) rotate(var(--kf-rot, 0deg));
-  }
-  50% {
-    transform: translateY(-14px) rotate(calc(var(--kf-rot, 0deg) + 4deg));
-  }
+
+/* flow tabs */
+.kjt-tabs {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  background: rgba(50, 62, 72, 0.06);
+  border-radius: 999px;
+  margin-bottom: clamp(14px, 2.4vw, 20px);
 }
-@media (prefers-reduced-motion: reduce) {
-  .kitchen-float {
-    animation: none;
+.kjt-tab {
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--kjt-dim);
+  background: transparent;
+  border: none;
+  border-radius: 999px;
+  padding: 7px 16px;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+}
+.kjt-tab:hover {
+  color: var(--kjt-text);
+}
+.kjt-tab.active {
+  background: var(--kjt-panel);
+  color: var(--kjt-text);
+  box-shadow: 0 2px 8px rgba(30, 42, 54, 0.12);
+}
+.kjt-tab:focus-visible {
+  outline: 2px solid var(--seg);
+  outline-offset: 2px;
+}
+
+.kjt-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: clamp(12px, 2vw, 18px);
+}
+.kjt-eyebrow {
+  color: #9a7b3e;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 700;
+  margin: 0 0 5px;
+}
+.kjt-title {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(24px, 4vw, 42px);
+  line-height: 0.98;
+  letter-spacing: -0.015em;
+  margin: 0;
+  text-wrap: balance;
+  color: var(--kjt-text);
+}
+.kjt-title em {
+  font-style: italic;
+  color: #b0562a;
+}
+.kjt-chip.terminal {
+  border-style: dashed;
+  color: var(--kjt-dim);
+}
+.kjt-chip.terminal::after {
+  content: '';
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #b0562a;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+.kjt-head-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.kjt-count {
+  font-variant-numeric: tabular-nums;
+  color: var(--kjt-dim);
+  font-size: 12.5px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.kjt-fs-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--kjt-ring);
+  background: var(--kjt-panel);
+  color: var(--kjt-text);
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.12s;
+}
+.kjt-fs-btn:hover {
+  transform: translateY(-1px);
+}
+.kjt-fs-btn:focus-visible {
+  outline: 2px solid var(--seg);
+  outline-offset: 2px;
+}
+
+/* scroll area — keeps the flow to one tidy screen with its own scroll */
+.kjt-scroll {
+  max-height: calc(100dvh - 15rem);
+  overflow-y: auto;
+  padding-right: 8px;
+  margin-right: -4px;
+}
+.kjt-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+.kjt-scroll::-webkit-scrollbar-thumb {
+  background: rgba(50, 62, 72, 0.22);
+  border-radius: 8px;
+}
+
+/* phase group */
+.kjt-phase-head {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 4px 9px;
+  background: color-mix(in srgb, var(--kjt-ground) 88%, transparent);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--kjt-line);
+}
+.kjt-phase-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--seg);
+  flex-shrink: 0;
+}
+.kjt-phase-name {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--seg);
+}
+.kjt-phase-range {
+  font-size: 11px;
+  color: var(--kjt-dim);
+  font-variant-numeric: tabular-nums;
+  margin-left: auto;
+}
+
+/* step row */
+.kjt-row {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 13px;
+  padding: 9px 6px;
+  border-bottom: 1px solid var(--kjt-line);
+}
+.kjt-row:last-child {
+  border-bottom: none;
+}
+.kjt-rail {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+.kjt-rail::before {
+  content: '';
+  position: absolute;
+  top: -9px;
+  bottom: -9px;
+  width: 2px;
+  background: var(--kjt-line);
+}
+.kjt-row:first-of-type .kjt-rail::before {
+  top: 14px;
+}
+.kjt-node {
+  position: relative;
+  z-index: 1;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--kjt-panel);
+  border: 2px solid var(--seg);
+  color: var(--seg);
+  font-size: 10.5px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.kjt-content {
+  min-width: 0;
+}
+.kjt-row-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--kjt-text);
+  line-height: 1.25;
+}
+.kjt-row-title svg {
+  width: 15px;
+  height: 15px;
+  stroke: var(--seg);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+.kjt-row-desc {
+  margin: 2px 0 0;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--kjt-dim);
+}
+.kjt-row-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 6px;
+}
+.kjt-chip {
+  font-size: 10.5px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--kjt-chip);
+  border: 1px solid var(--kjt-ring);
+  color: var(--kjt-text);
+}
+
+/* fullscreen: fill viewport, keep the flow scrollable */
+.kjt:fullscreen,
+.kjt.kjt-fs {
+  width: 100vw;
+  height: 100vh;
+  border-radius: 0;
+  border: none;
+  padding: clamp(20px, 4vh, 44px) clamp(24px, 7vw, 120px);
+}
+.kjt:fullscreen .kjt-scroll,
+.kjt.kjt-fs .kjt-scroll {
+  max-height: calc(100vh - 9rem);
+}
+
+@media (max-width: 560px) {
+  .kjt-scroll {
+    max-height: calc(100dvh - 13rem);
   }
 }
 

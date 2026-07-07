@@ -26,6 +26,7 @@ import {
   Library,
   Route,
   Network,
+  Workflow,
 } from 'lucide-react'
 
 type Zone = {
@@ -98,6 +99,14 @@ const ZONES: Zone[] = [
     icon: Library,
     box: { left: '22%', top: '46%', width: '16%', height: '15%' },
     align: 'start',
+  },
+  {
+    href: '/journey',
+    label: 'Process Flow',
+    ariaLabel: 'Go to Process Flow',
+    icon: Workflow,
+    box: { left: '76%', top: '76%', width: '20%', height: '18%' },
+    align: 'center',
   },
 ]
 
@@ -234,7 +243,7 @@ function KitchenSVG() {
       preserveAspectRatio="xMidYMid slice"
       className="absolute inset-0 h-full w-full"
       role="img"
-      aria-label="A stylized Magppie kitchen: a window, a wall display, a run of cabinets, a counter with an open recipe book, and a central stone island."
+      aria-label="A stylized Magppie kitchen: a window, a wall display, a run of cabinets, a counter with an open recipe book, a floor rug with a route motif, and a central stone island."
     >
       <defs>
         <linearGradient id="kccWall" x1="0" y1="0" x2="0" y2="1">
@@ -350,6 +359,22 @@ function KitchenSVG() {
           strokeWidth="3"
           strokeLinecap="round"
         />
+      </g>
+
+      {/* Floor rug with a winding route motif → Process Flow */}
+      <g id="process-mat">
+        <path d="M916 478 L1148 478 L1168 566 L892 566 Z" fill="rgb(var(--stone-espresso))" stroke="rgb(var(--stone-brass) / 0.3)" strokeWidth="1.5" />
+        <path
+          d="M926 552 q30 -22 60 -6 t60 -8 t60 -8"
+          fill="none"
+          stroke="rgb(var(--stone-sage))"
+          strokeWidth="2.5"
+          strokeDasharray="1 9"
+          strokeLinecap="round"
+        />
+        <circle cx="926" cy="552" r="5" fill="rgb(var(--stone-sage))" />
+        <circle cx="1046" cy="538" r="5" fill="rgb(var(--m-accent-copper))" />
+        <path d="M1096 528 l9 5 l-9 5 l3 -5Z" fill="rgb(var(--m-accent-copper))" />
       </g>
 
       {/* Island — foreground centre, largest, closest. Isometric slab. */}

@@ -36,8 +36,14 @@ export interface QuizAttempt {
   completedAt: string
   correctCount: number
   totalQuestions: number
+  /** Total score = basePoints + bonusPoints (this is what the leaderboard ranks on). */
   score: number
+  /** Base points cap only (e.g. 300 for the full monthly challenge) — bonuses are on top. */
   maxScore: number
+  /** Points from correct answers at their difficulty's base value. */
+  basePoints?: number
+  /** Speed + streak bonus points earned this attempt. */
+  bonusPoints?: number
   byLevel: Record<QuizLevel, { correct: number; total: number }>
   answers: AnsweredQuestion[]
 }
@@ -141,6 +147,8 @@ export interface LeaderboardRow {
   name: string
   initials: string
   points: number
+  /** Accuracy (0–100) on Hard-tier questions — first tie-break below points. */
+  hardAccuracy: number
   isCurrentUser: boolean
   rank: number
 }
@@ -165,13 +173,15 @@ function seeded(seed: number): number {
 
 export function monthlyLeaderboard(
   monthIndex: number,
-  currentUser: { name: string; initials: string; points: number },
+  currentUser: { name: string; initials: string; points: number; hardAccuracy?: number },
 ): LeaderboardRow[] {
   const peers = PEER_BDES.map((p, i) => {
     // Vary each peer's score by ±40 based on month + index, clamped to [0, 300].
     const jitter = Math.round((seeded(monthIndex * 31 + i) - 0.5) * 80)
     const points = Math.max(0, Math.min(300, p.base + jitter))
-    return { name: p.name, initials: p.initials, points, isCurrentUser: false }
+    // Synthetic Hard-tier accuracy (50–100%), deterministic per month + peer.
+    const hardAccuracy = Math.round(50 + seeded(monthIndex * 53 + i * 7) * 50)
+    return { name: p.name, initials: p.initials, points, hardAccuracy, isCurrentUser: false }
   })
 
   const rows = [
@@ -180,11 +190,20 @@ export function monthlyLeaderboard(
       name: currentUser.name,
       initials: currentUser.initials,
       points: currentUser.points,
+      hardAccuracy: currentUser.hardAccuracy ?? 0,
       isCurrentUser: true,
     },
   ]
 
+  // Rank by total points; ties broken by Hard-tier accuracy (rewards depth over
+  // volume), then finally by keeping the signed-in user visually first among
+  // exact ties so their row is easy to find.
   return rows
-    .sort((a, b) => b.points - a.points || (a.isCurrentUser ? -1 : 1))
+    .sort(
+      (a, b) =>
+        b.points - a.points ||
+        b.hardAccuracy - a.hardAccuracy ||
+        (a.isCurrentUser ? -1 : 1),
+    )
     .map((r, i) => ({ ...r, rank: i + 1 }))
 }
