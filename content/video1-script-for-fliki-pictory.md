@@ -10,6 +10,24 @@ or similar premium English voice), speed slightly slow.
 
 ---
 
+## 30-second cut (3 scenes)
+
+**Scene 1 of 3**
+Voiceover: Our mission is to transform ordinary homes into wellness homes. Spaces that keep you, your family, and the planet safe.
+Visual: dark minimalist luxury kitchen at dawn, single shaft of pale light on a matte stone countertop, dust drifting in the beam, slow dolly-in
+
+**Scene 2 of 3**
+Voiceover: Magppie Group has been in business for over fifty years. Our kitchens are made entirely from SilverStone, our patented sanitised stone. Zero percent wood.
+Visual: pristine stone slab catching first light as shadows recede across it, slow tilt
+
+**Scene 3 of 3**
+Voiceover: Anti-bacterial. Fire-safe. Stronger than granite. Backed by a twenty-five year guarantee, and honoured at KBIS twenty twenty-six. Magppie. Welcome home.
+Visual: water droplets beading off a stone edge in slow motion, then a slow pull-back to the wide dawn kitchen
+
+---
+
+## Full cut (22 scenes)
+
 **Scene 1**
 Voiceover: Our mission is to transform ordinary homes into wellness homes. Spaces that keep you, your family, and the planet safe.
 Visual: dark minimalist luxury kitchen at dawn, single shaft of pale light on a matte stone countertop, dust drifting in the beam, slow dolly-in
