@@ -77,14 +77,14 @@ export default function KitchenToolsBackdrop() {
       {TOOLS.map((t, i) => (
         <svg
           key={i}
-          className="kitchen-float absolute text-stone-ink/[0.16] dark:text-stone-brass/[0.32]"
+          className="kitchen-float absolute text-stone-ink/[0.32] dark:text-stone-brass/[0.55]"
           style={t.style}
-          width={t.size}
-          height={t.size}
+          width={t.size * 1.25}
+          height={t.size * 1.25}
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          strokeWidth={1.5}
+          strokeWidth={1.75}
           strokeLinecap="round"
           strokeLinejoin="round"
         >
