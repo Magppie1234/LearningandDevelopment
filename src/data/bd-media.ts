@@ -25,11 +25,25 @@ export interface ModuleVideoConfig {
 
 /**
  * Expected local asset path convention (§2): /assets/bd-academy/module-{n}/{lang}.mp4
- * No entries exist yet for any module — every module currently renders the
- * "coming soon" state. As real files are dropped in, add a variant here
- * (or wire this to admin/content once that CMS reaches BD academy).
+ * Modules without an entry render the "coming soon" state. As real files are
+ * dropped in, add a variant here (or wire this to admin/content once that
+ * CMS reaches BD academy).
  */
-export const BD_VIDEO_CONFIG: ModuleVideoConfig[] = []
+export const BD_VIDEO_CONFIG: ModuleVideoConfig[] = [
+  {
+    // Module 1 — "The Magppie Story" brand film (Section 1 script, narrated,
+    // cinematic monochrome). Rendered locally via Remotion + Edge neural TTS.
+    moduleId: 'bd-m1',
+    variants: [
+      {
+        languageCode: 'en',
+        languageLabel: 'English',
+        videoUrl: '/assets/bd-academy/module-1/en.mp4',
+        subtitleUrl: '/assets/bd-academy/module-1/en.vtt',
+      },
+    ],
+  },
+]
 
 export function videoConfigForModule(moduleId: string): ModuleVideoConfig | undefined {
   return BD_VIDEO_CONFIG.find((m) => m.moduleId === moduleId)
