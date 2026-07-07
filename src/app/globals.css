@@ -9,9 +9,12 @@
 */
 @layer base {
   :root {
-    /* Magppie brand tokens (RGB triplets — see tailwind.config.cjs) */
-    --m-parchment: 246 241 233;
-    --m-cream: 239 230 216;
+    /* Magppie brand tokens (RGB triplets — see tailwind.config.cjs).
+       Light-theme UI chrome (cards, sidebar, header) is neutral warm-white —
+       NOT pink — so it reads as clean surfaces floating on the rose-marble
+       page background (the marble photo is the only pink element). */
+    --m-parchment: 252 249 246; /* #FCF9F6 neutral warm white */
+    --m-cream: 250 245 239; /* #FAF5EF neutral cream */
     --m-ink-primary: 58 42 28;
     --m-ink-secondary: 107 84 64;
     --m-ink-tertiary: 156 138 118;
@@ -23,7 +26,7 @@
     --m-accent-copper: 184 112 63; /* #B8703F */
     --m-accent-silver: 168 174 184; /* #A8AEB8 */
     --m-accent-gold: 184 112 63;
-    --m-surface-warm: 232 223 207;
+    --m-surface-warm: 238 227 214; /* #EEE3D6 neutral warm tan */
 
     /* "Warm Stone" — Kitchen Command Center palette (RGB triplets).
        The material Magppie actually sells: sintered stone + warm metal, at
@@ -52,33 +55,33 @@
     --status-overdue-fg: hsl(4 65% 32%);
     --ring-track: rgba(0, 59, 70, 0.08);
 
-    --background: 36 33% 96%;        /* light beige page bg */
+    --background: 30 30% 98%;        /* neutral warm-white page bg (marble photo shows through gaps) */
     --foreground: 28 35% 16%;        /* espresso text */
-    --card: 0 0% 100%;               /* white surfaces */
+    --card: 30 25% 99%;              /* neutral warm-white surfaces */
     --card-foreground: 28 35% 16%;
-    --popover: 0 0% 100%;
+    --popover: 30 25% 99%;
     --popover-foreground: 28 35% 16%;
     --primary: 28 38% 28%;           /* rich brown */
     --primary-foreground: 36 33% 97%;
-    --secondary: 34 30% 90%;         /* soft beige */
+    --secondary: 30 22% 93%;         /* soft neutral tan */
     --secondary-foreground: 28 38% 24%;
-    --muted: 34 25% 92%;
+    --muted: 30 18% 94%;
     --muted-foreground: 30 12% 42%;
     --accent: 28 45% 45%;            /* warm caramel accent */
     --accent-foreground: 36 33% 97%;
     --destructive: 4 60% 48%;
     --destructive-foreground: 36 33% 97%;
-    --border: 32 22% 86%;            /* warm hairline */
-    --input: 32 22% 84%;
+    --border: 30 18% 88%;            /* neutral hairline */
+    --input: 30 18% 86%;
     --ring: 28 45% 45%;
     --radius: 0.75rem;
-    --sidebar-background: 0 0% 100%;
+    --sidebar-background: 30 25% 99%;
     --sidebar-foreground: 28 35% 16%;
     --sidebar-primary: 28 38% 28%;
     --sidebar-primary-foreground: 36 33% 97%;
-    --sidebar-accent: 34 30% 92%;
+    --sidebar-accent: 30 22% 94%;
     --sidebar-accent-foreground: 28 38% 24%;
-    --sidebar-border: 32 22% 88%;
+    --sidebar-border: 30 18% 90%;
     --sidebar-ring: 28 45% 45%;
   }
 
@@ -160,26 +163,21 @@
     background-attachment: fixed;
   }
 
-  /* Light theme — "designer stone" surfaces instead of flat colors. The page
-     is a light honed-marble slab; card surfaces (bg-cream / bg-card) carry a
-     subtle stone grain blended over their own color so they read like polished
-     stone tiles. Procedural SVG textures (fractal noise) — no raster assets.
-     Dark theme keeps its warm ambient glow above; these apply in light only. */
+  /* Light theme — rose marble page background (photographic slab, exact
+     client reference). A translucent white wash sits over the photo to lift
+     its brightness (photos can't take a CSS filter without affecting content,
+     since it's on <body> — a second background layer achieves the same
+     effect). Single non-tiled cover image. Dark theme keeps its warm ambient
+     glow above; this applies in light only. */
   :root:not(.dark) body {
-    background-color: #f3ede3;
-    /* One continuous marble slab (cover, not tiled) so veins never repeat. */
-    background-image: url('/stone-page-light.svg');
+    background-color: #fdf8f6;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)),
+      url('/marble-rose-photo.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
-  }
-  :root:not(.dark) .bg-cream,
-  :root:not(.dark) .bg-card,
-  :root:not(.dark) .bg-surface-cream {
-    background-image: url('/stone-tile-light.svg');
-    background-size: 360px;
-    background-blend-mode: multiply;
   }
 
   * {
@@ -332,6 +330,84 @@
 .kjt-fs-btn:focus-visible {
   outline: 2px solid var(--seg);
   outline-offset: 2px;
+}
+
+/* search */
+.kjt-searchbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: clamp(10px, 2vw, 16px);
+}
+.kjt-search {
+  position: relative;
+  width: 100%;
+  max-width: 340px;
+}
+.kjt-search-icon {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--kjt-dim);
+  pointer-events: none;
+  transition: color 0.2s;
+}
+.kjt-search input {
+  width: 100%;
+  height: 40px;
+  padding: 0 34px 0 36px;
+  border-radius: 999px;
+  border: 1px solid var(--kjt-ring);
+  background: var(--kjt-panel);
+  color: var(--kjt-text);
+  font-family: var(--sans);
+  font-size: 13.5px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.kjt-search input::placeholder {
+  color: var(--kjt-dim);
+}
+.kjt-search input:focus {
+  outline: none;
+  border-color: var(--seg);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--seg) 18%, transparent);
+}
+.kjt-search:has(input:focus) .kjt-search-icon {
+  color: var(--seg);
+}
+.kjt-search-clear {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--kjt-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.kjt-search-clear:hover {
+  background: var(--kjt-chip);
+  color: var(--kjt-text);
+}
+.kjt-search-count {
+  font-size: 12px;
+  color: var(--kjt-dim);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.kjt-empty {
+  text-align: center;
+  color: var(--kjt-dim);
+  font-size: 13.5px;
+  padding: 32px 0;
 }
 
 /* scroll area — keeps the flow to one tidy screen with its own scroll */

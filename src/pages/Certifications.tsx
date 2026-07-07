@@ -341,24 +341,17 @@ export default function Certifications() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: easeOut }}
-        className="relative rounded-3xl overflow-hidden"
-        style={{
-          background: 'linear-gradient(135deg, rgb(var(--stone-espresso)) 0%, rgb(var(--stone-charcoal)) 100%)',
-        }}
+        className="relative rounded-3xl overflow-hidden bg-card border border-[rgba(0,59,70,0.08)] shadow-card"
       >
         <div className="p-10 flex items-center justify-between gap-8">
           <div className="flex-1">
-            {/* §4: copper primary accent (dark-surface variant #C88255 on navy) */}
-            <p className="text-[11px] font-semibold uppercase tracking-[2px] text-[#C88255] mb-3">
+            <p className="text-[11px] font-semibold uppercase tracking-[2px] text-accent-copper mb-3">
               CERTIFICATION PROGRAM
             </p>
-            <h1
-              className="font-serif text-[52px] font-normal leading-tight mb-4"
-              style={{ color: '#f8f5f0' }}
-            >
+            <h1 className="font-serif text-[52px] font-normal leading-tight mb-4 text-ink-primary">
               Your Certification Journey
             </h1>
-            <p className="text-lg leading-relaxed max-w-[600px]" style={{ color: 'rgba(248,245,240,0.8)' }}>
+            <p className="text-lg leading-relaxed max-w-[600px] text-ink-secondary">
               Magppie&apos;s certification framework recognizes your expertise across five levels.
               Each level unlocks new opportunities, responsibilities, and career advancement.
             </p>
@@ -367,19 +360,18 @@ export default function Certifications() {
             initial={{ opacity: 0, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4, delay: 0.2 }}
-            className="rounded-2xl p-6 flex-shrink-0 w-[260px]"
-            style={{ background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(10px)' }}
+            className="rounded-2xl p-6 flex-shrink-0 w-[260px] bg-cream border border-[rgba(0,59,70,0.08)]"
           >
-            <p className="text-sm font-semibold" style={{ color: '#f8f5f0' }}>
+            <p className="text-sm font-semibold text-ink-primary">
               Level {userProgress.currentLevel} — {userProgress.currentLevelName}
             </p>
             <div className="flex items-center gap-4 mt-4">
-              <ProgressRing size={80} progress={userProgress.overallProgress} color="#C88255" label="" />
+              <ProgressRing size={80} progress={userProgress.overallProgress} color="#B8703F" label="" />
               <div>
-                <p className="text-[13px]" style={{ color: '#f8f5f0' }}>
+                <p className="text-[13px] text-ink-secondary">
                   {userProgress.levelsCompleted} of {userProgress.totalLevels} Levels Complete
                 </p>
-                <p className="text-xs mt-1 text-[#C88255]">
+                <p className="text-xs mt-1 text-accent-copper">
                   Next: Level {userProgress.currentLevel + 1} — {userProgress.nextLevel}
                 </p>
               </div>

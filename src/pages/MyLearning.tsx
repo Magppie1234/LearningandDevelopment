@@ -314,14 +314,14 @@ export default function MyLearning() {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: 'easeOut' }}
-        className="relative bg-stone-espresso rounded-2xl p-8 overflow-hidden"
+        className="relative bg-card border border-[rgba(0,59,70,0.08)] shadow-card rounded-2xl p-8 overflow-hidden"
       >
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <h2 className="font-serif text-[28px] font-normal text-stone-ivory">
+            <h2 className="font-serif text-[28px] font-normal text-ink-primary">
               Good morning, Sarah
             </h2>
-            <p className="text-stone-ivory/70 text-base mt-1">
+            <p className="text-ink-secondary text-base mt-1">
               Here&apos;s your learning progress for October 2024
             </p>
 
@@ -335,11 +335,11 @@ export default function MyLearning() {
               ].map((pill) => (
                 <div
                   key={pill.label}
-                  className="flex items-center gap-2 rounded-full px-5 py-2.5 bg-white/[0.08]"
+                  className="flex items-center gap-2 rounded-full px-5 py-2.5 bg-cream border border-[rgba(0,59,70,0.08)]"
                 >
                   <pill.icon size={16} className="text-accent-copper flex-shrink-0" />
-                  <span className="text-stone-ivory text-lg font-bold">{pill.num}</span>
-                  <span className="text-stone-ivory/70 text-[11px] font-medium uppercase">
+                  <span className="text-ink-primary text-lg font-bold">{pill.num}</span>
+                  <span className="text-ink-tertiary text-[11px] font-medium uppercase">
                     {pill.label}
                   </span>
                 </div>
@@ -353,11 +353,11 @@ export default function MyLearning() {
               pct={68}
               size={100}
               stroke={8}
-              trackColor="rgba(255,255,255,0.15)"
-              fillColor="#a7c4d4"
+              trackColor="rgba(0,59,70,0.08)"
+              fillColor="#B8703F"
               label={ringTriggered ? '68%' : '0%'}
               sublabel="Overall Progress"
-              textColor="#f8f5f0"
+              textColor="#3a2a1c"
               delay={200}
             />
           </div>

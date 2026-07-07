@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Maximize2, Minimize2 } from 'lucide-react'
+import { Maximize2, Minimize2, Search, X } from 'lucide-react'
 import { FLOWS } from '@/data/flows'
 
 /* Icon library — inner SVG markup keyed by the `ic` field on each step. */
@@ -58,9 +58,14 @@ const ICONS: Record<string, string> = {
 export default function KitchenJourney() {
   const [flowId, setFlowId] = useState(FLOWS[0].id)
   const [fullscreen, setFullscreen] = useState(false)
+  const [query, setQuery] = useState('')
   const rootRef = useRef<HTMLDivElement>(null)
 
   const flow = FLOWS.find((f) => f.id === flowId) ?? FLOWS[0]
+
+  // Reset the search whenever the flow tab changes — a filter carried over
+  // from a different flow reads as broken rather than helpful.
+  useEffect(() => setQuery(''), [flowId])
 
   /* Group the flat step list under its phase, carrying each step's global number. */
   const groups = useMemo(
@@ -74,6 +79,23 @@ export default function KitchenJourney() {
       })),
     [flow],
   )
+
+  const needle = query.trim().toLowerCase()
+  const filteredGroups = useMemo(() => {
+    if (!needle) return groups
+    return groups
+      .map((g) => ({
+        ...g,
+        steps: g.steps.filter(
+          ({ s, n }) =>
+            s.t.toLowerCase().includes(needle) ||
+            s.d.toLowerCase().includes(needle) ||
+            String(n) === needle,
+        ),
+      }))
+      .filter((g) => g.steps.length > 0)
+  }, [groups, needle])
+  const resultCount = filteredGroups.reduce((sum, g) => sum + g.steps.length, 0)
 
   useEffect(() => {
     const onChange = () => setFullscreen(document.fullscreenElement === rootRef.current)
@@ -126,8 +148,39 @@ export default function KitchenJourney() {
         </div>
       </div>
 
+      <div className="kjt-searchbar">
+        <div className="kjt-search">
+          <Search size={15} className="kjt-search-icon" aria-hidden />
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder={`Search ${flow.label.toLowerCase()} steps…`}
+            aria-label={`Search ${flow.label} steps`}
+          />
+          {query && (
+            <button
+              type="button"
+              className="kjt-search-clear"
+              onClick={() => setQuery('')}
+              aria-label="Clear search"
+            >
+              <X size={13} />
+            </button>
+          )}
+        </div>
+        {needle && (
+          <span className="kjt-search-count">
+            {resultCount} {resultCount === 1 ? 'result' : 'results'}
+          </span>
+        )}
+      </div>
+
       <div className="kjt-scroll">
-        {groups.map(({ phase, steps }) => (
+        {needle && filteredGroups.length === 0 && (
+          <p className="kjt-empty">No steps match “{query.trim()}”.</p>
+        )}
+        {filteredGroups.map(({ phase, steps }) => (
           <section key={phase.name}>
             {flow.phases.length > 1 && (
               <div

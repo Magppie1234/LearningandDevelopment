@@ -169,26 +169,26 @@ export default function Academies() {
           ease: [0, 0, 0.2, 1] as [number, number, number, number],
           delay: 0.1,
         }}
-        className="relative overflow-hidden rounded-3xl bg-stone-espresso p-10"
+        className="relative overflow-hidden rounded-3xl bg-card border border-[rgba(0,59,70,0.08)] shadow-card p-10"
       >
         {/* Decorative pattern */}
         <div
           className="absolute right-0 top-0 w-1/2 h-full opacity-20 pointer-events-none"
           style={{
-            backgroundImage: `radial-gradient(circle at 70% 30%, rgba(167,196,212,0.4) 0%, transparent 60%)`,
+            backgroundImage: `radial-gradient(circle at 70% 30%, rgba(184,112,63,0.2) 0%, transparent 60%)`,
           }}
         />
-        <div className="absolute right-10 top-1/2 -translate-y-1/2 w-48 h-48 rounded-full border border-surface-blue/20 opacity-30" />
-        <div className="absolute right-24 top-1/2 -translate-y-1/2 w-32 h-32 rounded-full border border-surface-blue/15 opacity-20" />
+        <div className="absolute right-10 top-1/2 -translate-y-1/2 w-48 h-48 rounded-full border border-accent-copper/15 opacity-40" />
+        <div className="absolute right-24 top-1/2 -translate-y-1/2 w-32 h-32 rounded-full border border-accent-copper/10 opacity-30" />
 
         <div className="relative z-10 max-w-[600px]">
-          <p className="text-[11px] font-semibold uppercase tracking-[1.5px] text-accent-gold mb-3">
+          <p className="text-[11px] font-semibold uppercase tracking-[1.5px] text-accent-copper mb-3">
             FEATURED ACADEMY
           </p>
-          <h2 className="font-serif text-4xl font-normal text-stone-ivory mb-3">
+          <h2 className="font-serif text-4xl font-normal text-ink-primary mb-3">
             {featuredAcademy.name}
           </h2>
-          <p className="text-base text-stone-ivory/80 leading-relaxed mb-6">
+          <p className="text-base text-ink-secondary leading-relaxed mb-6">
             Master the art of wellness product business development. From market
             analysis to client relationship management, this academy covers
             everything you need to drive growth.
@@ -205,10 +205,10 @@ export default function Academies() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 + i * 0.1, duration: 0.4 }}
-                className="flex items-center gap-2 bg-white/[0.08] rounded-full px-4 py-2"
+                className="flex items-center gap-2 bg-cream border border-[rgba(0,59,70,0.08)] rounded-full px-4 py-2"
               >
-                <stat.icon size={16} className="text-stone-ivory" />
-                <span className="text-sm text-stone-ivory font-medium">
+                <stat.icon size={16} className="text-ink-secondary" />
+                <span className="text-sm text-ink-primary font-medium">
                   {stat.label}
                 </span>
               </motion.div>
@@ -217,7 +217,7 @@ export default function Academies() {
 
           <Link
             href={`/academy/${featuredAcademy.id}`}
-            className="inline-flex items-center gap-2 bg-accent-copper text-stone-charcoal px-7 py-3.5 rounded-full text-sm font-semibold hover:brightness-95 hover:-translate-y-px transition-all"
+            className="inline-flex items-center gap-2 bg-accent-copper text-stone-ivory px-7 py-3.5 rounded-full text-sm font-semibold hover:brightness-95 hover:-translate-y-px transition-all"
           >
             Explore Academy
             <ArrowRight size={16} />
