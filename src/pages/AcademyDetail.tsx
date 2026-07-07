@@ -540,12 +540,12 @@ function BdCurriculumTab({ academyColor }: { academyColor: string }) {
           role="dialog"
           aria-modal="true"
           aria-label={bdEffectiveTitle(overrides, openModule.id, openModule.title)}
-          className="fixed inset-0 z-[100] flex items-start justify-center bg-black/50 p-3 sm:p-8"
+          className="fixed inset-0 z-[100] flex items-start justify-center bg-black/50 p-2 sm:p-4"
           onClick={(e) => {
             if (e.target === e.currentTarget) setExpandedId(null)
           }}
         >
-          <div className="w-full max-w-[900px] max-h-[calc(100dvh-1.5rem)] sm:max-h-[calc(100dvh-4rem)] overflow-y-auto rounded-2xl bg-card shadow-2xl">
+          <div className="w-full max-w-[1200px] max-h-[calc(100dvh-1rem)] sm:max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-2xl bg-card shadow-2xl">
             <div className="sticky top-0 z-10 flex items-center gap-3 bg-card/95 backdrop-blur-sm border-b border-[rgba(0,59,70,0.1)] px-5 py-4">
               <span className="text-xs font-medium text-ink-tertiary w-6 flex-shrink-0">
                 {String(openModule.number).padStart(2, '0')}
@@ -564,7 +564,7 @@ function BdCurriculumTab({ academyColor }: { academyColor: string }) {
             </div>
 
             <div className="px-5 py-6">
-              <div className="max-w-[760px] mx-auto">
+              <div className="max-w-[900px] mx-auto">
                 <p className="text-sm text-ink-secondary mb-4">{openModule.summary}</p>
                 <BdVideoPlayer module={openModule} />
                 <div className="mt-5 space-y-3.5">
