@@ -97,21 +97,21 @@ const FAQ_CLASSIFICATION: Record<string, FaqClassification> = {
     type: 'compare',
     columns: [
       {
-        title: 'SilverStone',
-        rows: [
-          { label: 'Grout lines', value: 'None' },
-          { label: 'Dirt and grease buildup', value: 'None — no grout to collect it' },
-          { label: 'Mould and fungus', value: 'Cannot grow on the surface' },
-          { label: 'Heat resistance', value: 'Heat-resistant' },
-        ],
-      },
-      {
         title: 'Tiles',
         rows: [
           { label: 'Grout lines', value: 'Grout lines throughout' },
           { label: 'Dirt and grease buildup', value: 'Grout prone to dirt and grease buildup' },
           { label: 'Mould and fungus', value: 'Grout prone to contamination' },
           { label: 'Heat resistance', value: '—' },
+        ],
+      },
+      {
+        title: 'SilverStone',
+        rows: [
+          { label: 'Grout lines', value: 'None' },
+          { label: 'Dirt and grease buildup', value: 'None — no grout to collect it' },
+          { label: 'Mould and fungus', value: 'Cannot grow on the surface' },
+          { label: 'Heat resistance', value: 'Heat-resistant' },
         ],
       },
     ],
