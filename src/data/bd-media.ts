@@ -43,6 +43,19 @@ export const BD_VIDEO_CONFIG: ModuleVideoConfig[] = [
       },
     ],
   },
+  {
+    // Module 2 — "Inside SilverStone" (bd-m2 content + training doc 1.3/1.4
+    // scripts). Same film system and narrator as Module 1.
+    moduleId: 'bd-m2',
+    variants: [
+      {
+        languageCode: 'en',
+        languageLabel: 'English',
+        videoUrl: '/assets/bd-academy/module-2/en.mp4',
+        subtitleUrl: '/assets/bd-academy/module-2/en.vtt',
+      },
+    ],
+  },
 ]
 
 export function videoConfigForModule(moduleId: string): ModuleVideoConfig | undefined {
