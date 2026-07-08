@@ -1044,13 +1044,22 @@ export default function AcademyDetail() {
         </div>
 
         <div className="flex items-start gap-5 mb-5">
-          {/* Academy Icon */}
-          <div
-            className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0"
-            style={{ backgroundColor: `${academy.color}30` }}
-          >
-            <IconComponent size={28} style={{ color: academy.color }} />
-          </div>
+          {/* Academy Icon — a photo when the academy has one, else the Lucide glyph */}
+          {academy.image ? (
+            <img
+              src={academy.image}
+              alt={`${academy.name} thumbnail`}
+              className="w-16 h-16 rounded-full object-cover flex-shrink-0 border-2"
+              style={{ borderColor: academy.color }}
+            />
+          ) : (
+            <div
+              className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0"
+              style={{ backgroundColor: `${academy.color}30` }}
+            >
+              <IconComponent size={28} style={{ color: academy.color }} />
+            </div>
+          )}
 
           <div className="flex-1">
             <motion.h1

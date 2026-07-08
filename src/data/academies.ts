@@ -78,6 +78,8 @@ export interface Academy {
   colorClass: string
   icon: string
   iconFn: LucideIcon
+  /** Optional photo shown in place of the icon on academy cards and headers. */
+  image?: string
   courseCount: number
   enrollmentCount: number
   avgRating: number
@@ -114,6 +116,7 @@ export const academies: Academy[] = [
     colorClass: 'bg-[#a7c4d4]',
     icon: 'Briefcase',
     iconFn: Briefcase,
+    image: '/course-thumb-bd.jpg',
     courseCount: 10,
     enrollmentCount: 340,
     avgRating: 4.8,

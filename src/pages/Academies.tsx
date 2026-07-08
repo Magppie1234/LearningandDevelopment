@@ -268,16 +268,25 @@ export default function Academies() {
                   />
 
                   <div className="p-5">
-                    {/* Icon */}
-                    <div
-                      className="w-11 h-11 rounded-full flex items-center justify-center mb-4"
-                      style={{ backgroundColor: `${academy.color}25` }}
-                    >
-                      <IconComponent
-                        size={22}
-                        style={{ color: academy.color }}
+                    {/* Icon — a photo when the academy has one, else the Lucide glyph */}
+                    {academy.image ? (
+                      <img
+                        src={academy.image}
+                        alt={`${academy.name} thumbnail`}
+                        className="w-11 h-11 rounded-full object-cover mb-4 border-2"
+                        style={{ borderColor: academy.color }}
                       />
-                    </div>
+                    ) : (
+                      <div
+                        className="w-11 h-11 rounded-full flex items-center justify-center mb-4"
+                        style={{ backgroundColor: `${academy.color}25` }}
+                      >
+                        <IconComponent
+                          size={22}
+                          style={{ color: academy.color }}
+                        />
+                      </div>
+                    )}
 
                     {/* Title */}
                     <h3 className="text-base font-semibold text-ink-primary mb-1.5 leading-snug">
