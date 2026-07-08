@@ -672,6 +672,12 @@ const initialsOf = (name: string) =>
     .join('')
     .toUpperCase()
 
+/** Only the founder has an approved photo in the repo; everyone else gets a
+ *  monogram medallion. Names + roles only, per the content rule. */
+const LEADER_PHOTO: Record<string, string> = {
+  'Vinod Jain': '/founder-vinod-jain.jpg',
+}
+
 /** Popup for a leader — kitchen visual behind, still names + roles only. */
 function LeaderModal({
   person,
@@ -680,6 +686,7 @@ function LeaderModal({
   person: { name: string; role: string }
   onClose: () => void
 }) {
+  const photo = LEADER_PHOTO[person.name]
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -714,12 +721,30 @@ function LeaderModal({
           style={{ background: `linear-gradient(190deg, ${NAVY}d9 0%, ${NAVY}f5 78%)` }}
         />
         <div className="relative px-8 py-12 text-center">
-          <div
-            className="mx-auto w-20 h-20 rounded-full flex items-center justify-center font-serif text-2xl"
-            style={{ border: `1.5px solid ${GOLD}`, color: GOLD, backgroundColor: 'rgba(6,42,51,0.6)' }}
+          <motion.div
+            initial={{ scale: 0.7, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: 'spring', stiffness: 260, damping: 18, delay: 0.1 }}
+            className="mx-auto w-24 h-24 rounded-full p-[3px]"
+            style={{ background: `conic-gradient(from 210deg, ${GOLD}, #f3ede2 40%, ${GOLD})` }}
           >
-            {initialsOf(person.name)}
-          </div>
+            {photo ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={photo}
+                alt={person.name}
+                className="w-full h-full rounded-full object-cover"
+                draggable={false}
+              />
+            ) : (
+              <span
+                className="w-full h-full rounded-full flex items-center justify-center font-serif text-2xl"
+                style={{ color: GOLD, backgroundColor: 'rgba(6,42,51,0.92)' }}
+              >
+                {initialsOf(person.name)}
+              </span>
+            )}
+          </motion.div>
           <p className="mt-6 font-serif text-3xl text-[#f3ede2]">{person.name}</p>
           <p className="mt-2 text-[13px] tracking-[0.18em] uppercase" style={{ color: GOLD }}>
             {person.role}
@@ -728,7 +753,7 @@ function LeaderModal({
           <button
             type="button"
             onClick={onClose}
-            className="mt-8 rounded-full px-6 py-2 text-[13px] font-semibold transition-colors"
+            className="mt-8 rounded-full px-6 py-2 text-[13px] font-semibold transition-colors hover:bg-[rgba(243,237,226,0.08)]"
             style={{ border: `1px solid ${GOLD}90`, color: '#f3ede2' }}
           >
             Close
@@ -739,8 +764,88 @@ function LeaderModal({
   )
 }
 
+function LeaderCard({
+  person,
+  index,
+  featured,
+  onSelect,
+}: {
+  person: { name: string; role: string }
+  index: number
+  featured?: boolean
+  onSelect: () => void
+}) {
+  const photo = LEADER_PHOTO[person.name]
+  return (
+    <motion.button
+      type="button"
+      onClick={onSelect}
+      initial={{ opacity: 0, y: 22 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.25 }}
+      transition={{ type: 'spring', stiffness: 120, damping: 16, delay: (index % 4) * 0.07 }}
+      whileHover={{ y: -6, scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      className={cn(
+        'group relative overflow-hidden text-center rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream/85 transition-shadow hover:shadow-elevated',
+        featured ? 'sm:col-span-2 px-6 py-7 flex items-center gap-6 text-left' : 'px-4 py-6',
+      )}
+    >
+      {/* sheen sweep on hover */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 opacity-0 group-hover:opacity-100 group-hover:translate-x-[320%] transition-all duration-700"
+        style={{ background: 'linear-gradient(90deg, transparent, rgba(200,130,85,0.16), transparent)' }}
+      />
+      {/* gold ring appears on hover */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        style={{ boxShadow: `inset 0 0 0 1.5px ${GOLD}90` }}
+      />
+      <span
+        className={cn(
+          'rounded-full p-[2.5px] shrink-0 transition-transform duration-300 group-hover:scale-105',
+          featured ? 'w-20 h-20' : 'mx-auto mb-3 block w-14 h-14',
+        )}
+        style={{ background: `conic-gradient(from 210deg, ${GOLD}, rgba(0,59,70,0.2) 45%, ${GOLD})` }}
+      >
+        {photo ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={photo}
+            alt={person.name}
+            className="w-full h-full rounded-full object-cover"
+            draggable={false}
+          />
+        ) : (
+          <span
+            className="w-full h-full rounded-full flex items-center justify-center font-serif bg-parchment"
+            style={{ color: '#0b3947', fontSize: featured ? 22 : 16 }}
+          >
+            {initialsOf(person.name)}
+          </span>
+        )}
+      </span>
+      <span className={featured ? '' : 'block'}>
+        <p className={cn('font-semibold text-ink-primary', featured ? 'font-serif text-2xl' : 'text-[15px]')}>
+          {person.name}
+        </p>
+        <p className={cn('text-ink-tertiary', featured ? 'mt-1 text-[13px] tracking-[0.14em] uppercase' : 'mt-0.5 text-[12.5px]')}>
+          {person.role}
+        </p>
+        {featured && (
+          <p className="mt-2 text-[12.5px] text-ink-secondary">Tap to meet the founder →</p>
+        )}
+      </span>
+    </motion.button>
+  )
+}
+
 function LeadershipBeat() {
   const [selected, setSelected] = useState<{ name: string; role: string } | null>(null)
+  const founder = VISION_LEADERSHIP.find((p) => p.role === 'Founder')
+  const rest = VISION_LEADERSHIP.filter((p) => p.role !== 'Founder')
   return (
     <MarbleSection>
       <div className="max-w-[860px] mx-auto">
@@ -748,29 +853,14 @@ function LeadershipBeat() {
           The people behind it
         </motion.h2>
         <motion.p {...reveal} className="mt-3 text-center text-[13px] text-ink-tertiary">
-          Tap a name to meet them.
+          Tap a card to meet them.
         </motion.p>
-        <div className="mt-12 grid grid-cols-2 sm:grid-cols-3 gap-3">
-          {VISION_LEADERSHIP.map((p, i) => (
-            <motion.button
-              key={p.name}
-              type="button"
-              onClick={() => setSelected(p)}
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.5, delay: (i % 3) * 0.08 }}
-              className="group text-center rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream/80 px-4 py-5 hover:-translate-y-0.5 hover:shadow-card transition-all"
-            >
-              <span
-                className="mx-auto mb-3 w-11 h-11 rounded-full flex items-center justify-center font-serif text-[15px] transition-colors"
-                style={{ border: '1px solid rgba(0,59,70,0.25)', color: '#0b3947' }}
-              >
-                {initialsOf(p.name)}
-              </span>
-              <p className="text-[15px] font-semibold text-ink-primary">{p.name}</p>
-              <p className="mt-0.5 text-[12.5px] text-ink-tertiary">{p.role}</p>
-            </motion.button>
+        <div className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {founder && (
+            <LeaderCard person={founder} index={0} featured onSelect={() => setSelected(founder)} />
+          )}
+          {rest.map((p, i) => (
+            <LeaderCard key={p.name} person={p} index={i + 2} onSelect={() => setSelected(p)} />
           ))}
         </div>
       </div>
