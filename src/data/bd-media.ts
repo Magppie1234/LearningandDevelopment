@@ -56,6 +56,22 @@ export const BD_VIDEO_CONFIG: ModuleVideoConfig[] = [
       },
     ],
   },
+  // Modules 3–9 — same film system and narrator as Modules 1–2. Each is
+  // narrated from its reading-pack Part 3 script, with the module's key
+  // visuals (pillar rail, comparison tables, pricing charts, payment split,
+  // consultant/customer dialogue scenes) rendered on screen.
+  // Extend this list as each module's film lands in public/assets/bd-academy.
+  ...[3].map((n) => ({
+    moduleId: `bd-m${n}`,
+    variants: [
+      {
+        languageCode: 'en',
+        languageLabel: 'English',
+        videoUrl: `/assets/bd-academy/module-${n}/en.mp4`,
+        subtitleUrl: `/assets/bd-academy/module-${n}/en.vtt`,
+      },
+    ],
+  })),
   {
     // Module 10 — "Know When to Hand Off" (the FAQ/escalation module).
     // Narrated from the Module 10 reading pack Part 3 script (master doc
