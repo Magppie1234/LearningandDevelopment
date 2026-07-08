@@ -56,6 +56,22 @@ export const BD_VIDEO_CONFIG: ModuleVideoConfig[] = [
       },
     ],
   },
+  {
+    // Module 10 — "Know When to Hand Off" (the FAQ/escalation module).
+    // Narrated from the Module 10 reading pack Part 3 script (master doc
+    // §7/§9/§11), same film system and narrator as Modules 1–2, with the
+    // escalation trigger grid, store map + status chart, and 5-second
+    // pitch rendered as on-screen visuals.
+    moduleId: 'bd-m10',
+    variants: [
+      {
+        languageCode: 'en',
+        languageLabel: 'English',
+        videoUrl: '/assets/bd-academy/module-10/en.mp4',
+        subtitleUrl: '/assets/bd-academy/module-10/en.vtt',
+      },
+    ],
+  },
 ]
 
 export function videoConfigForModule(moduleId: string): ModuleVideoConfig | undefined {
