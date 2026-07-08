@@ -22,7 +22,7 @@ const KITCHENS = [
   '/login/kitchen-black-kitchen.jpg',
 ]
 
-const ROTATE_MS = 2000
+const ROTATE_MS = 3500
 
 export default function LoginPage() {
   const router = useRouter()
