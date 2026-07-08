@@ -7,10 +7,11 @@ import { cn } from '@/lib/utils'
 import { TRAINING_CHUNKS } from '@/data/training-doc'
 
 /**
- * FAQ accordion (§4 of the consolidated build) — the full 62-question bank,
- * verbatim from training-doc.ts (same transcription the RAG corpus uses),
- * grouped under the original category headers. Collapsed by default; click
- * expands in place with a copper active chevron.
+ * FAQ accordion (§4 of the consolidated build) — the full question bank
+ * (Q1–62 from the source FAQ plus the Module 10 escalation/cheat-sheet
+ * questions), verbatim from training-doc.ts (same transcription the RAG
+ * corpus uses), grouped under the original category headers. Collapsed by
+ * default; click expands in place with a copper active chevron.
  *
  * Special handling preserved exactly as reviewed:
  *  - Q30 (EMI) is explicitly unresolved in the source — rendered with a
@@ -29,6 +30,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   F: 'F. Comparisons',
   G: 'G. Scope & Customisation',
   H: 'H. Stores & Locations',
+  I: 'I. Escalation & Quick Reference',
 }
 
 /** Which FAQ categories belong on which module page (mirrors source_section). */
@@ -36,7 +38,7 @@ const MODULE_CATEGORIES: Record<string, string[]> = {
   'bd-m7': ['A', 'F', 'G'],
   'bd-m8': ['B', 'D', 'E'],
   'bd-m4': ['C'],
-  'bd-m10': ['H'],
+  'bd-m10': ['H', 'I'],
 }
 
 /** Per-category "see the diagram" links (§4: link, don't duplicate). */
@@ -60,7 +62,7 @@ interface FaqItem {
 function faqItems(): FaqItem[] {
   return TRAINING_CHUNKS.filter((c) => c.category === 'faq')
     .map((c) => {
-      const m = c.sectionNumber.match(/5\.([A-H])\s+Q(\d+)/)
+      const m = c.sectionNumber.match(/5\.([A-I])\s+Q(\d+)/)
       return {
         id: c.id,
         letter: m?.[1] ?? '?',

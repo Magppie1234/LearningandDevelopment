@@ -60,6 +60,7 @@ const CATEGORY_TO_MODULE: Record<string, string> = {
   E: 'bd-m8',
   C: 'bd-m4',
   H: 'bd-m10',
+  I: 'bd-m10',
 }
 
 type FaqClassification = Pick<
@@ -456,6 +457,89 @@ const FAQ_CLASSIFICATION: Record<string, FaqClassification> = {
       { title: 'USA', body: '802 NW 5th Avenue, Suite 100, Gainesville, Florida.' },
     ],
   },
+
+  // I. Escalation & Quick Reference
+  'faq-q63': {
+    type: 'cards',
+    cards: [
+      { title: 'Discount or final price', body: 'Customer asks for a discount or says "final price" — only humans can discuss exceptions.' },
+      { title: 'Legal action or complaint', body: 'Customer mentions legal action, consumer court, or a complaint.' },
+      { title: 'Custom dimensions', body: 'Customer asks about custom dimensions or non-standard designs requiring technical review.' },
+      { title: 'Angry or frustrated', body: 'Customer is angry, abusive, or repeatedly frustrated after two objection-handling attempts.' },
+      { title: 'Partnership or B2B', body: 'Customer asks about partnership, dealership, or B2B bulk orders.' },
+      { title: 'Refunds or cancellation', body: 'Customer asks about refund policy or order cancellation.' },
+      { title: 'Complex layout', body: 'Customer provides complex layout details that require CAD review.' },
+      { title: 'Not covered here', body: 'Customer asks a question not covered in the training document after two attempts.' },
+    ],
+  },
+  'faq-q64': {
+    type: 'flow',
+    nodes: [
+      {
+        id: 'n1',
+        title: 'Reassure the customer',
+        kind: 'step',
+        detail: '"[Name] Ji, I want to make sure you get the most accurate information."',
+      },
+      {
+        id: 'n2',
+        title: 'Offer the senior consultant',
+        kind: 'step',
+        detail: '"Let me connect you with one of our senior wellness consultants who can personally guide you on this. Please hold for a moment."',
+      },
+      {
+        id: 'n3',
+        title: 'Warm transfer with context',
+        kind: 'outcome',
+        tone: 'positive',
+        detail: 'Pass along a context summary: city, requirement, budget range, and objections raised.',
+      },
+    ],
+    edges: [
+      { from: 'n1', to: 'n2' },
+      { from: 'n2', to: 'n3' },
+    ],
+  },
+  'faq-q65': {
+    type: 'cards',
+    cards: [
+      { title: 'Entirely from stone', body: 'The world\'s first kitchens entirely from stone — zero wood, zero formaldehyde, zero termites.' },
+      { title: 'Patented SilverStone', body: 'Antibacterial and scratch-proof.' },
+      { title: '25 plus 25', body: 'A 25-year guarantee plus 25 annual services.' },
+    ],
+  },
+  'faq-q66': {
+    type: 'flow',
+    nodes: [
+      { id: 'n1', title: '1. Health', subtitle: 'Safe for your family', kind: 'step', detail: 'No formaldehyde, no termites, no fungus — safe for your family.' },
+      { id: 'n2', title: '2. Durability', subtitle: 'Stronger than granite', kind: 'step', detail: 'Stronger than granite. 25-year guarantee. Zero maintenance.' },
+      { id: 'n3', title: '3. Service', subtitle: '25 annual visits', kind: 'outcome', tone: 'positive', detail: '25 complimentary annual visits. Pan-India support.' },
+    ],
+    edges: [
+      { from: 'n1', to: 'n2' },
+      { from: 'n2', to: 'n3' },
+    ],
+  },
+  'faq-q67': {
+    type: 'chart',
+    chartType: 'bar',
+    chartData: [
+      { label: 'Wood material — under', value: 100 },
+      { label: 'SilverStone material — about', value: 500 },
+      { label: 'Magppie kitchen — from', value: 8400 },
+      { label: 'Magppie kitchen — to', value: 10800 },
+    ],
+  },
+  'faq-q68': {
+    type: 'cards',
+    cards: [
+      { title: '50+ years', body: 'Group heritage.' },
+      { title: '20+ years', body: 'In kitchens.' },
+      { title: '9+ years', body: 'In SilverStone.' },
+      { title: 'KBIS 2026', body: 'Global Innovation Award.' },
+      { title: 'Trusted by', body: 'Ambani, Dhoni, Ranbir Kapoor.' },
+    ],
+  },
 }
 
 function classificationFor(id: string): FaqClassification {
@@ -463,7 +547,7 @@ function classificationFor(id: string): FaqClassification {
 }
 
 export const FAQ_ITEMS: FaqItem[] = TRAINING_CHUNKS.filter((c) => c.category === 'faq').map((c) => {
-  const m = c.sectionNumber.match(/5\.([A-H])\s+Q(\d+)/)
+  const m = c.sectionNumber.match(/5\.([A-I])\s+Q(\d+)/)
   const letter = m?.[1] ?? '?'
   const qNum = Number(m?.[2] ?? 0)
   return {

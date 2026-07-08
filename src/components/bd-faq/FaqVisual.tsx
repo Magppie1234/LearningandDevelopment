@@ -31,6 +31,7 @@ function Flag({ label }: { label: string }) {
 function chartUnit(item: FaqItem): string | undefined {
   if (item.id === 'faq-q25') return 'rupees per sq. ft.'
   if (item.id === 'faq-q44') return 'years'
+  if (item.id === 'faq-q67') return 'rupees per sq. ft.'
   return undefined
 }
 
