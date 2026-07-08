@@ -1,6 +1,8 @@
 'use client'
 
-import { AlertTriangle } from 'lucide-react'
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { AlertTriangle, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { FaqItem } from '@/lib/bd-faq/faq-data'
 import FlowChart from './FlowChart'
@@ -12,9 +14,11 @@ import FaqAccordion from './FaqAccordion'
 
 /**
  * The single dispatcher module pages import: takes one FaqItem and renders
- * the right primitive for its `type`. Non-accordion types show the question
- * as a heading, the visual, then the verbatim source answer beneath it —
- * the diagram illustrates the answer, it never replaces it.
+ * the right primitive for its `type`. Every question is click-to-expand:
+ * plain answers go through the shadcn Accordion, and visual-typed questions
+ * render as a collapsed card whose header toggles the diagram open. The
+ * verbatim source answer always renders beneath the visual — the diagram
+ * illustrates the answer, it never replaces it.
  */
 
 function Flag({ label }: { label: string }) {
@@ -36,6 +40,8 @@ function chartUnit(item: FaqItem): string | undefined {
 }
 
 export default function FaqVisual({ item, className }: { item: FaqItem; className?: string }) {
+  const [open, setOpen] = useState(false)
+
   if (item.type === 'accordion') {
     return (
       <div className={className}>
@@ -47,54 +53,83 @@ export default function FaqVisual({ item, className }: { item: FaqItem; classNam
   return (
     <div
       className={cn(
-        'rounded-[12px] border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream p-4 sm:p-5',
+        'rounded-[12px] border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream overflow-hidden',
         className,
       )}
     >
-      <div className="flex items-start justify-between gap-3 mb-4">
-        <p className="text-[14px] font-semibold text-ink-primary leading-snug">
-          {item.qNum ? (
-            <span className="mr-2 text-[11px] font-normal text-ink-tertiary tabular-nums">
-              Q{item.qNum}
-            </span>
-          ) : null}
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        className={cn(
+          'w-full flex items-center gap-3 px-4 py-3 sm:px-5 text-left transition-colors',
+          open ? 'bg-accent-copper/5' : 'hover:bg-[rgba(0,59,70,0.02)]',
+        )}
+      >
+        {item.qNum ? (
+          <span className="w-9 shrink-0 text-[11px] text-ink-tertiary tabular-nums">
+            Q{item.qNum}
+          </span>
+        ) : null}
+        <span className="flex-1 text-[13.5px] font-medium text-ink-primary leading-snug">
           {item.question}
-        </p>
+        </span>
         {item.flag && <Flag label={item.flag.label} />}
-      </div>
-
-      {item.type === 'flow' && item.nodes && item.edges && (
-        <FlowChart
-          nodes={item.nodes}
-          edges={item.edges}
-          ariaTitle={item.question}
-          ariaDescription={`Step-by-step flow: ${item.nodes.map((n) => n.title).join(', then ')}.`}
+        <ChevronDown
+          size={16}
+          className={cn(
+            'shrink-0 transition-transform',
+            open ? 'rotate-180 text-accent-copper' : 'text-ink-tertiary',
+          )}
         />
-      )}
+      </button>
 
-      {item.type === 'decision' && item.nodes && item.edges && (
-        <DecisionTree
-          nodes={item.nodes}
-          edges={item.edges}
-          ariaTitle={item.question}
-          ariaDescription={`Decision tree with outcomes: ${item.nodes
-            .filter((n) => n.kind === 'outcome')
-            .map((n) => n.title)
-            .join(' or ')}.`}
-        />
-      )}
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden"
+          >
+            <div className="px-4 pb-4 sm:px-5 sm:pb-5">
+              {item.type === 'flow' && item.nodes && item.edges && (
+                <FlowChart
+                  nodes={item.nodes}
+                  edges={item.edges}
+                  ariaTitle={item.question}
+                  ariaDescription={`Step-by-step flow: ${item.nodes.map((n) => n.title).join(', then ')}.`}
+                />
+              )}
 
-      {item.type === 'compare' && item.columns && <CompareCards columns={item.columns} />}
+              {item.type === 'decision' && item.nodes && item.edges && (
+                <DecisionTree
+                  nodes={item.nodes}
+                  edges={item.edges}
+                  ariaTitle={item.question}
+                  ariaDescription={`Decision tree with outcomes: ${item.nodes
+                    .filter((n) => n.kind === 'outcome')
+                    .map((n) => n.title)
+                    .join(' or ')}.`}
+                />
+              )}
 
-      {item.type === 'chart' && item.chartType && item.chartData && (
-        <DataChart chartType={item.chartType} data={item.chartData} unit={chartUnit(item)} />
-      )}
+              {item.type === 'compare' && item.columns && <CompareCards columns={item.columns} />}
 
-      {item.type === 'cards' && item.cards && <CategoryCards cards={item.cards} />}
+              {item.type === 'chart' && item.chartType && item.chartData && (
+                <DataChart chartType={item.chartType} data={item.chartData} unit={chartUnit(item)} />
+              )}
 
-      <p className="mt-4 border-t-[0.5px] border-[rgba(0,59,70,0.08)] pt-3 text-[12.5px] leading-relaxed text-ink-secondary">
-        {item.answer}
-      </p>
+              {item.type === 'cards' && item.cards && <CategoryCards cards={item.cards} />}
+
+              <p className="mt-4 border-t-[0.5px] border-[rgba(0,59,70,0.08)] pt-3 text-[12.5px] leading-relaxed text-ink-secondary">
+                {item.answer}
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

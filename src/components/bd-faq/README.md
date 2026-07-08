@@ -15,7 +15,7 @@ content — everything flows from the config.
 | `DataChart.tsx` | `chart` | Recharts bar / pie / line, theme-token colours |
 | `CategoryCards.tsx` | `cards` | Responsive grid of title + body cards |
 | `FaqAccordion.tsx` | `accordion` | Expandable Q&A on the shadcn Accordion (fallback for single-fact answers) |
-| `FaqVisual.tsx` | — | The dispatcher. The only component pages should import. |
+| `FaqVisual.tsx` | — | The dispatcher. The only component pages should import. Every question is click-to-expand: visual-typed items render as a collapsed card whose question header toggles the diagram + verbatim answer open. |
 
 ## Adding a new FAQ
 
