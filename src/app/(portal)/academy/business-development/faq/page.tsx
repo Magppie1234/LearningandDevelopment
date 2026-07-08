@@ -53,6 +53,12 @@ export default function BdFaqPage() {
   return (
     <div className="max-w-[880px] mx-auto space-y-8">
       <div>
+        <a
+          href="/academy/business-development/modules"
+          className="inline-block mb-2 text-[12.5px] text-ink-tertiary hover:text-ink-primary transition-colors"
+        >
+          ← Back to the BD modules
+        </a>
         <h1 className="text-xl font-semibold text-ink-primary">Business development FAQ</h1>
         <p className="mt-1 text-[13px] text-ink-secondary">
           All {FAQ_ITEMS.length} questions from the master training document, shown as interactive

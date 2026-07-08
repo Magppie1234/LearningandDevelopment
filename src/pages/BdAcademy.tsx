@@ -445,6 +445,12 @@ export default function BdAcademy() {
             {completed}/{BD_MODULES.length} complete
           </span>
         </div>
+        <Link
+          href="/academy/business-development/faq"
+          className="mt-4 inline-flex items-center gap-2 rounded-full border border-accent-copper/50 bg-accent-copper/5 px-4 py-2 text-[13px] font-semibold text-accent-copper hover:bg-accent-copper/10 transition-colors"
+        >
+          Browse the full BD FAQ — all 69 questions, with interactive visuals →
+        </Link>
       </section>
 
       {/* New-joiner diagnostic (§2): shows on first visit to the BD academy —
