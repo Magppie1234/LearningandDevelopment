@@ -435,15 +435,55 @@ function WhyStoneBeat() {
   )
 }
 
-/* ─────────── Beat 4b — The kitchen, in depth (interactive 3D) ─────────── */
+/* ─────────── Beat 4b — The kitchen, in depth (guided walkthrough) ─────────── */
 /**
- * Mouse-tracked 3D perspective showcase of the Wellness Kitchen photo —
- * the depth treatment of magppie.com's hero imagery, interactive. The card
- * tilts toward the cursor; the claim chips float above the surface at
- * different depths. All claims restate verified lines from vision.ts.
+ * Guided product walkthrough over the Wellness Kitchen photo: numbered
+ * hotspots on the actual parts of the product, stepped with prev/next or
+ * tapped directly. Every stop restates approved training content (master
+ * doc Q3/Q9/Q13/Q15/Q22/Q58 and the safety pillars) — nothing invented.
+ * The mouse-tracked 3D tilt stays.
  */
+const WALKTHROUGH_STOPS: {
+  title: string
+  body: string
+  x: string
+  y: string
+}[] = [
+  {
+    title: 'Stone fascia — the front shutters',
+    body: 'Every part is made from stone, inside and out — starting with the fascia, the front shutters you see and touch. Zero wood anywhere.',
+    x: '30%',
+    y: '64%',
+  },
+  {
+    title: 'Stone backsplash — no grout lines',
+    body: 'Unlike tiles, the SilverStone backsplash has no grout lines, so there is no accumulation of dirt, grease, or fungus behind the hob.',
+    x: '20%',
+    y: '44%',
+  },
+  {
+    title: 'Food-grade countertop',
+    body: 'SilverStone is a 100% food-grade stone — hygienic enough to eat directly on. Daily chopping and knife work won’t leave marks.',
+    x: '66%',
+    y: '58%',
+  },
+  {
+    title: 'Cabinets, shelves and carcass — all stone',
+    body: 'Stone cabinets, stone shelves, stone carcass. Drawers support up to 60 kg each, on patented hardware made in the same European facilities as Blum and Grass, load-rated beyond 100 kg.',
+    x: '50%',
+    y: '26%',
+  },
+  {
+    title: 'In-built lighting',
+    body: 'The in-built lights are strategically positioned so they are not exposed to water during cleaning, and carry their own 2-year guarantee.',
+    x: '9%',
+    y: '22%',
+  },
+]
+
 function KitchenDepthBeat() {
   const ref = useRef<HTMLDivElement>(null)
+  const [step, setStep] = useState(0)
   const mx = useMotionValue(0.5)
   const my = useMotionValue(0.5)
   const rotateY = useSpring(useTransform(mx, [0, 1], [-8, 8]), { stiffness: 150, damping: 20 })
@@ -461,12 +501,7 @@ function KitchenDepthBeat() {
     my.set(0.5)
   }
 
-  const chips: { label: string; x: string; y: string; z: number }[] = [
-    { label: '0% wood', x: '6%', y: '12%', z: 70 },
-    { label: 'Termite & fungus safe', x: '66%', y: '8%', z: 55 },
-    { label: 'No formaldehyde', x: '8%', y: '78%', z: 60 },
-    { label: '25-year guarantee', x: '62%', y: '82%', z: 80 },
-  ]
+  const active = WALKTHROUGH_STOPS[step]
 
   return (
     <section className="px-6 sm:px-12 py-20 sm:py-28" style={{ backgroundColor: NAVY }}>
@@ -475,7 +510,7 @@ function KitchenDepthBeat() {
           The Wellness Kitchen, in depth
         </motion.h2>
         <motion.p {...reveal} className="mt-3 text-center text-[13.5px] text-[#f3ede2]/60">
-          Move your cursor over the kitchen.
+          A guided walkthrough of the product — tap the numbered points, or step through.
         </motion.p>
 
         <motion.div
@@ -490,7 +525,7 @@ function KitchenDepthBeat() {
             ref={ref}
             onMouseMove={onMove}
             onMouseLeave={onLeave}
-            className="relative rounded-3xl overflow-visible cursor-pointer select-none"
+            className="relative rounded-3xl overflow-visible select-none"
             style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
           >
             <div className="rounded-3xl overflow-hidden shadow-[0_40px_80px_rgba(0,0,0,0.45)]">
@@ -518,23 +553,67 @@ function KitchenDepthBeat() {
               />
             </div>
 
-            {chips.map((c) => (
-              <div
-                key={c.label}
-                className="absolute rounded-full border px-3.5 py-1.5 text-[12px] font-semibold backdrop-blur-[2px]"
-                style={{
-                  left: c.x,
-                  top: c.y,
-                  transform: `translateZ(${c.z}px)`,
-                  color: '#f3ede2',
-                  borderColor: `${GOLD}90`,
-                  backgroundColor: 'rgba(6,42,51,0.55)',
-                }}
-              >
-                {c.label}
-              </div>
-            ))}
+            {/* numbered walkthrough hotspots, floating above the surface */}
+            {WALKTHROUGH_STOPS.map((s, i) => {
+              const isActive = i === step
+              return (
+                <button
+                  key={s.title}
+                  type="button"
+                  onClick={() => setStep(i)}
+                  aria-label={`Walkthrough stop ${i + 1}: ${s.title}`}
+                  className="absolute w-9 h-9 rounded-full font-serif text-[15px] flex items-center justify-center transition-all"
+                  style={{
+                    left: s.x,
+                    top: s.y,
+                    transform: `translateZ(${isActive ? 85 : 55}px)`,
+                    color: isActive ? '#141414' : '#f3ede2',
+                    backgroundColor: isActive ? GOLD : 'rgba(6,42,51,0.7)',
+                    border: `1.5px solid ${GOLD}`,
+                    boxShadow: isActive ? `0 0 0 7px ${GOLD}30, 0 8px 24px rgba(0,0,0,0.5)` : '0 6px 18px rgba(0,0,0,0.45)',
+                  }}
+                >
+                  {i + 1}
+                </button>
+              )
+            })}
           </motion.div>
+        </motion.div>
+
+        {/* walkthrough detail card */}
+        <motion.div
+          key={step}
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35 }}
+          className="mt-8 rounded-2xl px-6 sm:px-8 py-6 flex flex-col sm:flex-row sm:items-center gap-5"
+          style={{ backgroundColor: 'rgba(243,237,226,0.05)', border: `1px solid ${GOLD}40` }}
+        >
+          <div className="flex-1">
+            <p className="text-[11px] tracking-[0.3em] uppercase" style={{ color: GOLD }}>
+              Stop {step + 1} of {WALKTHROUGH_STOPS.length}
+            </p>
+            <p className="mt-2 font-serif text-xl text-[#f3ede2]">{active.title}</p>
+            <p className="mt-2 text-[14px] leading-relaxed text-[#f3ede2]/75">{active.body}</p>
+          </div>
+          <div className="flex gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => setStep((s) => (s + WALKTHROUGH_STOPS.length - 1) % WALKTHROUGH_STOPS.length)}
+              className="rounded-full px-5 py-2 text-[13px] font-semibold"
+              style={{ border: `1px solid ${GOLD}70`, color: '#f3ede2' }}
+            >
+              ← Prev
+            </button>
+            <button
+              type="button"
+              onClick={() => setStep((s) => (s + 1) % WALKTHROUGH_STOPS.length)}
+              className="rounded-full px-5 py-2 text-[13px] font-semibold"
+              style={{ backgroundColor: GOLD, color: '#141414' }}
+            >
+              Next →
+            </button>
+          </div>
         </motion.div>
       </div>
     </section>
