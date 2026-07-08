@@ -61,7 +61,7 @@ export const BD_VIDEO_CONFIG: ModuleVideoConfig[] = [
   // visuals (pillar rail, comparison tables, pricing charts, payment split,
   // consultant/customer dialogue scenes) rendered on screen.
   // Extend this list as each module's film lands in public/assets/bd-academy.
-  ...[3].map((n) => ({
+  ...[3, 4].map((n) => ({
     moduleId: `bd-m${n}`,
     variants: [
       {
