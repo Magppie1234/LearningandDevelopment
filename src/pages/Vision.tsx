@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { useRef, useState } from 'react'
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import {
   VISION_MISSION,
@@ -385,6 +385,112 @@ function WhyStoneBeat() {
   )
 }
 
+/* ─────────── Beat 4b — The kitchen, in depth (interactive 3D) ─────────── */
+/**
+ * Mouse-tracked 3D perspective showcase of the Wellness Kitchen photo —
+ * the depth treatment of magppie.com's hero imagery, interactive. The card
+ * tilts toward the cursor; the claim chips float above the surface at
+ * different depths. All claims restate verified lines from vision.ts.
+ */
+function KitchenDepthBeat() {
+  const ref = useRef<HTMLDivElement>(null)
+  const mx = useMotionValue(0.5)
+  const my = useMotionValue(0.5)
+  const rotateY = useSpring(useTransform(mx, [0, 1], [-8, 8]), { stiffness: 150, damping: 20 })
+  const rotateX = useSpring(useTransform(my, [0, 1], [6, -6]), { stiffness: 150, damping: 20 })
+  const sheenX = useTransform(mx, [0, 1], ['20%', '80%'])
+
+  const onMove = (e: React.MouseEvent) => {
+    const r = ref.current?.getBoundingClientRect()
+    if (!r) return
+    mx.set((e.clientX - r.left) / r.width)
+    my.set((e.clientY - r.top) / r.height)
+  }
+  const onLeave = () => {
+    mx.set(0.5)
+    my.set(0.5)
+  }
+
+  const chips: { label: string; x: string; y: string; z: number }[] = [
+    { label: '0% wood', x: '6%', y: '12%', z: 70 },
+    { label: 'Termite & fungus safe', x: '66%', y: '8%', z: 55 },
+    { label: 'No formaldehyde', x: '8%', y: '78%', z: 60 },
+    { label: '25-year guarantee', x: '62%', y: '82%', z: 80 },
+  ]
+
+  return (
+    <section className="px-6 sm:px-12 py-20 sm:py-28" style={{ backgroundColor: NAVY }}>
+      <div className="max-w-[860px] mx-auto">
+        <motion.h2 {...reveal} className="text-center font-serif text-3xl sm:text-4xl text-[#f3ede2]">
+          The Wellness Kitchen, in depth
+        </motion.h2>
+        <motion.p {...reveal} className="mt-3 text-center text-[13.5px] text-[#f3ede2]/60">
+          Move your cursor over the kitchen.
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.7 }}
+          className="mt-10"
+          style={{ perspective: 1100 }}
+        >
+          <motion.div
+            ref={ref}
+            onMouseMove={onMove}
+            onMouseLeave={onLeave}
+            className="relative rounded-3xl overflow-visible cursor-pointer select-none"
+            style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
+          >
+            <div className="rounded-3xl overflow-hidden shadow-[0_40px_80px_rgba(0,0,0,0.45)]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/hero-magppie-kitchen.jpg"
+                alt="Magppie Wellness Kitchen — SilverStone, zero wood"
+                className="w-full aspect-[16/9] object-cover"
+                draggable={false}
+              />
+              {/* moving sheen */}
+              <motion.div
+                className="absolute inset-0 pointer-events-none rounded-3xl"
+                style={{
+                  background: useTransform(
+                    sheenX,
+                    (v) =>
+                      `radial-gradient(600px circle at ${v} 30%, rgba(243,237,226,0.14), transparent 60%)`,
+                  ),
+                }}
+              />
+              <div
+                className="absolute inset-0 pointer-events-none rounded-3xl"
+                style={{ boxShadow: 'inset 0 0 80px rgba(0,0,0,0.35)' }}
+              />
+            </div>
+
+            {chips.map((c) => (
+              <div
+                key={c.label}
+                className="absolute rounded-full border px-3.5 py-1.5 text-[12px] font-semibold backdrop-blur-[2px]"
+                style={{
+                  left: c.x,
+                  top: c.y,
+                  transform: `translateZ(${c.z}px)`,
+                  color: '#f3ede2',
+                  borderColor: `${GOLD}90`,
+                  backgroundColor: 'rgba(6,42,51,0.55)',
+                }}
+              >
+                {c.label}
+              </div>
+            ))}
+          </motion.div>
+        </motion.div>
+      </div>
+    </section>
+  )
+}
+
 /* ─────────────────────── Beat 5 — The promise ─────────────────────── */
 function PromiseBeat() {
   return (
@@ -505,6 +611,7 @@ export default function Vision() {
       <LeadershipBeat />
       <GlobalPresenceBeat />
       <WhyStoneBeat />
+      <KitchenDepthBeat />
       <PromiseBeat />
     </div>
   )

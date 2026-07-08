@@ -118,7 +118,17 @@ export const VISION_VIDEO: {
   script: string
 } = {
   title: 'How it started, how it’s going',
-  variants: [], // no real file yet — slot renders its "coming soon" state
+  // Produced with the same film system and narrator as the BD module videos,
+  // narrated from the draft script below (verified lines only) plus the
+  // verified VISION_WHY_STONE lines. Re-render when the script is finalised.
+  variants: [
+    {
+      languageCode: 'en',
+      languageLabel: 'English',
+      videoUrl: '/assets/vision/our-story-en.mp4',
+      subtitleUrl: '/assets/vision/our-story-en.vtt',
+    },
+  ],
   scriptIsDraft: true,
   script: `“Our mission is to transform ordinary homes into wellness homes. Spaces that keep you, your family, and the planet safe.”
 
