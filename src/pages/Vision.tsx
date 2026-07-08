@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
+import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import {
   VISION_MISSION,
@@ -372,10 +372,41 @@ function TimelineBeat() {
   )
 }
 
+/** Light section ground — SilverStone rose-marble sheet under a parchment
+ *  veil, so the light beats read as stone rather than a plain white frame. */
+function MarbleSection({
+  children,
+  className,
+}: {
+  children: React.ReactNode
+  className?: string
+}) {
+  return (
+    <section className={cn('relative overflow-hidden px-6 sm:px-12 py-20 sm:py-28', className)}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/marble-rose-photo.png"
+        alt=""
+        aria-hidden
+        className="absolute inset-0 w-full h-full object-cover"
+        draggable={false}
+      />
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            'linear-gradient(180deg, rgba(247,242,234,0.88) 0%, rgba(247,242,234,0.8) 50%, rgba(247,242,234,0.92) 100%)',
+        }}
+      />
+      <div className="relative">{children}</div>
+    </section>
+  )
+}
+
 /* ─────────────────────── Beat 4 — Why stone ─────────────────────── */
 function WhyStoneBeat() {
   return (
-    <section className="bg-parchment px-6 sm:px-12 py-20 sm:py-28">
+    <MarbleSection>
       <div className="max-w-[720px] mx-auto text-center">
         <motion.h2 {...reveal} className="font-serif text-3xl sm:text-4xl text-ink-primary">
           {VISION_WHY_STONE.heading}
@@ -400,7 +431,7 @@ function WhyStoneBeat() {
           ))}
         </div>
       </div>
-    </section>
+    </MarbleSection>
   )
 }
 
@@ -554,30 +585,120 @@ function PromiseBeat() {
 }
 
 /* ───────────── Beat 6 — Leadership (names + roles only, §7) ───────────── */
-function LeadershipBeat() {
+const initialsOf = (name: string) =>
+  name
+    .split(' ')
+    .map((w) => w[0])
+    .slice(0, 2)
+    .join('')
+    .toUpperCase()
+
+/** Popup for a leader — kitchen visual behind, still names + roles only. */
+function LeaderModal({
+  person,
+  onClose,
+}: {
+  person: { name: string; role: string }
+  onClose: () => void
+}) {
   return (
-    <section className="bg-parchment px-6 sm:px-12 py-20 sm:py-28">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-50 flex items-center justify-center px-6"
+      style={{ backgroundColor: 'rgba(4,20,25,0.72)' }}
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label={`${person.name} — ${person.role}`}
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 26, scale: 0.96 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 18, scale: 0.97 }}
+        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+        className="relative w-full max-w-[440px] rounded-3xl overflow-hidden shadow-[0_40px_90px_rgba(0,0,0,0.5)]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* kitchen visual backdrop */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/hero-magppie-kitchen.jpg"
+          alt=""
+          aria-hidden
+          className="absolute inset-0 w-full h-full object-cover"
+          draggable={false}
+        />
+        <div
+          className="absolute inset-0"
+          style={{ background: `linear-gradient(190deg, ${NAVY}d9 0%, ${NAVY}f5 78%)` }}
+        />
+        <div className="relative px-8 py-12 text-center">
+          <div
+            className="mx-auto w-20 h-20 rounded-full flex items-center justify-center font-serif text-2xl"
+            style={{ border: `1.5px solid ${GOLD}`, color: GOLD, backgroundColor: 'rgba(6,42,51,0.6)' }}
+          >
+            {initialsOf(person.name)}
+          </div>
+          <p className="mt-6 font-serif text-3xl text-[#f3ede2]">{person.name}</p>
+          <p className="mt-2 text-[13px] tracking-[0.18em] uppercase" style={{ color: GOLD }}>
+            {person.role}
+          </p>
+          <p className="mt-6 text-[12.5px] text-[#f3ede2]/55">Magppie Group leadership</p>
+          <button
+            type="button"
+            onClick={onClose}
+            className="mt-8 rounded-full px-6 py-2 text-[13px] font-semibold transition-colors"
+            style={{ border: `1px solid ${GOLD}90`, color: '#f3ede2' }}
+          >
+            Close
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
+  )
+}
+
+function LeadershipBeat() {
+  const [selected, setSelected] = useState<{ name: string; role: string } | null>(null)
+  return (
+    <MarbleSection>
       <div className="max-w-[860px] mx-auto">
         <motion.h2 {...reveal} className="text-center font-serif text-3xl sm:text-4xl text-ink-primary">
           The people behind it
         </motion.h2>
-        <div className="mt-12 grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-7">
+        <motion.p {...reveal} className="mt-3 text-center text-[13px] text-ink-tertiary">
+          Tap a name to meet them.
+        </motion.p>
+        <div className="mt-12 grid grid-cols-2 sm:grid-cols-3 gap-3">
           {VISION_LEADERSHIP.map((p, i) => (
-            <motion.div
+            <motion.button
               key={p.name}
+              type="button"
+              onClick={() => setSelected(p)}
               initial={{ opacity: 0, y: 18 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.5, delay: (i % 3) * 0.08 }}
-              className="text-center"
+              className="group text-center rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream/80 px-4 py-5 hover:-translate-y-0.5 hover:shadow-card transition-all"
             >
+              <span
+                className="mx-auto mb-3 w-11 h-11 rounded-full flex items-center justify-center font-serif text-[15px] transition-colors"
+                style={{ border: '1px solid rgba(0,59,70,0.25)', color: '#0b3947' }}
+              >
+                {initialsOf(p.name)}
+              </span>
               <p className="text-[15px] font-semibold text-ink-primary">{p.name}</p>
               <p className="mt-0.5 text-[12.5px] text-ink-tertiary">{p.role}</p>
-            </motion.div>
+            </motion.button>
           ))}
         </div>
       </div>
-    </section>
+      <AnimatePresence>
+        {selected && <LeaderModal person={selected} onClose={() => setSelected(null)} />}
+      </AnimatePresence>
+    </MarbleSection>
   )
 }
 
