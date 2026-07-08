@@ -201,9 +201,10 @@ function VideoBeat() {
 
   return (
     <section
-      className="px-6 sm:px-12 py-20 sm:py-28"
+      className="relative overflow-hidden px-6 sm:px-12 py-20 sm:py-28"
       style={{ background: `linear-gradient(165deg, ${NAVY_SOFT} 0%, ${NAVY} 100%)` }}
     >
+      <StoneVeil />
       <motion.div {...reveal} className="max-w-[880px] mx-auto">
         <p className="text-[11px] font-medium tracking-[0.35em] mb-3 text-center" style={{ color: GOLD }}>
           THE MAGPPIE FILM
@@ -295,9 +296,10 @@ function VideoBeat() {
 function TimelineBeat() {
   return (
     <section
-      className="px-6 sm:px-12 py-20 sm:py-28"
+      className="relative overflow-hidden px-6 sm:px-12 py-20 sm:py-28"
       style={{ background: `linear-gradient(180deg, ${NAVY_SOFT} 0%, ${NAVY} 100%)` }}
     >
+      <StoneVeil />
       <motion.h2 {...reveal} className="text-center font-serif text-3xl sm:text-4xl text-[#f3ede2]">
         Twenty-five years in the making
       </motion.h2>
@@ -369,6 +371,30 @@ function TimelineBeat() {
         </div>
       </div>
     </section>
+  )
+}
+
+/** Stone-finish film for the dark beats — the rose-marble sheet blended
+ *  softly over the navy so nothing reads as a blank panel. Pointer-safe. */
+function StoneVeil() {
+  return (
+    <div aria-hidden className="pointer-events-none absolute inset-0">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/marble-rose-photo.png"
+        alt=""
+        className="w-full h-full object-cover opacity-[0.08]"
+        style={{ mixBlendMode: 'soft-light' }}
+        draggable={false}
+      />
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            'radial-gradient(1100px circle at 85% 10%, rgba(200,130,85,0.07), transparent 60%)',
+        }}
+      />
+    </div>
   )
 }
 
@@ -504,8 +530,9 @@ function KitchenDepthBeat() {
   const active = WALKTHROUGH_STOPS[step]
 
   return (
-    <section className="px-6 sm:px-12 py-20 sm:py-28" style={{ backgroundColor: NAVY }}>
-      <div className="max-w-[860px] mx-auto">
+    <section className="relative overflow-hidden px-6 sm:px-12 py-20 sm:py-28" style={{ backgroundColor: NAVY }}>
+      <StoneVeil />
+      <div className="relative max-w-[860px] mx-auto">
         <motion.h2 {...reveal} className="text-center font-serif text-3xl sm:text-4xl text-[#f3ede2]">
           The Wellness Kitchen, in depth
         </motion.h2>
@@ -624,10 +651,11 @@ function KitchenDepthBeat() {
 function PromiseBeat() {
   return (
     <section
-      className="min-h-[70vh] flex items-center px-6 sm:px-12"
+      className="relative overflow-hidden min-h-[70vh] flex items-center px-6 sm:px-12"
       style={{ background: `linear-gradient(200deg, ${NAVY_SOFT} 0%, ${NAVY} 70%)` }}
     >
-      <div className="max-w-[780px] mx-auto text-center py-24">
+      <StoneVeil />
+      <div className="relative max-w-[780px] mx-auto text-center py-24">
         <motion.p
           initial={{ opacity: 0, scale: 0.9 }}
           whileInView={{ opacity: 1, scale: 1 }}
@@ -776,27 +804,46 @@ function LeaderCard({
   onSelect: () => void
 }) {
   const photo = LEADER_PHOTO[person.name]
+  // Same 3D pop as the kitchen walkthrough: the card tilts toward the
+  // cursor and the medallion floats above the surface.
+  const mx = useMotionValue(0.5)
+  const my = useMotionValue(0.5)
+  const rotateY = useSpring(useTransform(mx, [0, 1], [-9, 9]), { stiffness: 180, damping: 18 })
+  const rotateX = useSpring(useTransform(my, [0, 1], [7, -7]), { stiffness: 180, damping: 18 })
+  const onMove = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const r = e.currentTarget.getBoundingClientRect()
+    mx.set((e.clientX - r.left) / r.width)
+    my.set((e.clientY - r.top) / r.height)
+  }
+  const onLeave = () => {
+    mx.set(0.5)
+    my.set(0.5)
+  }
   return (
     <motion.button
       type="button"
       onClick={onSelect}
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
       initial={{ opacity: 0, y: 22 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.25 }}
       transition={{ type: 'spring', stiffness: 120, damping: 16, delay: (index % 4) * 0.07 }}
-      whileHover={{ y: -6, scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
+      whileHover={{ scale: 1.03 }}
+      whileTap={{ scale: 0.97 }}
+      style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
       className={cn(
-        'group relative overflow-hidden text-center rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream/85 transition-shadow hover:shadow-elevated',
+        'group relative text-center rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream/85 transition-shadow hover:shadow-elevated',
         featured ? 'sm:col-span-2 px-6 py-7 flex items-center gap-6 text-left' : 'px-4 py-6',
       )}
     >
-      {/* sheen sweep on hover */}
-      <span
-        aria-hidden
-        className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 opacity-0 group-hover:opacity-100 group-hover:translate-x-[320%] transition-all duration-700"
-        style={{ background: 'linear-gradient(90deg, transparent, rgba(200,130,85,0.16), transparent)' }}
-      />
+      {/* sheen sweep on hover (clipped to the card) */}
+      <span aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl">
+        <span
+          className="absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 opacity-0 group-hover:opacity-100 group-hover:translate-x-[320%] transition-all duration-700"
+          style={{ background: 'linear-gradient(90deg, transparent, rgba(200,130,85,0.16), transparent)' }}
+        />
+      </span>
       {/* gold ring appears on hover */}
       <span
         aria-hidden
@@ -808,7 +855,10 @@ function LeaderCard({
           'rounded-full p-[2.5px] shrink-0 transition-transform duration-300 group-hover:scale-105',
           featured ? 'w-20 h-20' : 'mx-auto mb-3 block w-14 h-14',
         )}
-        style={{ background: `conic-gradient(from 210deg, ${GOLD}, rgba(0,59,70,0.2) 45%, ${GOLD})` }}
+        style={{
+          background: `conic-gradient(from 210deg, ${GOLD}, rgba(0,59,70,0.2) 45%, ${GOLD})`,
+          transform: 'translateZ(28px)',
+        }}
       >
         {photo ? (
           // eslint-disable-next-line @next/next/no-img-element
