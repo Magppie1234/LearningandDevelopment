@@ -5,6 +5,7 @@ import { BD_MODULES } from '@/data/bd-academy'
 import { FAQ_ITEMS, faqTypeCounts, type FaqItem } from '@/lib/bd-faq/faq-data'
 import FaqVisual from '@/components/bd-faq/FaqVisual'
 import FaqAccordion from '@/components/bd-faq/FaqAccordion'
+import BdVideoPlayer from '@/components/BdVideoPlayer'
 
 /**
  * BD Academy FAQ — every source question rendered through the FaqVisual
@@ -77,6 +78,13 @@ export default function BdFaqPage() {
           ))}
         </div>
       </div>
+
+      {/* The FAQ film — Module 10's "Know When to Hand Off", the module these
+          escalation/quick-reference questions come from. Questions follow below. */}
+      {(() => {
+        const m10 = BD_MODULES.find((m) => m.id === 'bd-m10')
+        return m10 ? <BdVideoPlayer module={m10} /> : null
+      })()}
 
       {MODULE_ORDER.map((moduleId) => {
         const items = grouped.get(moduleId)
