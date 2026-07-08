@@ -149,25 +149,69 @@ function SilverStoneProcess() {
 function SafetyPillars() {
   const items = listItems('bd-m3') // 7 ordered "Title — proof" strings, exact order
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-      {items.map((raw, i) => {
-        const [title, ...rest] = raw.split(' — ')
-        const proof = rest.join(' — ')
-        return (
-          <div
-            key={i}
-            className="rounded-[12px] border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream px-4 py-3"
-          >
-            <div className="flex items-center gap-2.5">
-              <span className="shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-semibold bg-accent-gold/15 border border-accent-gold text-ink-primary">
-                {i + 1}
-              </span>
-              <span className="flex-1 text-sm font-semibold text-ink-primary">{title}</span>
+    <div className="space-y-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        {items.map((raw, i) => {
+          const [title, ...rest] = raw.split(' — ')
+          const proof = rest.join(' — ')
+          return (
+            <div
+              key={i}
+              className="rounded-[12px] border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream px-4 py-3"
+            >
+              <div className="flex items-center gap-2.5">
+                <span className="shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-semibold bg-accent-gold/15 border border-accent-gold text-ink-primary">
+                  {i + 1}
+                </span>
+                <span className="flex-1 text-sm font-semibold text-ink-primary">{title}</span>
+              </div>
+              <p className="text-[12.5px] text-ink-secondary leading-relaxed pl-[34px] pt-1">{proof}</p>
             </div>
-            <p className="text-[12.5px] text-ink-secondary leading-relaxed pl-[34px] pt-1">{proof}</p>
-          </div>
-        )
-      })}
+          )
+        })}
+      </div>
+
+      {/* Proof in numbers — the three quantified pillars, as a readable graph. */}
+      <div className={cn(CARD, 'p-4')}>
+        <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-tertiary mb-3">
+          Proof in numbers
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+          {[
+            { big: '60 kg', small: 'load per drawer' },
+            { big: '30 days', small: 'submerged — stone unchanged' },
+            { big: '+62%', small: 'more storage than standard' },
+          ].map((s) => (
+            <div
+              key={s.small}
+              className="rounded-[10px] border-[0.5px] border-[rgba(0,59,70,0.14)] bg-[rgba(0,59,70,0.02)] px-4 py-3 text-center"
+            >
+              <p className="text-xl font-semibold text-ink-primary">{s.big}</p>
+              <p className="text-[11.5px] text-ink-tertiary mt-0.5">{s.small}</p>
+            </div>
+          ))}
+        </div>
+        <div className="space-y-2">
+          {[
+            { label: 'Standard kitchen storage', pct: 62, display: '100' },
+            { label: 'Magppie wall cabinets', pct: 100, display: 'up to 162' },
+          ].map((b, i) => (
+            <div key={b.label} className="flex items-center gap-3">
+              <span className="w-44 shrink-0 text-[12px] text-ink-secondary">{b.label}</span>
+              <div className="flex-1 h-4 rounded-full bg-[rgba(0,59,70,0.05)] overflow-hidden">
+                <div
+                  className={cn('h-full rounded-full', i === 1 ? 'bg-accent-gold' : 'bg-[rgba(0,59,70,0.22)]')}
+                  style={{ width: `${b.pct}%` }}
+                />
+              </div>
+              <span className="w-16 shrink-0 text-[12px] tabular-nums text-ink-primary text-right">{b.display}</span>
+            </div>
+          ))}
+        </div>
+        <p className="text-[11.5px] text-ink-tertiary mt-2.5">
+          Up to 62% more storage than standard kitchens — sized to fit large Indian plates.
+        </p>
+      </div>
     </div>
   )
 }
