@@ -5,7 +5,7 @@ import { useShallow } from 'zustand/react/shallow'
 import { useOrgStore } from '@/lib/org-store'
 import { BoardRow } from './BoardRow'
 import { CSuiteCard } from './CSuiteCard'
-import { OrgChartTree } from './OrgChartTree'
+import { RadialOrgChart } from './RadialOrgChart'
 
 function ConnectorLine() {
   return <div className="mx-auto h-8 w-px bg-[rgba(0,59,70,0.15)]" />
@@ -65,9 +65,10 @@ export function OrgChart() {
 
   return (
     <div className="space-y-8">
-      {/* Desktop: branching org-chart tree (Board -> C-Suite, connector lines) */}
+      {/* Desktop: radial org chart — Founder & MD at the centre, board on
+          dashed orbits, each C-Suite branch fanned out with its accent. */}
       <div className="hidden xl:block">
-        <OrgChartTree cSuite={cSuite} />
+        <RadialOrgChart />
       </div>
 
       {/* Narrower viewports: the original accordion stack — a branching tree
