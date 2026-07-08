@@ -38,13 +38,32 @@ const reveal = {
 }
 
 /* ─────────────────────── Beat 1 — Mission ─────────────────────── */
+/**
+ * Opens on the Wellness Kitchen itself: the photograph slowly pushes in
+ * behind the mission line (cinematic Ken Burns), veiled by the navy
+ * gradient so the existing text stays exactly as it was.
+ */
 function MissionBeat() {
   return (
-    <section
-      className="min-h-[82vh] flex items-center justify-center px-6 sm:px-12"
-      style={{ background: `linear-gradient(165deg, ${NAVY} 0%, ${NAVY_SOFT} 100%)` }}
-    >
-      <motion.div {...reveal} className="max-w-[880px] text-center py-24">
+    <section className="relative min-h-[82vh] flex items-center justify-center px-6 sm:px-12 overflow-hidden">
+      {/* slow push-in kitchen photograph */}
+      <motion.img
+        src="/hero-magppie-kitchen.jpg"
+        alt="Magppie Wellness Kitchen"
+        initial={{ scale: 1 }}
+        animate={{ scale: 1.12 }}
+        transition={{ duration: 28, ease: 'linear', repeat: Infinity, repeatType: 'reverse' }}
+        className="absolute inset-0 w-full h-full object-cover"
+        draggable={false}
+      />
+      {/* navy veil for legibility */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `linear-gradient(165deg, ${NAVY}e8 0%, ${NAVY_SOFT}cc 55%, ${NAVY}f2 100%)`,
+        }}
+      />
+      <motion.div {...reveal} className="relative max-w-[880px] text-center py-24">
         <p
           className="text-[11px] font-medium tracking-[0.35em] mb-8"
           style={{ color: GOLD }}
