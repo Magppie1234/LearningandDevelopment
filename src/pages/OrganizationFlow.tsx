@@ -1,9 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
-import { AnimatePresence, motion } from 'framer-motion'
 import { Network } from 'lucide-react'
+import KitchenBackdrop from '@/components/KitchenBackdrop'
 
 /**
  * Client-only import. The chart's store uses zustand `persist` against
@@ -30,53 +29,11 @@ const OrgChart = dynamic(
   },
 )
 
-// Same rotating Wellness Kitchen photography as the login page (3.5s per
-// kitchen), but under a LIGHT parchment veil so the chart stays perfectly
-// readable — the kitchens glow through softly instead of carrying the page.
-const KITCHENS = [
-  '/login/kitchen-00.jpg',
-  '/login/kitchen-01.jpg',
-  '/login/kitchen-02.jpg',
-  '/login/kitchen-33.jpg',
-  '/login/kitchen-black-kitchen.jpg',
-]
-const ROTATE_MS = 3500
-
 export default function OrganizationFlow() {
-  const [slide, setSlide] = useState(0)
-
-  useEffect(() => {
-    const t = setInterval(() => setSlide((s) => (s + 1) % KITCHENS.length), ROTATE_MS)
-    return () => clearInterval(t)
-  }, [])
-
   return (
     <div className="-m-4 sm:-m-8 relative min-h-screen overflow-hidden">
-      {/* rotating kitchen ground */}
-      <AnimatePresence>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <motion.img
-          key={slide}
-          src={KITCHENS[slide]}
-          alt=""
-          aria-hidden
-          initial={{ opacity: 0, scale: 1.05 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ opacity: { duration: 1.1 }, scale: { duration: 3.8, ease: 'linear' } }}
-          className="absolute inset-0 w-full h-full object-cover"
-          draggable={false}
-        />
-      </AnimatePresence>
-      {/* light legibility veil — parchment, not navy, kept translucent enough
-          that the rotating kitchens stay clearly visible behind the chart */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            'linear-gradient(180deg, rgba(252,249,246,0.78) 0%, rgba(252,249,246,0.62) 45%, rgba(250,245,239,0.74) 100%)',
-        }}
-      />
+      {/* Light rotating Wellness Kitchen backdrop (same imagery as login). */}
+      <KitchenBackdrop veil="light" />
 
       <div className="relative px-4 sm:px-8 py-8 max-w-[1240px] mx-auto space-y-6">
         <section className="pb-6 border-b border-[rgba(0,59,70,0.10)]">

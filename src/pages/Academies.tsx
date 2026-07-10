@@ -16,6 +16,7 @@ import {
 import { academies, recentlyAddedCourses, learningPaths, iconMap } from '@/data/academies'
 import AcademyProgressCard from '@/components/AcademyProgressCard'
 import BdLearnerDashboard from '@/components/BdLearnerDashboard'
+import KitchenBackdrop from '@/components/KitchenBackdrop'
 import type { CourseLevel } from '@/data/academies'
 
 function LevelBadge({ level }: { level: CourseLevel }) {
@@ -89,7 +90,11 @@ export default function Academies() {
   const featuredAcademy = academies[0]
 
   return (
-    <div className="space-y-8 max-w-[1200px] mx-auto">
+    <div className="-m-4 sm:-m-8 relative min-h-screen">
+      {/* Light rotating Wellness Kitchen backdrop (same imagery as login). */}
+      <KitchenBackdrop veil="light" />
+
+      <div className="relative px-4 sm:px-8 py-8 space-y-8 max-w-[1200px] mx-auto">
       {/* Section 1: Page Header */}
       <motion.section
         initial={{ opacity: 0, y: 20 }}
@@ -533,6 +538,7 @@ export default function Academies() {
           })}
         </div>
       </motion.section>
+      </div>
     </div>
   )
 }
