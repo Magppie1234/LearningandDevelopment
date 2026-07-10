@@ -260,6 +260,8 @@ export default function BdLearnerDashboard() {
                   axisLine={false}
                   tickLine={false}
                 />
+                {/* recharts' Tooltip generics can't express formatters that
+                    change the name per datum — both callbacks are detached. */}
                 <Tooltip
                   cursor={{ fill: 'rgba(0,59,70,0.04)' }}
                   contentStyle={{
@@ -268,14 +270,13 @@ export default function BdLearnerDashboard() {
                     fontSize: 12,
                     boxShadow: '0 8px 24px rgba(0,59,70,0.12)',
                   }}
-                  labelFormatter={(_label, payload) =>
-                    payload?.[0]?.payload?.title ?? _label
-                  }
-                  formatter={(value: number, _n, item) => {
-                    const status = item?.payload?.status as LessonStatus
+                  labelFormatter={((_label: string, payload: Array<{ payload?: { title?: string } }>) =>
+                    payload?.[0]?.payload?.title ?? _label) as never}
+                  formatter={((value: number, _n: string, item: { payload?: { status?: LessonStatus } }) => {
+                    const status = item?.payload?.status
                     if (status === 'not-started') return ['Not started', 'Status']
                     return [`${value}%`, status === 'in-progress' ? 'In progress' : 'Score']
-                  }}
+                  }) as never}
                 />
                 <Bar dataKey="score" radius={[6, 6, 0, 0]} maxBarSize={40}>
                   {barData.map((d, i) => (

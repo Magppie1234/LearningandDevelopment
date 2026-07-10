@@ -1169,10 +1169,10 @@ export default function AcademyDetail() {
         )}
       </motion.section>
 
-      {/* BD-only: personal learning dashboard — progress, quiz scores, status */}
-      {academy.id === 'business-development' && (
+      {/* Personal learning dashboard — progress, scores, status (academies that have one) */}
+      {(academy.id === 'business-development' || academy.id === 'sales') && (
         <Link
-          href="/academy/business-development/dashboard"
+          href={`/academy/${academy.id}/dashboard`}
           className="group flex items-center justify-between gap-4 rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream px-6 py-5 hover:shadow-card transition-shadow"
         >
           <div className="flex items-center gap-4">
@@ -1181,10 +1181,12 @@ export default function AcademyDetail() {
             </div>
             <div>
               <p className="text-sm font-semibold text-ink-primary">
-                BD learning dashboard
+                {academy.id === 'sales' ? 'Sales learning dashboard' : 'BD learning dashboard'}
               </p>
               <p className="text-[13px] text-ink-tertiary mt-0.5">
-                Your progress at a glance — quiz scores by module, status breakdown, competency mastery and diagnostic baseline.
+                {academy.id === 'sales'
+                  ? 'Your progress at a glance — progress by course, status pictograph, level mastery and team standing.'
+                  : 'Your progress at a glance — quiz scores by module, status breakdown, competency mastery and diagnostic baseline.'}
               </p>
             </div>
           </div>

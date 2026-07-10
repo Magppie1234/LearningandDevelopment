@@ -1,14 +1,12 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import {
-  ArrowLeft,
   ArrowRight,
   BookOpen,
   CheckCircle2,
-  Circle,
   ClipboardCheck,
   Flame,
   FolderOpen,
@@ -21,11 +19,22 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { BD_MODULES, BD_PASS_THRESHOLD, type BdCompetency } from '@/data/bd-academy'
+import { getAcademyById } from '@/data/academies'
 import { getMonthId, getMonthIndex, getMonthLabel } from '@/data/bde-quiz'
 import { useBdProgress } from '@/lib/bd-progress-store'
 import { useBdDiagnostic } from '@/lib/bd-diagnostic-store'
 import { useBdTitles, bdEffectiveTitle } from '@/lib/bd-title-store'
 import { useQuizStore, bestFullAttempt, completionStreak, lifetimeStats } from '@/lib/quiz-store'
+import {
+  STATUS_VIZ,
+  type StatusKey,
+  DashHero,
+  KpiCard,
+  ProgressBarsChart,
+  Pictograph,
+  StatTile,
+  ChartCard,
+} from '@/components/AcademyDashboardViz'
 
 const COMP_COLOR: Record<string, string> = {
   'Product Knowledge': 'var(--status-ontrack)',
@@ -43,230 +52,6 @@ const COMPETENCIES: BdCompetency[] = [
   'Trust & Credibility',
 ]
 
-/* Status palette for the charts — the app's reserved status tokens, so both
-   themes stay on-brand. Identity is never color-alone: every use below pairs
-   the swatch with an icon and a text label. */
-const STATUS_VIZ = {
-  passed: { color: 'var(--status-ontrack)', label: 'Passed', icon: CheckCircle2 },
-  inProgress: { color: 'rgb(var(--m-accent-copper))', label: 'In progress', icon: ClipboardCheck },
-  notStarted: { color: 'rgb(var(--m-ink-tertiary))', label: 'Not started', icon: Circle },
-} as const
-
-type StatusKey = keyof typeof STATUS_VIZ
-
-/* ─────────────────── KPI card (reference: pill label + value) ─────────────────── */
-function KpiCard({
-  icon: Icon,
-  pillColor,
-  label,
-  value,
-  sub,
-}: {
-  icon: typeof BookOpen
-  pillColor: string
-  label: string
-  value: string
-  sub?: string
-}) {
-  return (
-    <div className="rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream p-5 flex flex-col items-center text-center">
-      <div
-        className="w-10 h-10 rounded-full flex items-center justify-center mb-3 border"
-        style={{ borderColor: pillColor, color: pillColor }}
-      >
-        <Icon size={19} />
-      </div>
-      <span
-        className="inline-block rounded-full px-3.5 py-1 text-[11px] font-semibold text-parchment"
-        style={{ backgroundColor: pillColor }}
-      >
-        {label}
-      </span>
-      <p className="mt-3 text-xl font-bold text-ink-primary tabular-nums leading-tight">{value}</p>
-      {sub && <p className="text-[11px] text-ink-tertiary mt-1">{sub}</p>}
-    </div>
-  )
-}
-
-/* ─────────────────── bar chart: best quiz score per module ─────────────────── */
-function ModuleScoresChart({
-  data,
-}: {
-  data: { id: string; number: number; title: string; pct: number | null; passed: boolean }[]
-}) {
-  const [hover, setHover] = useState<string | null>(null)
-  const gridLines = [0, 20, 40, 60, 80, 100]
-  const passPct = Math.round(BD_PASS_THRESHOLD * 100)
-
-  return (
-    <div>
-      <div className="relative h-[190px]">
-        {/* grid */}
-        {gridLines.map((g) => (
-          <div
-            key={g}
-            className="absolute inset-x-0 flex items-center gap-2"
-            style={{ bottom: `${(g / 100) * 100}%` }}
-          >
-            <span className="w-7 text-right text-[10px] text-ink-tertiary tabular-nums -translate-y-1/2">
-              {g}
-            </span>
-            <div
-              className={cn('flex-1 border-t', g === passPct ? 'border-dashed' : '')}
-              style={{
-                borderColor:
-                  g === passPct ? 'var(--status-ontrack)' : 'rgba(0,59,70,0.07)',
-              }}
-            />
-          </div>
-        ))}
-        {/* pass-line tag */}
-        <span
-          className="absolute right-0 -translate-y-1/2 rounded px-1.5 py-0.5 text-[9px] font-semibold"
-          style={{
-            bottom: `${passPct}%`,
-            backgroundColor: 'var(--status-ontrack-bg)',
-            color: 'var(--status-ontrack-fg)',
-          }}
-        >
-          Pass {passPct}%
-        </span>
-        {/* bars */}
-        <div className="absolute inset-y-0 left-9 right-0 flex items-end justify-between gap-[6px] px-1">
-          {data.map((d) => (
-            <div
-              key={d.id}
-              className="relative flex-1 h-full flex items-end justify-center"
-              onMouseEnter={() => setHover(d.id)}
-              onMouseLeave={() => setHover(null)}
-            >
-              {d.pct === null ? (
-                <div className="w-full max-w-[26px] h-[3px] rounded-full bg-[rgba(0,59,70,0.10)]" />
-              ) : (
-                <div
-                  className="w-full max-w-[26px] rounded-t-[4px] transition-all duration-700"
-                  style={{
-                    height: `${Math.max(d.pct, 2)}%`,
-                    backgroundColor: 'rgb(var(--m-accent-copper))',
-                  }}
-                />
-              )}
-              {hover === d.id && (
-                <div className="absolute bottom-full mb-1.5 left-1/2 -translate-x-1/2 z-10 whitespace-nowrap rounded-lg bg-ink-primary px-2.5 py-1.5 text-[11px] text-parchment shadow-card pointer-events-none">
-                  <span className="font-semibold">M{d.number}</span> · {d.title}
-                  <br />
-                  {d.pct === null ? 'Quiz not attempted' : `Best score ${d.pct}%${d.passed ? ' · passed' : ''}`}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-      {/* x labels */}
-      <div className="mt-1.5 ml-9 flex justify-between gap-[6px] px-1">
-        {data.map((d) => (
-          <span key={d.id} className="flex-1 text-center text-[10px] text-ink-tertiary tabular-nums">
-            M{d.number}
-          </span>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-/* ─────────────────── pictograph: one cap per module ───────────────────
-   Each GraduationCap is one module, colored by its status — the fastest
-   read of "how many taken vs completed". Hover shows the module + score;
-   click opens it. Identity never rides on color alone: the legend pairs
-   every color with an icon, label and count. */
-function ModulePictograph({
-  data,
-  counts,
-}: {
-  data: { id: string; number: number; title: string; pct: number | null; status: StatusKey }[]
-  counts: Record<StatusKey, number>
-}) {
-  const [hover, setHover] = useState<string | null>(null)
-  const [hoverStatus, setHoverStatus] = useState<StatusKey | null>(null)
-  const order: StatusKey[] = ['passed', 'inProgress', 'notStarted']
-
-  return (
-    <div>
-      <p className="text-[28px] font-bold text-ink-primary tabular-nums leading-none">
-        {counts.passed}
-        <span className="text-base font-semibold text-ink-tertiary"> of {data.length} completed</span>
-      </p>
-      <div className="mt-4 grid grid-cols-5 gap-2">
-        {data.map((d) => {
-          const dimmed = hoverStatus !== null && d.status !== hoverStatus
-          return (
-            <Link
-              key={d.id}
-              href={`/academy/business-development/modules?module=${d.id}`}
-              onMouseEnter={() => setHover(d.id)}
-              onMouseLeave={() => setHover(null)}
-              className="relative flex flex-col items-center rounded-xl py-2.5 hover:bg-[rgba(0,59,70,0.04)] transition-all"
-              style={{ opacity: dimmed ? 0.3 : 1 }}
-              aria-label={`Module ${d.number}: ${d.title} — ${STATUS_VIZ[d.status].label}`}
-            >
-              <GraduationCap
-                size={30}
-                strokeWidth={d.status === 'notStarted' ? 1.5 : 2.2}
-                style={{ color: STATUS_VIZ[d.status].color }}
-              />
-              <span className="mt-1 text-[10px] font-medium text-ink-tertiary tabular-nums">
-                M{d.number}
-              </span>
-              {hover === d.id && (
-                <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 z-10 whitespace-nowrap rounded-lg bg-ink-primary px-2.5 py-1.5 text-[11px] text-parchment shadow-card pointer-events-none">
-                  <span className="font-semibold">M{d.number}</span> · {d.title}
-                  <br />
-                  {STATUS_VIZ[d.status].label}
-                  {d.pct !== null && ` · best score ${d.pct}%`}
-                </div>
-              )}
-            </Link>
-          )
-        })}
-      </div>
-      {/* legend — icon + label + count, never color alone */}
-      <div className="mt-4 pt-4 border-t border-[rgba(0,59,70,0.08)] space-y-2">
-        {order.map((k) => {
-          const { color, label, icon: Icon } = STATUS_VIZ[k]
-          return (
-            <button
-              key={k}
-              type="button"
-              onMouseEnter={() => setHoverStatus(k)}
-              onMouseLeave={() => setHoverStatus(null)}
-              className="flex items-center gap-2.5 text-left w-full"
-            >
-              <span className="w-3 h-3 rounded-[3px] shrink-0" style={{ backgroundColor: color }} />
-              <Icon size={14} className="shrink-0 text-ink-tertiary" />
-              <span className="text-[13px] text-ink-secondary flex-1">{label}</span>
-              <span className="text-[13px] font-semibold text-ink-primary tabular-nums">
-                {counts[k]}
-              </span>
-            </button>
-          )
-        })}
-      </div>
-    </div>
-  )
-}
-
-/* ─────────────────── small stat tile ─────────────────── */
-function StatTile({ label, value, sub }: { label: string; value: string; sub?: string }) {
-  return (
-    <div className="rounded-[12px] border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream p-4">
-      <p className="text-2xl font-bold text-ink-primary tabular-nums">{value}</p>
-      <p className="text-[11px] font-medium uppercase tracking-wide text-ink-tertiary mt-0.5">{label}</p>
-      {sub && <p className="text-[11px] text-ink-tertiary mt-1">{sub}</p>}
-    </div>
-  )
-}
-
-/* ═══════════════════════════════ page ═══════════════════════════════ */
 export default function BdDashboard() {
   const results = useBdProgress((s) => s.results)
   const completed = useBdProgress((s) => s.completedCount)()
@@ -274,42 +59,33 @@ export default function BdDashboard() {
   const overrides = useBdTitles((s) => s.overrides)
   const diagnostic = useBdDiagnostic()
   const attempts = useQuizStore((s) => s.attempts)
+  const academy = getAcademyById('business-development')
 
-  const scoreData = useMemo(
+  const moduleData = useMemo(
     () =>
       BD_MODULES.map((m) => {
         const r = results[m.id]
         const status: StatusKey = r?.passed ? 'passed' : r?.viewed ? 'inProgress' : 'notStarted'
-        return {
-          id: m.id,
-          number: m.number,
-          title: bdEffectiveTitle(overrides, m.id, m.title),
-          pct: r && r.total > 0 ? Math.round((r.bestScore / r.total) * 100) : null,
-          passed: r?.passed ?? false,
-          status,
-        }
+        const title = bdEffectiveTitle(overrides, m.id, m.title)
+        const scorePct = r && r.total > 0 ? Math.round((r.bestScore / r.total) * 100) : null
+        return { id: m.id, number: m.number, title, pct: scorePct, status }
       }),
     [results, overrides],
   )
 
   const statusCounts = useMemo(() => {
     const c: Record<StatusKey, number> = { passed: 0, inProgress: 0, notStarted: 0 }
-    for (const m of BD_MODULES) {
-      const r = results[m.id]
-      if (r?.passed) c.passed++
-      else if (r?.viewed) c.inProgress++
-      else c.notStarted++
-    }
+    for (const d of moduleData) c[d.status]++
     return c
-  }, [results])
+  }, [moduleData])
 
   // Performance score out of 10, like the reference dashboard's "7.2".
   const perfScore = useMemo(() => {
-    const attempted = scoreData.filter((d) => d.pct !== null)
+    const attempted = moduleData.filter((d) => d.pct !== null)
     if (attempted.length === 0) return null
     const avgPct = attempted.reduce((s, d) => s + (d.pct ?? 0), 0) / attempted.length
     return Math.round(avgPct) / 10
-  }, [scoreData])
+  }, [moduleData])
 
   const totalAttempts = useMemo(
     () => BD_MODULES.reduce((s, m) => s + (results[m.id]?.attempts ?? 0), 0),
@@ -327,30 +103,18 @@ export default function BdDashboard() {
 
   return (
     <div className="max-w-[1000px] mx-auto space-y-8">
-      {/* ── header ── */}
-      <section className="pb-6 border-b border-[rgba(0,59,70,0.08)]">
-        <Link
-          href="/academy/business-development"
-          className="inline-flex items-center gap-1.5 text-sm text-ink-tertiary hover:text-ink-primary transition-colors mb-3"
-        >
-          <ArrowLeft size={15} /> Business Development Executive
-        </Link>
-        <h1 className="font-serif text-4xl font-normal text-ink-primary">
-          BD learning dashboard
-        </h1>
-        <p className="text-sm text-ink-secondary mt-2 max-w-[620px]">
-          Track your Business Development academy progress — course details, quiz
-          performance, module status and your diagnostic baseline in one place.
-        </p>
-      </section>
+      <DashHero
+        color={academy?.color ?? '#a7c4d4'}
+        image={academy?.image}
+        backHref="/academy/business-development"
+        backLabel="Business Development Executive"
+        title="BD learning dashboard"
+        subtitle="Track your Business Development academy progress — course details, quiz performance, module status and your diagnostic baseline in one place."
+        ring={pct}
+      />
 
       {/* ── KPI row (reference: course / progress / performance) ── */}
-      <motion.section
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35 }}
-        className="grid grid-cols-1 sm:grid-cols-3 gap-4"
-      >
+      <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <KpiCard
           icon={BookOpen}
           pillColor="rgb(var(--m-accent-copper))"
@@ -364,6 +128,7 @@ export default function BdDashboard() {
           label="Progress"
           value={`${pct}%`}
           sub={`${completed}/${BD_MODULES.length} modules passed · ${totalAttempts} quiz attempts`}
+          delay={0.08}
         />
         <KpiCard
           icon={Gauge}
@@ -371,34 +136,53 @@ export default function BdDashboard() {
           label="Performance score"
           value={perfScore === null ? '—' : perfScore.toFixed(1)}
           sub={perfScore === null ? 'No quizzes taken yet' : 'Avg best quiz score, out of 10'}
+          delay={0.16}
         />
-      </motion.section>
+      </section>
 
-      {/* ── charts row (reference: bar chart + donut) ── */}
+      {/* ── charts row (bar chart + pictograph) ── */}
       <section className="grid grid-cols-1 lg:grid-cols-[58%_1fr] gap-4">
-        <div className="rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream p-5">
-          <div className="flex items-center gap-2 mb-4">
-            <ClipboardCheck size={16} className="text-ink-tertiary" />
-            <h2 className="text-sm font-semibold text-ink-primary">Quiz scores by module</h2>
-          </div>
-          <ModuleScoresChart data={scoreData} />
-        </div>
-        <div className="rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream p-5">
-          <div className="flex items-center gap-2 mb-4">
-            <GraduationCap size={16} className="text-ink-tertiary" />
-            <h2 className="text-sm font-semibold text-ink-primary">
-              Modules completed — each cap is one module
-            </h2>
-          </div>
-          <ModulePictograph data={scoreData} counts={statusCounts} />
-        </div>
+        <ChartCard icon={ClipboardCheck} title="Quiz scores by module">
+          <ProgressBarsChart
+            data={moduleData.map((d) => ({
+              id: d.id,
+              label: `M${d.number}`,
+              pct: d.pct,
+              lines: [
+                `M${d.number} · ${d.title}`,
+                d.pct === null
+                  ? 'Quiz not attempted'
+                  : `Best score ${d.pct}%${d.status === 'passed' ? ' · passed' : ''}`,
+              ],
+            }))}
+            refLine={{ pct: Math.round(BD_PASS_THRESHOLD * 100), label: `Pass ${Math.round(BD_PASS_THRESHOLD * 100)}%` }}
+          />
+        </ChartCard>
+        <ChartCard icon={GraduationCap} title="Modules completed — each cap is one module">
+          <Pictograph
+            items={moduleData.map((d) => ({
+              id: d.id,
+              href: `/academy/business-development/modules?module=${d.id}`,
+              label: `M${d.number}`,
+              lines: [
+                `M${d.number} · ${d.title}`,
+                `${STATUS_VIZ[d.status].label}${d.pct !== null ? ` · best score ${d.pct}%` : ''}`,
+              ],
+              status: d.status,
+            }))}
+            icon={GraduationCap}
+            counts={statusCounts}
+            unitLabel="completed"
+            cols={5}
+          />
+        </ChartCard>
       </section>
 
       {/* ── continue learning ── */}
       {nextModule ? (
         <Link
           href={`/academy/business-development/modules?module=${nextModule.id}`}
-          className="group flex items-center justify-between gap-4 rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream px-6 py-5 hover:shadow-card transition-shadow"
+          className="group flex items-center justify-between gap-4 rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream px-6 py-5 shadow-card hover:shadow-elevated hover:-translate-y-0.5 transition-all duration-300"
         >
           <div className="flex items-center gap-4 min-w-0">
             <div
@@ -441,7 +225,7 @@ export default function BdDashboard() {
         <p className="text-[13px] text-ink-tertiary mb-4">
           Each bar counts modules passed within that competency.
         </p>
-        <div className="rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream p-6 space-y-4">
+        <div className="rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream p-6 space-y-4 shadow-card">
           {COMPETENCIES.map((comp) => {
             const mods = BD_MODULES.filter((m) => m.competency === comp)
             const passed = mods.filter((m) => results[m.id]?.passed).length
@@ -515,7 +299,7 @@ export default function BdDashboard() {
             </div>
           </>
         ) : (
-          <div className="rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream px-6 py-5 flex flex-wrap items-center justify-between gap-4">
+          <div className="rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream px-6 py-5 flex flex-wrap items-center justify-between gap-4 shadow-card">
             <div className="flex items-center gap-4">
               <div className="w-11 h-11 rounded-xl bg-accent-copper/15 flex items-center justify-center shrink-0">
                 <Target size={22} className="text-accent-copper" />
@@ -542,7 +326,7 @@ export default function BdDashboard() {
       {/* ── module status list ── */}
       <section>
         <h2 className="font-serif text-2xl font-normal text-ink-primary mb-4">Modules</h2>
-        <div className="rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream overflow-hidden">
+        <div className="rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream overflow-hidden shadow-card">
           {BD_MODULES.map((m, i) => {
             const r = results[m.id]
             const status: StatusKey = r?.passed ? 'passed' : r?.viewed ? 'inProgress' : 'notStarted'
@@ -600,7 +384,7 @@ export default function BdDashboard() {
                 : 'Full challenge not taken yet'
             }
           />
-          <div className="rounded-[12px] border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream p-4">
+          <div className="rounded-[12px] border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream p-4 shadow-card">
             <p className="text-2xl font-bold text-ink-primary tabular-nums flex items-center gap-1.5">
               {streak}
               {streak > 0 && <Flame size={18} className="text-accent-copper" />}
@@ -656,7 +440,7 @@ export default function BdDashboard() {
             <Link
               key={l.href}
               href={l.href}
-              className="group rounded-[12px] border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream p-4 hover:shadow-card transition-shadow"
+              className="group rounded-[12px] border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream p-4 shadow-card hover:shadow-elevated hover:-translate-y-0.5 transition-all duration-300"
             >
               <l.icon size={18} className="text-ink-tertiary group-hover:text-ink-primary transition-colors" />
               <p className="text-sm font-semibold text-ink-primary mt-2">{l.title}</p>
