@@ -68,12 +68,13 @@ export default function OrganizationFlow() {
           draggable={false}
         />
       </AnimatePresence>
-      {/* light legibility veil — parchment, not navy, so the chart reads clearly */}
+      {/* light legibility veil — parchment, not navy, kept translucent enough
+          that the rotating kitchens stay clearly visible behind the chart */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            'linear-gradient(180deg, rgba(252,249,246,0.90) 0%, rgba(252,249,246,0.84) 45%, rgba(250,245,239,0.92) 100%)',
+            'linear-gradient(180deg, rgba(252,249,246,0.78) 0%, rgba(252,249,246,0.62) 45%, rgba(250,245,239,0.74) 100%)',
         }}
       />
 
