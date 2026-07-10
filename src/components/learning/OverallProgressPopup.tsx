@@ -52,10 +52,14 @@ export default function OverallProgressPopup() {
 
   if (!data) return null
   const s = summarizeProgress(data.progress, data.insights)
+  const noActivity = s.totalModules > 0 && s.completed === 0 && s.inProgress === 0 && s.totalTimeSeconds === 0
 
-  const takeaway = `You're ${s.completionPct}% through your learning${
-    s.strongestTopic ? `, strongest in ${s.strongestTopic}` : ''
-  }${s.weakestTopic ? `, and could use more time on ${s.weakestTopic}` : ''}.`
+  // Section 7: zero activity gets a "let's get started", not a wall of 0%s.
+  const takeaway = noActivity
+    ? "You haven't started yet — open any academy and your progress will begin filling in here."
+    : `You're ${s.completionPct}% through your learning${
+        s.strongestTopic ? `, strongest in ${s.strongestTopic}` : ''
+      }${s.weakestTopic ? `, and could use more time on ${s.weakestTopic}` : ''}.`
 
   return (
     <AnimatePresence>
@@ -67,7 +71,7 @@ export default function OverallProgressPopup() {
             exit={{ opacity: 0, scale: 0.96 }}
             transition={{ duration: 0.25 }}
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-[440px] rounded-2xl bg-card border border-[rgba(0,59,70,0.1)] shadow-2xl p-6"
+            className="w-full max-w-[440px] rounded-2xl bg-stone-espresso border border-white/10 shadow-2xl p-6"
           >
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-2 text-accent-copper">
@@ -78,33 +82,37 @@ export default function OverallProgressPopup() {
                 type="button"
                 onClick={dismiss}
                 aria-label="Dismiss"
-                className="w-8 h-8 rounded-full flex items-center justify-center text-ink-tertiary hover:text-ink-primary hover:bg-black/[0.04] transition-colors"
+                className="w-8 h-8 rounded-full flex items-center justify-center text-stone-ivory/50 hover:text-stone-ivory hover:bg-white/[0.06] transition-colors"
               >
                 <X size={16} />
               </button>
             </div>
 
-            <h2 className="font-serif text-2xl text-ink-primary mt-2">Your progress at a glance</h2>
+            <h2 className="font-serif text-2xl text-stone-ivory mt-2">
+              {noActivity ? 'Ready when you are' : 'Your progress at a glance'}
+            </h2>
 
-            <div className="mt-4 grid grid-cols-3 gap-3">
-              {[
-                { label: 'Complete', value: `${s.completionPct}%` },
-                { label: 'In progress', value: String(s.inProgress) },
-                { label: 'Time invested', value: formatDuration(s.totalTimeSeconds) },
-              ].map((k) => (
-                <div key={k.label} className="rounded-[12px] bg-cream border-[0.5px] border-[rgba(0,59,70,0.14)] p-3 text-center">
-                  <p className="text-lg font-bold text-ink-primary tabular-nums">{k.value}</p>
-                  <p className="text-[10px] font-medium uppercase tracking-wide text-ink-tertiary mt-0.5">{k.label}</p>
-                </div>
-              ))}
-            </div>
+            {!noActivity && (
+              <div className="mt-4 grid grid-cols-3 gap-3">
+                {[
+                  { label: 'Complete', value: `${s.completionPct}%` },
+                  { label: 'In progress', value: String(s.inProgress) },
+                  { label: 'Time invested', value: formatDuration(s.totalTimeSeconds) },
+                ].map((k) => (
+                  <div key={k.label} className="rounded-[12px] bg-stone-charcoal border border-white/10 p-3 text-center">
+                    <p className="text-lg font-bold text-stone-ivory tabular-nums">{k.value}</p>
+                    <p className="text-[10px] font-medium uppercase tracking-wide text-stone-ivory/45 mt-0.5">{k.label}</p>
+                  </div>
+                ))}
+              </div>
+            )}
 
-            <p className="text-[13px] text-ink-secondary mt-4 leading-relaxed">{takeaway}</p>
+            <p className="text-[13px] text-stone-ivory/70 mt-4 leading-relaxed">{takeaway}</p>
 
             <button
               type="button"
               onClick={dismiss}
-              className="mt-5 w-full rounded-full bg-ink-primary py-2.5 text-sm font-semibold text-parchment hover:opacity-90 transition"
+              className="mt-5 w-full rounded-full bg-accent-copper py-2.5 text-sm font-semibold text-stone-ink hover:brightness-95 transition"
             >
               Let&apos;s go
             </button>

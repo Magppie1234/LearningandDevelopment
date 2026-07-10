@@ -24,7 +24,7 @@ function Ring({ pct, color }: { pct: number; color: string }) {
   return (
     <div className="relative shrink-0" style={{ width: size, height: size }}>
       <svg width={size} height={size} className="-rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(0,59,70,0.08)" strokeWidth={sw} />
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(245,239,230,0.12)" strokeWidth={sw} />
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -38,7 +38,7 @@ function Ring({ pct, color }: { pct: number; color: string }) {
           style={{ transition: 'stroke-dashoffset 0.9s ease-out' }}
         />
       </svg>
-      <span className="absolute inset-0 flex items-center justify-center text-[13px] font-bold text-ink-primary tabular-nums">
+      <span className="absolute inset-0 flex items-center justify-center text-[13px] font-bold text-stone-ivory tabular-nums">
         {pct}%
       </span>
     </div>
@@ -46,15 +46,16 @@ function Ring({ pct, color }: { pct: number; color: string }) {
 }
 
 function TopicChips({ topics, tone }: { topics: string[]; tone: 'weak' | 'strong' }) {
-  if (topics.length === 0) return <span className="text-[12px] text-ink-tertiary">—</span>
-  const color = tone === 'weak' ? 'var(--status-risk)' : 'var(--status-ontrack)'
+  // Section 4 zero-state: omit the row entirely rather than showing a dash.
+  if (topics.length === 0) return null
+  const color = tone === 'weak' ? '#e0a04a' : 'rgb(var(--stone-sage))'
   return (
     <span className="flex flex-wrap gap-1.5">
       {topics.map((t) => (
         <span
           key={t}
           className="inline-block rounded-lg px-2 py-0.5 text-[11px] font-medium"
-          style={{ backgroundColor: `color-mix(in srgb, ${color} 14%, transparent)`, color }}
+          style={{ backgroundColor: `color-mix(in srgb, ${color} 22%, transparent)`, color }}
         >
           {t}
         </span>
@@ -81,15 +82,18 @@ export default function InsightCard({
   const trend = insight?.trend ?? null
   const tMeta = trend ? TREND_META[trend] : null
   const scoreTrail = scores && scores.length > 1 ? ` (${scores.join('% → ')}%)` : ''
+  const weak = insight?.weak_topics ?? []
+  const strong = insight?.strong_topics ?? []
+  const hasTopics = weak.length > 0 || strong.length > 0
 
   return (
-    <div className="rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream p-5 shadow-card">
+    <div className="rounded-2xl border border-white/10 bg-stone-espresso p-5">
       <div className="flex items-start gap-4">
-        <Ring pct={bestPct} color={tMeta?.color ?? 'var(--status-ontrack)'} />
+        <Ring pct={bestPct} color={tMeta?.color ?? 'rgb(var(--stone-sage))'} />
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-semibold text-ink-primary">{moduleLabel}</p>
+          <p className="text-sm font-semibold text-stone-ivory">{moduleLabel}</p>
           {/* plain-language read */}
-          <p className="text-[13px] text-ink-secondary mt-0.5">
+          <p className="text-[13px] text-stone-ivory/60 mt-0.5">
             {progress.attempt_count} attempt{progress.attempt_count === 1 ? '' : 's'}
             {tMeta && (
               <>
@@ -106,20 +110,27 @@ export default function InsightCard({
         </div>
       </div>
 
-      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div>
-          <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-ink-tertiary mb-1.5">
-            <Target size={12} style={{ color: 'var(--status-risk)' }} /> Focus here
-          </p>
-          <TopicChips topics={insight?.weak_topics ?? []} tone="weak" />
+      {/* Section 4: omit the topic rows entirely when there's nothing to show. */}
+      {hasTopics && (
+        <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {weak.length > 0 && (
+            <div>
+              <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-stone-ivory/45 mb-1.5">
+                <Target size={12} style={{ color: '#e0a04a' }} /> Focus here
+              </p>
+              <TopicChips topics={weak} tone="weak" />
+            </div>
+          )}
+          {strong.length > 0 && (
+            <div>
+              <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-stone-ivory/45 mb-1.5">
+                <Sparkles size={12} style={{ color: 'rgb(var(--stone-sage))' }} /> You&apos;re strong here
+              </p>
+              <TopicChips topics={strong} tone="strong" />
+            </div>
+          )}
         </div>
-        <div>
-          <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-ink-tertiary mb-1.5">
-            <Sparkles size={12} style={{ color: 'var(--status-ontrack)' }} /> You&apos;re strong here
-          </p>
-          <TopicChips topics={insight?.strong_topics ?? []} tone="strong" />
-        </div>
-      </div>
+      )}
     </div>
   )
 }

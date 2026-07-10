@@ -62,11 +62,29 @@ function row(
   }
 }
 
+export interface DemoResume {
+  academyId: string
+  moduleId: string
+  label: string
+  position: number | null
+  kind: 'video' | 'scroll' | null
+}
+
 export interface DemoLearningData {
   progress: ModuleProgressRow[]
   insights: InsightSummaryRow[]
   labels: Record<string, string>
+  /** Minutes invested per day for the current week (index 0 = Monday). */
+  weekByDayMinutes: number[]
+  /** Total seconds invested this month. */
+  monthTotalSeconds: number
+  /** Most-recently-accessed in-progress module for the generic resume CTA. */
+  resume: DemoResume | null
 }
+
+// Deterministic weekly shape (share of a module's minutes spread across the
+// last few days) — makes the week bars look like real daily activity.
+const WEEK_SHAPE = [0.18, 0.14, 0.22, 0.1, 0.16, 0.12, 0.08]
 
 /**
  * @param academyId  BD_ACADEMY_ID / SALES_ACADEMY_ID to scope, or undefined
@@ -134,6 +152,23 @@ export function useDemoLearningData(academyId?: string): DemoLearningData {
       }
     }
 
-    return { progress, insights, labels }
+    // Week / month rollups + the generic-resume target.
+    const totalMins = progress.reduce((s, p) => s + p.total_time_spent_seconds / 60, 0)
+    const weekMins = Math.round(totalMins * 0.32) // a slice of lifetime landed "this week"
+    const weekByDayMinutes = WEEK_SHAPE.map((f) => Math.round(weekMins * f))
+    const monthTotalSeconds = Math.round(totalMins * 0.62 * 60)
+
+    const resumeRow = progress.find((p) => p.status === 'in_progress') ?? null
+    const resume: DemoResume | null = resumeRow
+      ? {
+          academyId: resumeRow.academy_id,
+          moduleId: resumeRow.module_id,
+          label: labels[resumeRow.module_id] ?? resumeRow.module_id,
+          position: resumeRow.last_position,
+          kind: resumeRow.last_position_kind,
+        }
+      : null
+
+    return { progress, insights, labels, weekByDayMinutes, monthTotalSeconds, resume }
   }, [academyId, bdResults])
 }

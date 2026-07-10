@@ -12,18 +12,23 @@ import { summarizeProgress } from '@/lib/learning-summary'
 import { useDemoLearningData } from '@/lib/learning-demo-data'
 import InsightCard from './InsightCard'
 import ModuleProgressCard from './ModuleProgressCard'
+import WeekMonthProgress from './WeekMonthProgress'
+import GenericResumeCTA from './GenericResumeCTA'
 
 /**
- * Top-level learning dashboard. Presence of `academyId` decides global vs
- * academy-scoped; `viewingUserId` + a non-learner `viewerRole` put it in
- * read-only "viewing someone else" mode (actions hidden, banner shown). The
- * hard academy/user scoping happens at the API + RLS layer — this component
- * only ever renders what the server returns for the requested scope.
+ * Top-level learning dashboard — dark "Obsidian" (warm-stone) surface that sits
+ * on the home canvas / kitchen background. `academyId` decides global vs
+ * academy-scoped; `viewingUserId` + a non-learner `viewerRole` = read-only
+ * "viewing someone else". Hard academy/user scoping happens at the API + RLS
+ * layer — this only renders what the server returns for the requested scope.
  *
- * Demo-login mode: with no real session the Supabase read returns 401/503, so
- * we render the demo bridge (src/lib/learning-demo-data.ts) instead — real
- * BD quiz-store activity over a representative scenario — so the dashboard is
- * alive today. Real auth (NEXT_PUBLIC_REAL_AUTH=1) swaps in live data.
+ * `showGlobalExtras` adds the home-only pieces (week/month trend, generic
+ * "continue where you left off" CTA) that must NEVER appear on an academy-
+ * scoped dashboard.
+ *
+ * Demo-login mode renders the demo bridge (real BD quiz activity over a
+ * representative scenario); real auth (NEXT_PUBLIC_REAL_AUTH=1) swaps in live
+ * Supabase data + Realtime.
  */
 const REAL_AUTH = process.env.NEXT_PUBLIC_REAL_AUTH === '1'
 
@@ -35,25 +40,26 @@ export default function LearningDashboard({
   viewingLearnerName,
   onContinueModule,
   title,
+  showGlobalExtras = false,
+  resumeHref,
 }: {
   /** Omit for the global (all-academy) dashboard; pass to scope to one academy. */
   academyId?: string
   viewerRole: ViewerRole
-  /** Set when a manager/admin is viewing another learner's dashboard. */
   viewingUserId?: string
   viewingLearnerName?: string
-  /** Human label for a module_id (e.g. "Module 3: …"). */
   moduleLabel?: (moduleId: string) => string
   onContinueModule?: (moduleId: string, position: number | null, kind: 'video' | 'scroll' | null) => void
   title?: string
+  /** Home-only: week/month trend + generic resume CTA. Never on scoped views. */
+  showGlobalExtras?: boolean
+  /** Where the generic resume CTA links to (resolved by the host page). */
+  resumeHref?: (academyId: string, moduleId: string) => string
 }) {
   const load = useLearningProgress({ academyId, viewingUserId })
   const demo = useDemoLearningData(academyId)
   const readOnly = viewerRole !== 'learner' && Boolean(viewingUserId)
 
-  // In demo-login mode a guest has no session (401) / no backend (503); bridge
-  // to the demo data instead of the sign-in notice. Never bridge a manager's
-  // read-only "viewing someone" flow — that must reflect real data only.
   const useDemo = !REAL_AUTH && !viewingUserId && (load.status === 'unauthenticated' || load.status === 'unconfigured')
 
   const effective: { progress: ModuleProgressRow[]; insights: InsightSummaryRow[]; labels: Record<string, string> } | null =
@@ -77,39 +83,36 @@ export default function LearningDashboard({
         </div>
       )}
 
-      {title && <h2 className="font-serif text-2xl font-normal text-ink-primary">{title}</h2>}
+      {title && <h2 className="font-serif text-2xl font-normal text-stone-ivory">{title}</h2>}
 
       {load.status === 'loading' && (
-        <div className="rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream p-6 animate-pulse h-28" />
+        <div className="rounded-2xl border border-white/10 bg-stone-espresso p-6 animate-pulse h-28" />
       )}
 
       {!useDemo && load.status === 'unconfigured' && (
-        <div className="rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream p-6 text-sm text-ink-secondary">
-          <p className="font-semibold text-ink-primary mb-1">Live dashboard pending backend</p>
+        <div className="rounded-2xl border border-white/10 bg-stone-espresso p-6 text-sm text-stone-ivory/70">
+          <p className="font-semibold text-stone-ivory mb-1">Live dashboard pending backend</p>
           The learning dashboard reads from Supabase (sessions, attempts, insights). It activates
-          once <code className="text-[12px]">NEXT_PUBLIC_SUPABASE_URL/ANON_KEY</code> and real auth
-          are configured — the schema, API routes, and RLS are in place and waiting.
+          once <code className="text-[12px] text-accent-copper">NEXT_PUBLIC_SUPABASE_URL/ANON_KEY</code>{' '}
+          and real auth are configured.
         </div>
       )}
 
       {!useDemo && load.status === 'unauthenticated' && (
-        <div className="rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream p-6 text-sm text-ink-secondary flex flex-wrap items-center justify-between gap-4">
+        <div className="rounded-2xl border border-white/10 bg-stone-espresso p-6 text-sm text-stone-ivory/70 flex flex-wrap items-center justify-between gap-4">
           <div>
-            <p className="font-semibold text-ink-primary mb-1">Sign in to track your learning</p>
-            You&apos;re browsing as a guest. Sign in with your Magppie email and this dashboard
-            starts recording time, quiz attempts, and insights — synced across devices.
+            <p className="font-semibold text-stone-ivory mb-1">Sign in to track your learning</p>
+            You&apos;re browsing as a guest. Sign in and this dashboard starts recording time,
+            attempts, and insights — synced across devices.
           </div>
-          <a
-            href="/login"
-            className="shrink-0 rounded-full bg-ink-primary px-4 py-2 text-xs font-semibold text-parchment hover:opacity-90 transition"
-          >
+          <a href="/login" className="shrink-0 rounded-full bg-accent-copper px-4 py-2 text-xs font-semibold text-stone-ink hover:brightness-95 transition">
             Sign in
           </a>
         </div>
       )}
 
       {load.status === 'error' && (
-        <div className="rounded-2xl border-[0.5px] border-[rgba(186,117,23,0.4)] bg-accent-copper/5 p-6 text-sm text-ink-secondary">
+        <div className="rounded-2xl border border-[rgba(200,130,85,0.4)] bg-accent-copper/10 p-6 text-sm text-stone-ivory/70">
           Couldn&apos;t load progress: {load.message}
         </div>
       )}
@@ -120,12 +123,14 @@ export default function LearningDashboard({
           const insightByModule = new Map(effective.insights.map((i) => [i.module_id, i]))
           const withAttempts = effective.progress.filter((p) => p.attempt_count > 0)
 
-          if (effective.progress.length === 0) {
+          // ── Zero-state (Section 4): a short "let's get started", not a wall of 0s ──
+          if (effective.progress.every((p) => p.status === 'not_started' && p.attempt_count === 0)) {
             return (
-              <div className="rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream p-8 text-center">
-                <GraduationCap size={26} className="mx-auto text-ink-tertiary mb-2" />
-                <p className="text-sm text-ink-secondary">
-                  No learning activity yet{academyId ? ' in this academy' : ''}. Open a module to start tracking.
+              <div className="rounded-2xl border border-white/10 bg-stone-espresso p-8 text-center">
+                <GraduationCap size={26} className="mx-auto text-accent-copper mb-2" />
+                <p className="text-sm font-semibold text-stone-ivory">Let&apos;s get started</p>
+                <p className="text-sm text-stone-ivory/60 mt-1">
+                  Open a module to begin — your time, scores, and insights will appear here as you learn.
                 </p>
               </div>
             )
@@ -133,6 +138,14 @@ export default function LearningDashboard({
 
           return (
             <>
+              {/* generic resume (home only) */}
+              {showGlobalExtras && useDemo && demo.resume && (
+                <GenericResumeCTA
+                  resume={demo.resume}
+                  href={resumeHref?.(demo.resume.academyId, demo.resume.moduleId) ?? '#'}
+                />
+              )}
+
               {/* headline stats */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {[
@@ -141,13 +154,21 @@ export default function LearningDashboard({
                   { icon: GraduationCap, label: 'Modules done', value: `${s.completed}/${s.totalModules}` },
                   { icon: Clock, label: 'Time invested', value: formatDuration(s.totalTimeSeconds) },
                 ].map((k) => (
-                  <div key={k.label} className="rounded-[12px] border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream p-4 shadow-card">
-                    <k.icon size={16} className="text-ink-tertiary" />
-                    <p className="text-2xl font-bold text-ink-primary tabular-nums mt-2">{k.value}</p>
-                    <p className="text-[11px] font-medium uppercase tracking-wide text-ink-tertiary mt-0.5">{k.label}</p>
+                  <div key={k.label} className="rounded-[12px] border border-white/10 bg-stone-espresso p-4">
+                    <k.icon size={16} className="text-accent-copper" />
+                    <p className="text-2xl font-bold text-stone-ivory tabular-nums mt-2">{k.value}</p>
+                    <p className="text-[11px] font-medium uppercase tracking-wide text-stone-ivory/45 mt-0.5">{k.label}</p>
                   </div>
                 ))}
               </div>
+
+              {/* week + month (home only) */}
+              {showGlobalExtras && useDemo && (
+                <WeekMonthProgress
+                  weekByDayMinutes={demo.weekByDayMinutes}
+                  monthTotalSeconds={demo.monthTotalSeconds}
+                />
+              )}
 
               {/* insight cards (only modules with ≥1 attempt) */}
               {withAttempts.length > 0 && (
@@ -171,8 +192,6 @@ export default function LearningDashboard({
                     academyId={p.academy_id}
                     moduleLabel={labelFor(p.module_id)}
                     progress={p}
-                    // Demo rows have no live session, so resume/reset can't act —
-                    // present them read-only rather than as dead buttons.
                     readOnly={readOnly || useDemo}
                     onContinue={(pr) => onContinueModule?.(pr.module_id, pr.last_position, pr.last_position_kind)}
                   />

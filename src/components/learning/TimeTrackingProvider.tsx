@@ -20,16 +20,19 @@ import {
  * heartbeat every 30s (so partial sessions survive a crash/tab-close), and
  * closes it on unmount / beforeunload.
  *
- * Idle handling: for study/video reading, 3 minutes with no mouse/keyboard
- * activity auto-pauses and stops accumulating time. For `video`, the idle
- * signal is playback state instead (watching legitimately involves no mouse
- * movement) — pass `videoPlaying` from the player.
+ * Idle handling is ACTIVITY-SPECIFIC (Section 2), not one rule for all:
+ *  - video: a *state* signal — the timer runs only while `videoPlaying` is
+ *    true; pausing the video freezes it immediately (no grace period).
+ *  - study/reading: an *activity* signal — the timer runs only while there's
+ *    been scroll/click/keypress within the last 60s; 60s idle → auto-pause.
+ *  - quiz: no idle-pause — the timer runs from open to submission.
  *
- * No-ops entirely when viewerRole !== 'learner' or a viewingUserId is set:
- * a manager/admin reviewing someone's dashboard must never write session data.
+ * No-ops when a viewingUserId is set (a manager/admin reviewing someone's
+ * dashboard must never write session data). An admin studying their OWN module
+ * still tracks — the gate is "viewing someone else", not role.
  */
 
-const IDLE_MS = 3 * 60 * 1000
+const IDLE_MS = 60 * 1000 // 1 minute of no interaction (study/reading)
 const HEARTBEAT_MS = 30 * 1000
 
 interface TimeTrackingValue {
@@ -65,7 +68,11 @@ export function TimeTrackingProvider({
   getResumePosition?: () => number | null
   children: ReactNode
 }) {
-  const enabled = viewerRole === 'learner' && !viewingUserId
+  // Track whenever this is the learner's OWN session (not a manager/admin
+  // viewing someone else). `viewerRole` is kept in the signature for clarity
+  // but the gate is viewingUserId — an admin studying their own module tracks.
+  void viewerRole
+  const enabled = !viewingUserId
   const [activeSeconds, setActiveSeconds] = useState(0)
   const [idle, setIdle] = useState(false)
 
@@ -88,10 +95,14 @@ export function TimeTrackingProvider({
     events.forEach((e) => window.addEventListener(e, markActive, { passive: true }))
 
     const tick = window.setInterval(() => {
+      // Activity-specific idle: video → play state; quiz → never idle;
+      // study → no interaction within IDLE_MS (1 min).
       const isIdle =
         activityType === 'video'
           ? videoPlayingRef.current === false
-          : Date.now() - lastActivityRef.current > IDLE_MS
+          : activityType === 'quiz'
+            ? false
+            : Date.now() - lastActivityRef.current > IDLE_MS
       setIdle(isIdle)
       if (!isIdle) {
         activeSecondsRef.current += 1

@@ -59,6 +59,7 @@ export function useLearningProgress(opts: {
 }): ProgressLoad {
   const { academyId, viewingUserId } = opts
   const [state, setState] = useState<ProgressLoad>({ status: 'loading' })
+  const [tick, setTick] = useState(0)
 
   useEffect(() => {
     let alive = true
@@ -66,7 +67,6 @@ export function useLearningProgress(opts: {
     if (academyId) params.set('academyId', academyId)
     if (viewingUserId) params.set('userId', viewingUserId)
 
-    setState({ status: 'loading' })
     authedFetch(`/api/learning/progress?${params.toString()}`)
       .then(async (res) => {
         if (!alive) return
@@ -88,6 +88,31 @@ export function useLearningProgress(opts: {
       .catch((e) => alive && setState({ status: 'error', message: String(e) }))
     return () => {
       alive = false
+    }
+  }, [academyId, viewingUserId, tick])
+
+  // Live sync (Section 3): re-fetch whenever this learner's rows change in
+  // learning_sessions / quiz_attempts / module_progress. No session (demo) →
+  // no channel, so this is inert until real auth is on. The subscription is
+  // scoped to the target user (and academy when scoped) so cross-tab/device
+  // updates land immediately without a manual refresh.
+  useEffect(() => {
+    let channel: ReturnType<typeof supabase.channel> | null = null
+    let alive = true
+    supabase.auth.getSession().then(({ data }) => {
+      const uid = viewingUserId ?? data.session?.user?.id
+      if (!alive || !uid) return
+      const bump = () => setTick((t) => t + 1)
+      const filter = `user_id=eq.${uid}`
+      channel = supabase.channel(`learning-${uid}-${academyId ?? 'global'}`)
+      for (const table of ['learning_sessions', 'quiz_attempts', 'module_progress', 'insight_summary']) {
+        channel.on('postgres_changes', { event: '*', schema: 'public', table, filter }, bump)
+      }
+      channel.subscribe()
+    })
+    return () => {
+      alive = false
+      if (channel) supabase.removeChannel(channel)
     }
   }, [academyId, viewingUserId])
 

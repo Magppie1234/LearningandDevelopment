@@ -32,7 +32,7 @@ import {
   StatTile,
   ChartCard,
 } from '@/components/AcademyDashboardViz'
-import LearningDashboard from '@/components/learning/LearningDashboard'
+import EstimatedCompletionCard from '@/components/learning/EstimatedCompletionCard'
 
 // Academy-scoped instance key. Uses the real academies.id UUID once Supabase is
 // wired (via env); falls back to the slug so the scoped query is well-formed.
@@ -421,28 +421,9 @@ export default function BdDashboard() {
         </Link>
       </section>
 
-      {/* ── live learning dashboard (academy-scoped, Supabase-backed) ──
-          Physically scoped to BD via academyId at the API + RLS layer, so it
-          can never surface another academy's data. Shows a "pending backend"
-          notice until Supabase + auth are configured. */}
+      {/* ── estimated time to complete (academy-scoped, pace-based) ── */}
       <section>
-        <h2 className="font-serif text-2xl font-normal text-ink-primary mb-1">
-          Live progress &amp; insights
-        </h2>
-        <p className="text-[13px] text-ink-tertiary mb-4">
-          Time tracked, attempt trends, and weak/strong topics — scoped to this academy.
-        </p>
-        <LearningDashboard
-          academyId={BD_ACADEMY_ID}
-          viewerRole="learner"
-          moduleLabel={(id) => {
-            const m = BD_MODULES.find((x) => x.id === id)
-            return m ? `Module ${m.number}: ${bdEffectiveTitle(overrides, m.id, m.title)}` : id
-          }}
-          onContinueModule={(id) => {
-            window.location.href = `/academy/business-development/modules?module=${id}`
-          }}
-        />
+        <EstimatedCompletionCard academyId={BD_ACADEMY_ID} academyName="BD Academy" />
       </section>
 
       {/* ── quick links ── */}

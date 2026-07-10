@@ -37,16 +37,16 @@ export default function LearnerSelector({
   }, [q, learners])
 
   return (
-    <div className="rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream shadow-card overflow-hidden">
-      <div className="p-3 border-b border-[rgba(0,59,70,0.08)]">
+    <div className="rounded-2xl border border-white/10 bg-stone-espresso overflow-hidden">
+      <div className="p-3 border-b border-white/10">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-tertiary" size={14} />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-ivory/40" size={14} />
           <input
             type="text"
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="Search learners you oversee…"
-            className="w-full bg-parchment border border-[rgba(0,59,70,0.12)] rounded-lg pl-8 pr-3 py-1.5 text-[13px] text-ink-primary placeholder:text-ink-tertiary focus:outline-none focus:border-ink-primary"
+            className="w-full bg-stone-charcoal border border-white/10 rounded-lg pl-8 pr-3 py-1.5 text-[13px] text-stone-ivory placeholder:text-stone-ivory/40 focus:outline-none focus:border-accent-copper"
           />
         </div>
       </div>
@@ -57,25 +57,25 @@ export default function LearnerSelector({
             type="button"
             onClick={() => onSelect(l.userId)}
             className={cn(
-              'w-full flex items-center gap-3 px-4 py-3 text-left border-b border-[rgba(0,59,70,0.06)] last:border-b-0 hover:bg-[rgba(0,59,70,0.03)] transition-colors',
-              selectedUserId === l.userId && 'bg-[rgba(0,59,70,0.04)]',
+              'w-full flex items-center gap-3 px-4 py-3 text-left border-b border-white/5 last:border-b-0 hover:bg-white/[0.04] transition-colors',
+              selectedUserId === l.userId && 'bg-white/[0.05]',
             )}
           >
-            <span className="w-8 h-8 rounded-full bg-surface-warm flex items-center justify-center text-[11px] font-bold text-ink-secondary shrink-0">
+            <span className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-[11px] font-bold text-stone-ivory/80 shrink-0">
               {l.name.split(' ').map((p) => p[0]).slice(0, 2).join('').toUpperCase()}
             </span>
             <span className="min-w-0 flex-1">
-              <span className="block text-sm font-medium text-ink-primary truncate">{l.name}</span>
-              {l.academyLabel && <span className="block text-[12px] text-ink-tertiary truncate">{l.academyLabel}</span>}
+              <span className="block text-sm font-medium text-stone-ivory truncate">{l.name}</span>
+              {l.academyLabel && <span className="block text-[12px] text-stone-ivory/50 truncate">{l.academyLabel}</span>}
             </span>
             {l.completionPct != null && (
-              <span className="text-[12px] font-semibold text-ink-secondary tabular-nums">{l.completionPct}%</span>
+              <span className="text-[12px] font-semibold text-stone-ivory/70 tabular-nums">{l.completionPct}%</span>
             )}
-            <ChevronRight size={15} className="text-ink-tertiary/60 shrink-0" />
+            <ChevronRight size={15} className="text-stone-ivory/40 shrink-0" />
           </button>
         ))}
         {filtered.length === 0 && (
-          <p className="px-4 py-8 text-center text-sm text-ink-tertiary">No learners match “{q}”.</p>
+          <p className="px-4 py-8 text-center text-sm text-stone-ivory/50">No learners match “{q}”.</p>
         )}
       </div>
     </div>

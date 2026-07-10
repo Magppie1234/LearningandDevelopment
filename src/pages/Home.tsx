@@ -34,7 +34,15 @@ export default function Home() {
         <h2 className="font-serif text-2xl font-light text-stone-ivory mb-4">
           Your learning, across every academy
         </h2>
-        <LearningDashboard viewerRole="learner" />
+        <LearningDashboard
+          viewerRole="learner"
+          showGlobalExtras
+          resumeHref={(aId, moduleId) =>
+            aId === (process.env.NEXT_PUBLIC_SALES_ACADEMY_ID ?? 'sales')
+              ? '/academy/sales?tab=curriculum'
+              : `/academy/business-development/modules?module=${moduleId}`
+          }
+        />
       </div>
 
       {/* ...then the Kitchen Command Center and everything else. */}
