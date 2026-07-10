@@ -1,6 +1,8 @@
 'use client'
 
 import KitchenCommandCenter from '@/components/KitchenCommandCenter'
+import LearningDashboard from '@/components/learning/LearningDashboard'
+import OverallProgressPopup from '@/components/learning/OverallProgressPopup'
 
 /**
  * Dashboard landing — an interactive-first "Kitchen Command Center".
@@ -27,6 +29,19 @@ export default function Home() {
       <div className="mx-auto w-full max-w-[1100px]">
         <KitchenCommandCenter />
       </div>
+
+      {/* Global Personal Learning Dashboard — aggregates every academy the
+          learner is enrolled in (no academyId = global scope). Cream cards sit
+          on the dark canvas as solid panels (no glass), per the design spec. */}
+      <div className="mx-auto w-full max-w-[1100px]">
+        <h2 className="font-serif text-2xl font-light text-stone-ivory mb-4">
+          Your learning, across every academy
+        </h2>
+        <LearningDashboard viewerRole="learner" />
+      </div>
+
+      {/* Every-login snapshot — learner-facing, once per session. */}
+      <OverallProgressPopup />
     </div>
   )
 }
