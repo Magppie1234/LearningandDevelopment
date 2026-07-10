@@ -26,18 +26,20 @@ export default function Home() {
         </h1>
       </header>
 
-      <div className="mx-auto w-full max-w-[1100px]">
-        <KitchenCommandCenter />
-      </div>
-
-      {/* Global Personal Learning Dashboard — aggregates every academy the
-          learner is enrolled in (no academyId = global scope). Cream cards sit
-          on the dark canvas as solid panels (no glass), per the design spec. */}
+      {/* Global Personal Learning Dashboard FIRST (user preference) —
+          aggregates every academy the learner is enrolled in (no academyId =
+          global scope). Cream cards sit on the dark canvas as solid panels
+          (no glass), per the design spec. */}
       <div className="mx-auto w-full max-w-[1100px]">
         <h2 className="font-serif text-2xl font-light text-stone-ivory mb-4">
           Your learning, across every academy
         </h2>
         <LearningDashboard viewerRole="learner" />
+      </div>
+
+      {/* ...then the Kitchen Command Center and everything else. */}
+      <div className="mx-auto w-full max-w-[1100px]">
+        <KitchenCommandCenter />
       </div>
 
       {/* Every-login snapshot — learner-facing, once per session. */}

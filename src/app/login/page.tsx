@@ -36,9 +36,13 @@ export default function LoginPage() {
   const [linkSent, setLinkSent] = useState(false)
   const [authError, setAuthError] = useState<string | null>(null)
 
-  // Real auth is available once Supabase env is set; without it the page
-  // falls back to the original device-local demo sign-in.
-  const realAuth = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL)
+  // Demo login is the default for now (user preference, 2026-07-10): any
+  // email enters the portal with the device-local demo identity. Real
+  // magic-link auth is fully wired — flip it on by setting
+  // NEXT_PUBLIC_REAL_AUTH=1 alongside the Supabase env.
+  const realAuth =
+    process.env.NEXT_PUBLIC_REAL_AUTH === '1' &&
+    Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL)
 
   useEffect(() => {
     const t = setInterval(() => setSlide((s) => (s + 1) % KITCHENS.length), ROTATE_MS)

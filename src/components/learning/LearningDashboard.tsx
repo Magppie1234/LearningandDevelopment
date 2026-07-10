@@ -64,21 +64,32 @@ export default function LearningDashboard({
         </div>
       )}
 
-      {load.status === 'unauthenticated' && (
-        <div className="rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream p-6 text-sm text-ink-secondary flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <p className="font-semibold text-ink-primary mb-1">Sign in to track your learning</p>
-            You&apos;re browsing as a guest. Sign in with your Magppie email and this dashboard
-            starts recording time, quiz attempts, and insights — synced across devices.
+      {load.status === 'unauthenticated' &&
+        (process.env.NEXT_PUBLIC_REAL_AUTH === '1' ? (
+          <div className="rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream p-6 text-sm text-ink-secondary flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <p className="font-semibold text-ink-primary mb-1">Sign in to track your learning</p>
+              You&apos;re browsing as a guest. Sign in with your Magppie email and this dashboard
+              starts recording time, quiz attempts, and insights — synced across devices.
+            </div>
+            <a
+              href="/login"
+              className="shrink-0 rounded-full bg-ink-primary px-4 py-2 text-xs font-semibold text-parchment hover:opacity-90 transition"
+            >
+              Sign in
+            </a>
           </div>
-          <a
-            href="/login"
-            className="shrink-0 rounded-full bg-ink-primary px-4 py-2 text-xs font-semibold text-parchment hover:opacity-90 transition"
-          >
-            Sign in
-          </a>
-        </div>
-      )}
+        ) : (
+          // Demo-login mode: no session exists by design, so skip the sign-in
+          // pitch — just note that live tracking arrives with accounts.
+          <div className="rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream p-6 text-sm text-ink-secondary">
+            <p className="font-semibold text-ink-primary mb-1">Live tracking ready, awaiting accounts</p>
+            The Supabase backend is live; per-person time tracking, attempts and insights start
+            recording once account sign-in is enabled (set{' '}
+            <code className="text-[12px]">NEXT_PUBLIC_REAL_AUTH=1</code>). Until then the portal
+            runs on the shared demo identity.
+          </div>
+        ))}
 
       {load.status === 'error' && (
         <div className="rounded-2xl border-[0.5px] border-[rgba(186,117,23,0.4)] bg-accent-copper/5 p-6 text-sm text-ink-secondary">
