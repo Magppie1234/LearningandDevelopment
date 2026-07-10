@@ -5,6 +5,9 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { X, Sparkles } from 'lucide-react'
 import { useLearningProgress, formatDuration } from '@/lib/learning-dashboard-client'
 import { summarizeProgress } from '@/lib/learning-summary'
+import { useDemoLearningData } from '@/lib/learning-demo-data'
+
+const REAL_AUTH = process.env.NEXT_PUBLIC_REAL_AUTH === '1'
 
 /**
  * Big-picture "welcome back" snapshot — overall completion, time invested,
@@ -18,17 +21,27 @@ const SEEN_KEY = 'ld-overall-popup-seen'
 
 export default function OverallProgressPopup() {
   const load = useLearningProgress({}) // global scope, own data
+  const demo = useDemoLearningData() // global demo bridge
   const [open, setOpen] = useState(false)
 
+  const useDemo = !REAL_AUTH && (load.status === 'unauthenticated' || load.status === 'unconfigured')
+  const data =
+    load.status === 'ready' && !load.readOnly
+      ? { progress: load.progress, insights: load.insights }
+      : useDemo
+        ? { progress: demo.progress, insights: demo.insights }
+        : null
+
   useEffect(() => {
-    if (load.status !== 'ready' || load.readOnly) return
-    if (load.progress.length === 0) return
+    if (!data || data.progress.length === 0) return
     let seen = false
     try {
       seen = sessionStorage.getItem(SEEN_KEY) === '1'
     } catch {}
     if (!seen) setOpen(true)
-  }, [load])
+    // data identity changes each render; gate on a stable signal instead.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [load.status, demo.progress.length])
 
   function dismiss() {
     setOpen(false)
@@ -37,8 +50,8 @@ export default function OverallProgressPopup() {
     } catch {}
   }
 
-  if (load.status !== 'ready' || load.readOnly) return null
-  const s = summarizeProgress(load.progress, load.insights)
+  if (!data) return null
+  const s = summarizeProgress(data.progress, data.insights)
 
   const takeaway = `You're ${s.completionPct}% through your learning${
     s.strongestTopic ? `, strongest in ${s.strongestTopic}` : ''

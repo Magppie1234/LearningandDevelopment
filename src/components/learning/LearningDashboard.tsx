@@ -1,8 +1,15 @@
 'use client'
 
 import { Eye, Layers, Clock, CheckCircle2, GraduationCap } from 'lucide-react'
-import { useLearningProgress, formatDuration, type ViewerRole } from '@/lib/learning-dashboard-client'
+import {
+  useLearningProgress,
+  formatDuration,
+  type ViewerRole,
+  type ModuleProgressRow,
+  type InsightSummaryRow,
+} from '@/lib/learning-dashboard-client'
 import { summarizeProgress } from '@/lib/learning-summary'
+import { useDemoLearningData } from '@/lib/learning-demo-data'
 import InsightCard from './InsightCard'
 import ModuleProgressCard from './ModuleProgressCard'
 
@@ -12,7 +19,14 @@ import ModuleProgressCard from './ModuleProgressCard'
  * read-only "viewing someone else" mode (actions hidden, banner shown). The
  * hard academy/user scoping happens at the API + RLS layer — this component
  * only ever renders what the server returns for the requested scope.
+ *
+ * Demo-login mode: with no real session the Supabase read returns 401/503, so
+ * we render the demo bridge (src/lib/learning-demo-data.ts) instead — real
+ * BD quiz-store activity over a representative scenario — so the dashboard is
+ * alive today. Real auth (NEXT_PUBLIC_REAL_AUTH=1) swaps in live data.
  */
+const REAL_AUTH = process.env.NEXT_PUBLIC_REAL_AUTH === '1'
+
 export default function LearningDashboard({
   academyId,
   viewerRole,
@@ -34,8 +48,22 @@ export default function LearningDashboard({
   title?: string
 }) {
   const load = useLearningProgress({ academyId, viewingUserId })
+  const demo = useDemoLearningData(academyId)
   const readOnly = viewerRole !== 'learner' && Boolean(viewingUserId)
-  const labelFor = (m: string) => moduleLabel?.(m) ?? m
+
+  // In demo-login mode a guest has no session (401) / no backend (503); bridge
+  // to the demo data instead of the sign-in notice. Never bridge a manager's
+  // read-only "viewing someone" flow — that must reflect real data only.
+  const useDemo = !REAL_AUTH && !viewingUserId && (load.status === 'unauthenticated' || load.status === 'unconfigured')
+
+  const effective: { progress: ModuleProgressRow[]; insights: InsightSummaryRow[]; labels: Record<string, string> } | null =
+    load.status === 'ready'
+      ? { progress: load.progress, insights: load.insights, labels: {} }
+      : useDemo
+        ? { progress: demo.progress, insights: demo.insights, labels: demo.labels }
+        : null
+
+  const labelFor = (m: string) => moduleLabel?.(m) ?? effective?.labels[m] ?? m
 
   return (
     <section className="space-y-5">
@@ -55,7 +83,7 @@ export default function LearningDashboard({
         <div className="rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream p-6 animate-pulse h-28" />
       )}
 
-      {load.status === 'unconfigured' && (
+      {!useDemo && load.status === 'unconfigured' && (
         <div className="rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream p-6 text-sm text-ink-secondary">
           <p className="font-semibold text-ink-primary mb-1">Live dashboard pending backend</p>
           The learning dashboard reads from Supabase (sessions, attempts, insights). It activates
@@ -64,32 +92,21 @@ export default function LearningDashboard({
         </div>
       )}
 
-      {load.status === 'unauthenticated' &&
-        (process.env.NEXT_PUBLIC_REAL_AUTH === '1' ? (
-          <div className="rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream p-6 text-sm text-ink-secondary flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <p className="font-semibold text-ink-primary mb-1">Sign in to track your learning</p>
-              You&apos;re browsing as a guest. Sign in with your Magppie email and this dashboard
-              starts recording time, quiz attempts, and insights — synced across devices.
-            </div>
-            <a
-              href="/login"
-              className="shrink-0 rounded-full bg-ink-primary px-4 py-2 text-xs font-semibold text-parchment hover:opacity-90 transition"
-            >
-              Sign in
-            </a>
+      {!useDemo && load.status === 'unauthenticated' && (
+        <div className="rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream p-6 text-sm text-ink-secondary flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <p className="font-semibold text-ink-primary mb-1">Sign in to track your learning</p>
+            You&apos;re browsing as a guest. Sign in with your Magppie email and this dashboard
+            starts recording time, quiz attempts, and insights — synced across devices.
           </div>
-        ) : (
-          // Demo-login mode: no session exists by design, so skip the sign-in
-          // pitch — just note that live tracking arrives with accounts.
-          <div className="rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream p-6 text-sm text-ink-secondary">
-            <p className="font-semibold text-ink-primary mb-1">Live tracking ready, awaiting accounts</p>
-            The Supabase backend is live; per-person time tracking, attempts and insights start
-            recording once account sign-in is enabled (set{' '}
-            <code className="text-[12px]">NEXT_PUBLIC_REAL_AUTH=1</code>). Until then the portal
-            runs on the shared demo identity.
-          </div>
-        ))}
+          <a
+            href="/login"
+            className="shrink-0 rounded-full bg-ink-primary px-4 py-2 text-xs font-semibold text-parchment hover:opacity-90 transition"
+          >
+            Sign in
+          </a>
+        </div>
+      )}
 
       {load.status === 'error' && (
         <div className="rounded-2xl border-[0.5px] border-[rgba(186,117,23,0.4)] bg-accent-copper/5 p-6 text-sm text-ink-secondary">
@@ -97,13 +114,13 @@ export default function LearningDashboard({
         </div>
       )}
 
-      {load.status === 'ready' &&
+      {effective &&
         (() => {
-          const s = summarizeProgress(load.progress, load.insights)
-          const insightByModule = new Map(load.insights.map((i) => [i.module_id, i]))
-          const withAttempts = load.progress.filter((p) => p.attempt_count > 0)
+          const s = summarizeProgress(effective.progress, effective.insights)
+          const insightByModule = new Map(effective.insights.map((i) => [i.module_id, i]))
+          const withAttempts = effective.progress.filter((p) => p.attempt_count > 0)
 
-          if (load.progress.length === 0) {
+          if (effective.progress.length === 0) {
             return (
               <div className="rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream p-8 text-center">
                 <GraduationCap size={26} className="mx-auto text-ink-tertiary mb-2" />
@@ -148,13 +165,15 @@ export default function LearningDashboard({
 
               {/* all module progress rows */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {load.progress.map((p) => (
+                {effective.progress.map((p) => (
                   <ModuleProgressCard
                     key={`${p.academy_id}:${p.module_id}`}
                     academyId={p.academy_id}
                     moduleLabel={labelFor(p.module_id)}
                     progress={p}
-                    readOnly={readOnly}
+                    // Demo rows have no live session, so resume/reset can't act —
+                    // present them read-only rather than as dead buttons.
+                    readOnly={readOnly || useDemo}
                     onContinue={(pr) => onContinueModule?.(pr.module_id, pr.last_position, pr.last_position_kind)}
                   />
                 ))}
