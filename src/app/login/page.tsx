@@ -3,15 +3,18 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowRight, Mail } from 'lucide-react'
+import { ArrowRight, Mail, MailCheck } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
 
 /**
- * L&D Portal login — a demo, email-based welcome gate styled after
- * magppiekitchen.com: rotating Wellness Kitchen photography (real brand
- * assets pulled from the site), the white Magppie logo, serif headline
- * carrying the portal's aim, and a single-field "Let's get started" card.
- * No real auth yet — the portal runs on its demo identity; the email is
- * kept locally so a future account system can pick it up.
+ * L&D Portal login — styled after magppiekitchen.com: rotating Wellness
+ * Kitchen photography, the white Magppie logo, serif headline, and a
+ * single-field "Let's get started" card.
+ *
+ * With Supabase env configured this is REAL auth: a magic-link (email OTP)
+ * sign-in, domain-restricted to Magppie accounts at the database level.
+ * Without env (or via "Continue as guest") it falls back to the original
+ * device-local demo identity, so the portal always remains usable.
  */
 
 const KITCHENS = [
@@ -30,6 +33,12 @@ export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [touched, setTouched] = useState(false)
   const [entering, setEntering] = useState(false)
+  const [linkSent, setLinkSent] = useState(false)
+  const [authError, setAuthError] = useState<string | null>(null)
+
+  // Real auth is available once Supabase env is set; without it the page
+  // falls back to the original device-local demo sign-in.
+  const realAuth = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL)
 
   useEffect(() => {
     const t = setInterval(() => setSlide((s) => (s + 1) % KITCHENS.length), ROTATE_MS)
@@ -38,17 +47,41 @@ export default function LoginPage() {
 
   const emailOk = useMemo(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()), [email])
 
-  const enter = (asGuest = false) => {
+  const enter = async (asGuest = false) => {
     if (!asGuest && !emailOk) {
       setTouched(true)
       return
     }
+    setAuthError(null)
+
+    // Guest (or no Supabase env): original demo flow — device-local identity.
+    if (asGuest || !realAuth) {
+      setEntering(true)
+      try {
+        if (!asGuest) window.localStorage.setItem('ld-login-email', email.trim())
+        window.localStorage.setItem('ld-logged-in-at', new Date().toISOString())
+      } catch {}
+      setTimeout(() => router.push('/'), 650)
+      return
+    }
+
+    // Real sign-in: Supabase magic link. Signup is restricted to Magppie
+    // domains at the database level (allowed_email_domains trigger).
     setEntering(true)
-    try {
-      if (!asGuest) window.localStorage.setItem('ld-login-email', email.trim())
-      window.localStorage.setItem('ld-logged-in-at', new Date().toISOString())
-    } catch {}
-    setTimeout(() => router.push('/'), 650)
+    const { error } = await supabase.auth.signInWithOtp({
+      email: email.trim(),
+      options: { emailRedirectTo: window.location.origin },
+    })
+    setEntering(false)
+    if (error) {
+      setAuthError(
+        /restricted|allowed domains/i.test(error.message)
+          ? 'Sign-in is restricted to Magppie company accounts (@mymagppie.com / @magppie.com).'
+          : error.message,
+      )
+      return
+    }
+    setLinkSent(true)
   }
 
   return (
@@ -127,9 +160,29 @@ export default function LoginPage() {
             transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
             className="w-full max-w-[440px] lg:ml-auto rounded-2xl bg-[#faf6ef] text-[#1c1a17] shadow-[0_40px_90px_rgba(0,0,0,0.55)] px-8 sm:px-10 py-10"
           >
+            {linkSent ? (
+              <div className="py-6 text-center">
+                <MailCheck size={34} className="mx-auto text-[#7a8a6a]" />
+                <h2 className="font-serif text-3xl leading-tight mt-4">Check your email.</h2>
+                <p className="mt-3 text-[13.5px] leading-relaxed text-[#1c1a17]/65">
+                  We sent a sign-in link to <span className="font-semibold">{email.trim()}</span>.
+                  Open it on this device to enter the portal.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setLinkSent(false)}
+                  className="mt-6 text-[12.5px] text-[#1c1a17]/55 underline underline-offset-4 hover:text-[#1c1a17] transition-colors"
+                >
+                  Use a different email
+                </button>
+              </div>
+            ) : (
+              <>
             <h2 className="font-serif text-4xl leading-tight">Let&apos;s get started.</h2>
             <p className="mt-2 text-[13px] text-[#1c1a17]/60">
-              Sign in with your email to enter the portal.
+              {realAuth
+                ? 'Sign in with your Magppie email — we’ll send you a secure link.'
+                : 'Sign in with your email to enter the portal.'}
             </p>
 
             <label className="block mt-8 text-[11px] font-semibold tracking-[0.22em] text-[#1c1a17]/55">
@@ -153,6 +206,9 @@ export default function LoginPage() {
                 Please enter a valid email address.
               </p>
             )}
+            {authError && (
+              <p className="mt-2 text-[12px] text-[#a4462d]">{authError}</p>
+            )}
 
             <button
               type="button"
@@ -160,7 +216,7 @@ export default function LoginPage() {
               disabled={entering}
               className="group mt-8 w-full flex items-center justify-center gap-2.5 bg-[#141414] text-[#f3ede2] rounded-none px-6 py-4 text-[12.5px] font-semibold tracking-[0.24em] transition-all hover:bg-[#2a2622] disabled:opacity-70"
             >
-              {entering ? 'WELCOME…' : "LET'S GET STARTED"}
+              {entering ? (realAuth ? 'SENDING LINK…' : 'WELCOME…') : "LET'S GET STARTED"}
               {!entering && (
                 <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
               )}
@@ -176,9 +232,12 @@ export default function LoginPage() {
             </button>
 
             <p className="mt-7 text-[11.5px] leading-relaxed text-[#1c1a17]/45">
-              Demo sign-in — any email works for now. Your email stays on this device; personal
-              accounts and progress sync arrive with the account system.
+              {realAuth
+                ? 'Magppie company accounts only (@mymagppie.com / @magppie.com). Guest mode keeps everything on this device.'
+                : 'Demo sign-in — any email works for now. Your email stays on this device; personal accounts and progress sync arrive with the account system.'}
             </p>
+              </>
+            )}
           </motion.div>
         </div>
       </div>

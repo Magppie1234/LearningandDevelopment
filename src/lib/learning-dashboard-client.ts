@@ -37,6 +37,7 @@ async function authedFetch(input: string, init: RequestInit = {}): Promise<Respo
 export type ProgressLoad =
   | { status: 'loading' }
   | { status: 'unconfigured' }
+  | { status: 'unauthenticated' }
   | { status: 'error'; message: string }
   | {
       status: 'ready'
@@ -70,6 +71,7 @@ export function useLearningProgress(opts: {
       .then(async (res) => {
         if (!alive) return
         if (res.status === 503) return setState({ status: 'unconfigured' })
+        if (res.status === 401) return setState({ status: 'unauthenticated' })
         if (!res.ok) {
           const body = await res.json().catch(() => ({}))
           return setState({ status: 'error', message: body.error ?? `HTTP ${res.status}` })
@@ -165,6 +167,7 @@ export interface RosterRow {
 export type RosterLoad =
   | { status: 'loading' }
   | { status: 'unconfigured' }
+  | { status: 'unauthenticated' }
   | { status: 'error'; message: string }
   | { status: 'ready'; roster: RosterRow[] }
 
@@ -177,6 +180,7 @@ export function useRoster(): RosterLoad {
       .then(async (res) => {
         if (!alive) return
         if (res.status === 503) return setState({ status: 'unconfigured' })
+        if (res.status === 401) return setState({ status: 'unauthenticated' })
         if (!res.ok) {
           const body = await res.json().catch(() => ({}))
           return setState({ status: 'error', message: body.error ?? `HTTP ${res.status}` })

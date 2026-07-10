@@ -92,6 +92,12 @@ export default function AdminRosterOverview({
           local identity, so there are no other learners to list.
         </div>
       )}
+      {load.status === 'unauthenticated' && (
+        <div className="rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream p-6 text-sm text-ink-secondary">
+          Sign in with an admin account to view the roster — guests and learners see no rows here
+          (row-level security).
+        </div>
+      )}
       {load.status === 'error' && (
         <div className="rounded-2xl border-[0.5px] border-[rgba(186,117,23,0.4)] bg-accent-copper/5 p-6 text-sm text-ink-secondary">
           Couldn&apos;t load the roster: {load.message}
