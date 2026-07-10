@@ -1,11 +1,14 @@
 'use client'
 
-import { Network } from 'lucide-react'
+import { useState } from 'react'
+import { Network, Table2 } from 'lucide-react'
 import { useShallow } from 'zustand/react/shallow'
+import { cn } from '@/lib/utils'
 import { useOrgStore } from '@/lib/org-store'
 import { BoardRow } from './BoardRow'
 import { CSuiteCard } from './CSuiteCard'
-import { RadialOrgChart } from './RadialOrgChart'
+import { OrgChartTree } from './OrgChartTree'
+import { OrgTable } from './OrgTable'
 
 function ConnectorLine() {
   return <div className="mx-auto h-8 w-px bg-[rgba(0,59,70,0.15)]" />
@@ -44,6 +47,8 @@ function EmptyState() {
   )
 }
 
+type OrgView = 'flow' | 'table'
+
 export function OrgChart() {
   const hydrated = useOrgStore((s) => s.hydrated)
   const positions = useOrgStore((s) => s.positions)
@@ -53,6 +58,14 @@ export function OrgChart() {
         .filter((p) => p.tier === 'c_suite')
         .sort((a, b) => a.sortOrder - b.sortOrder),
     ),
+  )
+  // Deep-linkable view (?view=table). This component mounts client-only
+  // (next/dynamic ssr:false), so window is safe to read in the initializer.
+  const [view, setView] = useState<OrgView>(() =>
+    typeof window !== 'undefined' &&
+    new URLSearchParams(window.location.search).get('view') === 'table'
+      ? 'table'
+      : 'flow',
   )
 
   // This component only ever mounts client-side (see pages/OrganizationFlow.tsx,
@@ -64,25 +77,58 @@ export function OrgChart() {
   if (positions.length === 0) return <EmptyState />
 
   return (
-    <div className="space-y-8">
-      {/* Desktop: radial org chart — Founder & MD at the centre, board on
-          dashed orbits, each C-Suite branch fanned out with its accent. */}
-      <div className="hidden xl:block">
-        <RadialOrgChart />
-      </div>
-
-      {/* Narrower viewports: the original accordion stack — a branching tree
-          needs a single, non-wrapping row of six nodes to draw correctly, which
-          doesn't reliably fit below the xl breakpoint (1280px). */}
-      <div className="xl:hidden space-y-8">
-        <BoardRow />
-        <ConnectorLine />
-        <div className="max-w-[760px] mx-auto space-y-4">
-          {cSuite.map((c) => (
-            <CSuiteCard key={c.id} position={c} />
+    <div className="space-y-6">
+      {/* view toggle */}
+      <div className="flex justify-center">
+        <div className="inline-flex rounded-full border-[0.5px] border-[rgba(0,59,70,0.16)] bg-cream p-1 shadow-card">
+          {(
+            [
+              { key: 'flow', label: 'Flow chart', icon: Network },
+              { key: 'table', label: 'Table', icon: Table2 },
+            ] as const
+          ).map((v) => (
+            <button
+              key={v.key}
+              type="button"
+              onClick={() => setView(v.key)}
+              className={cn(
+                'inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors',
+                view === v.key
+                  ? 'bg-ink-primary text-parchment'
+                  : 'text-ink-secondary hover:text-ink-primary',
+              )}
+            >
+              <v.icon size={14} />
+              {v.label}
+            </button>
           ))}
         </div>
       </div>
+
+      {view === 'table' ? (
+        <OrgTable />
+      ) : (
+        <>
+          {/* Desktop: branching tree — Board on top, trunk-and-branch
+              connectors, one row of C-Suite nodes, one open panel at a time. */}
+          <div className="hidden xl:block">
+            <OrgChartTree cSuite={cSuite} />
+          </div>
+
+          {/* Narrower viewports: the accordion stack — a branching tree needs
+              a single, non-wrapping row of six nodes to draw correctly, which
+              doesn't reliably fit below the xl breakpoint (1280px). */}
+          <div className="xl:hidden space-y-8">
+            <BoardRow />
+            <ConnectorLine />
+            <div className="max-w-[760px] mx-auto space-y-4">
+              {cSuite.map((c) => (
+                <CSuiteCard key={c.id} position={c} />
+              ))}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   )
 }
