@@ -445,12 +445,20 @@ export default function BdAcademy() {
             {completed}/{BD_MODULES.length} complete
           </span>
         </div>
-        <Link
-          href="/academy/business-development/faq"
-          className="mt-4 inline-flex items-center gap-2 rounded-full border border-accent-copper/50 bg-accent-copper/5 px-4 py-2 text-[13px] font-semibold text-accent-copper hover:bg-accent-copper/10 transition-colors"
-        >
-          Browse the full BD FAQ — all 69 questions, with interactive visuals →
-        </Link>
+        <div className="mt-4 flex flex-wrap items-center gap-2.5">
+          <Link
+            href="/academy/business-development/faq"
+            className="inline-flex items-center gap-2 rounded-full border border-accent-copper/50 bg-accent-copper/5 px-4 py-2 text-[13px] font-semibold text-accent-copper hover:bg-accent-copper/10 transition-colors"
+          >
+            Browse the full BD FAQ — all 69 questions, with interactive visuals →
+          </Link>
+          <Link
+            href="/academy/business-development/dashboard"
+            className="inline-flex items-center gap-2 rounded-full border border-[rgba(0,59,70,0.16)] px-4 py-2 text-[13px] font-semibold text-ink-secondary hover:text-ink-primary hover:bg-black/[0.03] transition-colors"
+          >
+            View your learning dashboard →
+          </Link>
+        </div>
       </section>
 
       {/* New-joiner diagnostic (§2): shows on first visit to the BD academy —

@@ -1169,6 +1169,29 @@ export default function AcademyDetail() {
         )}
       </motion.section>
 
+      {/* BD-only: personal learning dashboard — progress, quiz scores, status */}
+      {academy.id === 'business-development' && (
+        <Link
+          href="/academy/business-development/dashboard"
+          className="group flex items-center justify-between gap-4 rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream px-6 py-5 hover:shadow-card transition-shadow"
+        >
+          <div className="flex items-center gap-4">
+            <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: `${academy.color}20` }}>
+              <BarChart3 size={22} style={{ color: academy.color }} />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-ink-primary">
+                BD learning dashboard
+              </p>
+              <p className="text-[13px] text-ink-tertiary mt-0.5">
+                Your progress at a glance — quiz scores by module, status breakdown, competency mastery and diagnostic baseline.
+              </p>
+            </div>
+          </div>
+          <ArrowRight size={18} className="shrink-0 text-ink-tertiary group-hover:text-ink-primary transition-colors" />
+        </Link>
+      )}
+
       {/* BD-only: real Magppie sales training modules (10 modules + quizzes) */}
       {academy.id === 'business-development' && (
         <Link
