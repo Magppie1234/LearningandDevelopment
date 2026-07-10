@@ -25,8 +25,15 @@ import {
 } from '@/data/bd-academy'
 import { useBdProgress } from '@/lib/bd-progress-store'
 import { useBdTitles, bdEffectiveTitle } from '@/lib/bd-title-store'
+import { apiRecordAttempt } from '@/lib/learning-dashboard-client'
+import { TimeTrackingProvider } from '@/components/learning/TimeTrackingProvider'
+import LiveSessionClock from '@/components/learning/LiveSessionClock'
 import { ProgressRing, statusFromProgress } from '@/components/AcademyProgressCard'
 import BdVideoPlayer from '@/components/BdVideoPlayer'
+
+// Academy-scoped key for live time-tracking + attempts (real academies.id uuid
+// via env; slug fallback keeps the call well-formed in demo).
+const BD_ACADEMY_ID = process.env.NEXT_PUBLIC_BD_ACADEMY_ID ?? 'business-development'
 import BdModuleVisual, { bdModuleHasVisual, bdModuleVisualLabel } from '@/components/BdModuleVisuals'
 import BdDiagnosticBanner from '@/components/BdDiagnostic'
 import BdFaqAccordion, { bdModuleHasFaq } from '@/components/BdFaqAccordion'
@@ -123,7 +130,21 @@ function Quiz({ module, onDone }: { module: BdModule; onDone: () => void }) {
 
   function submit() {
     if (!allAnswered) return
+    // Local demo store (always) …
     recordAttempt(module.id, correct, questions.length, passed)
+    // … and the live Supabase attempt (real auth only): every question tagged
+    // by competency so the insight engine computes weak/strong topics + trend.
+    void apiRecordAttempt({
+      academyId: BD_ACADEMY_ID,
+      moduleId: module.id,
+      scorePct: Math.round((correct / questions.length) * 100),
+      passed,
+      questionBreakdown: questions.map((q) => ({
+        question_id: q.id,
+        topic_tag: q.competency,
+        correct: answers[q.id] === q.correctIndex,
+      })),
+    })
     setSubmitted(true)
   }
 
@@ -246,7 +267,17 @@ function ModuleView({
   }, [module.id])
 
   return (
+    <TimeTrackingProvider
+      academyId={BD_ACADEMY_ID}
+      moduleId={module.id}
+      activityType="study"
+      viewerRole="learner"
+    >
     <div className="max-w-[760px] mx-auto">
+      {/* Persistent live session stopwatch (real auth only; null otherwise). */}
+      <div className="fixed top-20 right-5 z-40 hidden sm:block">
+        <LiveSessionClock />
+      </div>
       {/* §5 navigation: persistent back arrow + breadcrumb trail */}
       <div className="flex items-center gap-3 mb-4">
         <button
@@ -391,6 +422,7 @@ function ModuleView({
         )
       })()}
     </div>
+    </TimeTrackingProvider>
   )
 }
 
