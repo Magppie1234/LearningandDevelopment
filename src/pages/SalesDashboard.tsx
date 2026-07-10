@@ -20,7 +20,6 @@ import { getAcademyById, type Course, type CourseLevel, type CourseStatus } from
 import {
   STATUS_VIZ,
   type StatusKey,
-  DashHero,
   KpiCard,
   ProgressBarsChart,
   Pictograph,
@@ -71,15 +70,22 @@ export default function SalesDashboard() {
 
   return (
     <div className="max-w-[1000px] mx-auto space-y-8">
-      <DashHero
-        color={academy.color}
-        image={academy.image}
-        backHref="/academy/sales"
-        backLabel="Sales Academy"
-        title="Sales learning dashboard"
-        subtitle="Track your Sales Academy progress — courses taken and completed, hours invested, and where to pick up next, all in one place."
-        ring={overallPct}
-      />
+      {/* ── header ── */}
+      <section className="pb-6 border-b border-[rgba(0,59,70,0.08)]">
+        <Link
+          href="/academy/sales"
+          className="inline-flex items-center gap-1.5 text-sm text-ink-tertiary hover:text-ink-primary transition-colors mb-3"
+        >
+          ← Sales Academy
+        </Link>
+        <h1 className="font-serif text-4xl font-normal text-ink-primary">
+          Sales learning dashboard
+        </h1>
+        <p className="text-sm text-ink-secondary mt-2 max-w-[620px]">
+          Track your Sales Academy progress — courses taken and completed, hours
+          invested, and where to pick up next, all in one place.
+        </p>
+      </section>
 
       {/* ── KPI row (reference: course / time spent / progress) ── */}
       <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
