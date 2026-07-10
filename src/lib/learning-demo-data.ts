@@ -90,6 +90,13 @@ const WEEK_SHAPE = [0.18, 0.14, 0.22, 0.1, 0.16, 0.12, 0.08]
  * @param academyId  BD_ACADEMY_ID / SALES_ACADEMY_ID to scope, or undefined
  *                   for the global (all-academy) dashboard.
  */
+// Populated preview scenario is OFF by default: a demo learner with no real
+// activity must see the honest ZERO-state (0%, empty graph, modules
+// "not started"), per the spec. Set NEXT_PUBLIC_DEMO_POPULATED=1 to bring back
+// the illustrative "looks alive" scenario. Real activity in the BD quiz store
+// always shows through regardless of this flag.
+const POPULATED = process.env.NEXT_PUBLIC_DEMO_POPULATED === '1'
+
 export function useDemoLearningData(academyId?: string): DemoLearningData {
   const bdResults = useBdProgress((s) => s.results)
 
@@ -101,13 +108,14 @@ export function useDemoLearningData(academyId?: string): DemoLearningData {
     const wantBd = !academyId || academyId === BD_ACADEMY_ID
     const wantSales = !academyId || academyId === SALES_ACADEMY_ID
 
-    // ── Business Development: real store overlaid on the demo scenario ──
+    // ── Business Development: real store overlaid on the (optional) scenario ──
     if (wantBd) {
       BD_MODULES.forEach((m, i) => {
-        const demo = BD_DEMO[i] ?? { score: 0, status: 'not_started' as DemoStatus, mins: 0, attempts: 0 }
+        const demoBase = POPULATED ? BD_DEMO[i] : undefined
+        const demo = demoBase ?? { score: 0, status: 'not_started' as DemoStatus, mins: 0, attempts: 0 }
         const real = bdResults[m.id]
 
-        // Real store activity wins over the demo baseline when present.
+        // Real store activity wins over the (zero or scenario) baseline.
         let status: DemoStatus = demo.status
         let score = demo.score
         let attempts = demo.attempts
@@ -144,9 +152,16 @@ export function useDemoLearningData(academyId?: string): DemoLearningData {
     if (wantSales) {
       const sales = getAcademyById('sales')
       for (const c of sales?.courses ?? []) {
-        const status: DemoStatus =
-          c.status === 'Completed' ? 'completed' : c.status === 'In Progress' ? 'in_progress' : 'not_started'
-        const mins = Math.round((c.durationHours * c.progress) / 100 * 60)
+        // Zero-state by default; only reflect seeded course progress when the
+        // populated preview is explicitly enabled.
+        const status: DemoStatus = !POPULATED
+          ? 'not_started'
+          : c.status === 'Completed'
+            ? 'completed'
+            : c.status === 'In Progress'
+              ? 'in_progress'
+              : 'not_started'
+        const mins = POPULATED ? Math.round((c.durationHours * c.progress) / 100 * 60) : 0
         labels[c.id] = c.title
         progress.push(row(SALES_ACADEMY_ID, c.id, status, mins, status === 'not_started' ? 0 : 1))
       }

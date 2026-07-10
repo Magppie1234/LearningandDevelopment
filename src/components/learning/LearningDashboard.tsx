@@ -123,8 +123,8 @@ export default function LearningDashboard({
           const insightByModule = new Map(effective.insights.map((i) => [i.module_id, i]))
           const withAttempts = effective.progress.filter((p) => p.attempt_count > 0)
 
-          // ── Zero-state (Section 4): a short "let's get started", not a wall of 0s ──
-          if (effective.progress.every((p) => p.status === 'not_started' && p.attempt_count === 0)) {
+          // Fully empty (not even module rows to list) → a short prompt.
+          if (effective.progress.length === 0) {
             return (
               <div className="rounded-2xl border border-white/10 bg-stone-espresso p-8 text-center">
                 <GraduationCap size={26} className="mx-auto text-accent-copper mb-2" />
@@ -136,6 +136,9 @@ export default function LearningDashboard({
             )
           }
 
+          // Zero-state (Section 4): render the real zeroed dashboard — 0% tiles,
+          // an empty week graph, module cards at 0% / "not attempted" / Start —
+          // never fabricated numbers, and no insight cards until ≥1 attempt.
           return (
             <>
               {/* generic resume (home only) */}
