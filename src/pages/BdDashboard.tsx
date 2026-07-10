@@ -2,7 +2,6 @@
 
 import { useMemo } from 'react'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
 import {
   ArrowRight,
   BookOpen,
@@ -19,7 +18,6 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { BD_MODULES, BD_PASS_THRESHOLD, type BdCompetency } from '@/data/bd-academy'
-import { getAcademyById } from '@/data/academies'
 import { getMonthId, getMonthIndex, getMonthLabel } from '@/data/bde-quiz'
 import { useBdProgress } from '@/lib/bd-progress-store'
 import { useBdDiagnostic } from '@/lib/bd-diagnostic-store'
@@ -28,7 +26,6 @@ import { useQuizStore, bestFullAttempt, completionStreak, lifetimeStats } from '
 import {
   STATUS_VIZ,
   type StatusKey,
-  DashHero,
   KpiCard,
   ProgressBarsChart,
   Pictograph,
@@ -59,7 +56,6 @@ export default function BdDashboard() {
   const overrides = useBdTitles((s) => s.overrides)
   const diagnostic = useBdDiagnostic()
   const attempts = useQuizStore((s) => s.attempts)
-  const academy = getAcademyById('business-development')
 
   const moduleData = useMemo(
     () =>
@@ -103,15 +99,22 @@ export default function BdDashboard() {
 
   return (
     <div className="max-w-[1000px] mx-auto space-y-8">
-      <DashHero
-        color={academy?.color ?? '#a7c4d4'}
-        image={academy?.image}
-        backHref="/academy/business-development"
-        backLabel="Business Development Executive"
-        title="BD learning dashboard"
-        subtitle="Track your Business Development academy progress — course details, quiz performance, module status and your diagnostic baseline in one place."
-        ring={pct}
-      />
+      {/* ── header ── */}
+      <section className="pb-6 border-b border-[rgba(0,59,70,0.08)]">
+        <Link
+          href="/academy/business-development"
+          className="inline-flex items-center gap-1.5 text-sm text-ink-tertiary hover:text-ink-primary transition-colors mb-3"
+        >
+          ← Business Development Executive
+        </Link>
+        <h1 className="font-serif text-4xl font-normal text-ink-primary">
+          BD learning dashboard
+        </h1>
+        <p className="text-sm text-ink-secondary mt-2 max-w-[620px]">
+          Track your Business Development academy progress — course details, quiz
+          performance, module status and your diagnostic baseline in one place.
+        </p>
+      </section>
 
       {/* ── KPI row (reference: course / progress / performance) ── */}
       <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
