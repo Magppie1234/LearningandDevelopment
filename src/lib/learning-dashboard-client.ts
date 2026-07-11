@@ -105,7 +105,16 @@ export function useLearningProgress(opts: {
       const bump = () => setTick((t) => t + 1)
       const filter = `user_id=eq.${uid}`
       channel = supabase.channel(`learning-${uid}-${academyId ?? 'global'}`)
-      for (const table of ['learning_sessions', 'quiz_attempts', 'module_progress', 'insight_summary']) {
+      // module_attempts is where a quiz submission lands (it then triggers the
+      // insight + module_progress rollups); include it so the report reacts the
+      // instant an attempt is recorded.
+      for (const table of [
+        'learning_sessions',
+        'quiz_attempts',
+        'module_attempts',
+        'module_progress',
+        'insight_summary',
+      ]) {
         channel.on('postgres_changes', { event: '*', schema: 'public', table, filter }, bump)
       }
       channel.subscribe()
@@ -199,6 +208,8 @@ export type RosterLoad =
 /** Admin/manager roster (RLS decides which learners are visible). */
 export function useRoster(): RosterLoad {
   const [state, setState] = useState<RosterLoad>({ status: 'loading' })
+  const [tick, setTick] = useState(0)
+
   useEffect(() => {
     let alive = true
     authedFetch('/api/learning/roster')
@@ -217,7 +228,29 @@ export function useRoster(): RosterLoad {
     return () => {
       alive = false
     }
+  }, [tick])
+
+  // Live roster (Section 3): any learner's module_progress change re-fetches;
+  // RLS already limits what this admin/manager may see. Inert without a session.
+  useEffect(() => {
+    let channel: ReturnType<typeof supabase.channel> | null = null
+    let alive = true
+    supabase.auth.getSession().then(({ data }) => {
+      if (!alive || !data.session) return
+      channel = supabase.channel('learning-roster')
+      for (const table of ['module_progress', 'insight_summary']) {
+        channel.on('postgres_changes', { event: '*', schema: 'public', table }, () =>
+          setTick((t) => t + 1),
+        )
+      }
+      channel.subscribe()
+    })
+    return () => {
+      alive = false
+      if (channel) supabase.removeChannel(channel)
+    }
   }, [])
+
   return state
 }
 
