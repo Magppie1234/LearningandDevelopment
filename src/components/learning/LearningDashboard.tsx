@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { Eye, Layers, Clock, CheckCircle2, GraduationCap } from 'lucide-react'
 import {
   useLearningProgress,
@@ -14,6 +15,15 @@ import InsightCard from './InsightCard'
 import ModuleProgressCard from './ModuleProgressCard'
 import WeekMonthProgress from './WeekMonthProgress'
 import GenericResumeCTA from './GenericResumeCTA'
+import AcademyFilterTabs from './AcademyFilterTabs'
+
+const BD_ID = process.env.NEXT_PUBLIC_BD_ACADEMY_ID ?? 'business-development'
+const SALES_ID = process.env.NEXT_PUBLIC_SALES_ACADEMY_ID ?? 'sales'
+function academyLabel(id: string): string {
+  if (id === BD_ID) return 'Business Development'
+  if (id === SALES_ID) return 'Sales'
+  return id
+}
 
 /**
  * Top-level learning dashboard — dark "Obsidian" (warm-stone) surface that sits
@@ -60,6 +70,9 @@ export default function LearningDashboard({
   const demo = useDemoLearningData(academyId)
   const readOnly = viewerRole !== 'learner' && Boolean(viewingUserId)
 
+  // Home-only domain filter (spec §5): All / one academy. View filter, not a route.
+  const [filterAcademy, setFilterAcademy] = useState<string | null>(null)
+
   const useDemo = !REAL_AUTH && !viewingUserId && (load.status === 'unauthenticated' || load.status === 'unconfigured')
 
   const effective: { progress: ModuleProgressRow[]; insights: InsightSummaryRow[]; labels: Record<string, string> } | null =
@@ -70,6 +83,15 @@ export default function LearningDashboard({
         : null
 
   const labelFor = (m: string) => moduleLabel?.(m) ?? effective?.labels[m] ?? m
+
+  // Academy options for the home filter — distinct academies present in the data.
+  const academyOptions =
+    showGlobalExtras && effective
+      ? [...new Set(effective.progress.map((p) => p.academy_id))].map((id) => ({
+          id,
+          label: academyLabel(id),
+        }))
+      : []
 
   return (
     <section className="space-y-5">
@@ -84,6 +106,11 @@ export default function LearningDashboard({
       )}
 
       {title && <h2 className="font-serif text-2xl font-normal text-stone-ivory">{title}</h2>}
+
+      {/* Domain / academy filter — home only, above the dashboard, right-aligned. */}
+      {showGlobalExtras && academyOptions.length >= 2 && (
+        <AcademyFilterTabs options={academyOptions} value={filterAcademy} onChange={setFilterAcademy} />
+      )}
 
       {load.status === 'loading' && (
         <div className="rounded-2xl border border-white/10 bg-stone-espresso p-6 animate-pulse h-28" />
@@ -119,12 +146,28 @@ export default function LearningDashboard({
 
       {effective &&
         (() => {
-          const s = summarizeProgress(effective.progress, effective.insights)
-          const insightByModule = new Map(effective.insights.map((i) => [i.module_id, i]))
-          const withAttempts = effective.progress.filter((p) => p.attempt_count > 0)
+          // Apply the home domain filter (no-op when null or on scoped views).
+          const fProgress = filterAcademy
+            ? effective.progress.filter((p) => p.academy_id === filterAcademy)
+            : effective.progress
+          const fInsights = filterAcademy
+            ? effective.insights.filter((i) => i.academy_id === filterAcademy)
+            : effective.insights
+
+          const s = summarizeProgress(fProgress, fInsights)
+          const insightByModule = new Map(fInsights.map((i) => [i.module_id, i]))
+          const withAttempts = fProgress.filter((p) => p.attempt_count > 0)
+
+          // Scale the demo week/month to the filtered academy's share of time.
+          const allSec = effective.progress.reduce((a, p) => a + p.total_time_spent_seconds, 0)
+          const filtSec = fProgress.reduce((a, p) => a + p.total_time_spent_seconds, 0)
+          const scale = filterAcademy && allSec > 0 ? filtSec / allSec : 1
+          const weekByDay = demo.weekByDayMinutes.map((m) => Math.round(m * scale))
+          const monthByWeek = demo.monthByWeekMinutes.map((m) => Math.round(m * scale))
+          const monthSec = Math.round(demo.monthTotalSeconds * scale)
 
           // Fully empty (not even module rows to list) → a short prompt.
-          if (effective.progress.length === 0) {
+          if (fProgress.length === 0) {
             return (
               <div className="rounded-2xl border border-white/10 bg-stone-espresso p-8 text-center">
                 <GraduationCap size={26} className="mx-auto text-accent-copper mb-2" />
@@ -165,11 +208,12 @@ export default function LearningDashboard({
                 ))}
               </div>
 
-              {/* week + month (home only) */}
+              {/* week + month with the Week/Month toggle (home only) */}
               {showGlobalExtras && useDemo && (
                 <WeekMonthProgress
-                  weekByDayMinutes={demo.weekByDayMinutes}
-                  monthTotalSeconds={demo.monthTotalSeconds}
+                  weekByDayMinutes={weekByDay}
+                  monthByWeekMinutes={monthByWeek}
+                  monthTotalSeconds={monthSec}
                 />
               )}
 
@@ -189,7 +233,7 @@ export default function LearningDashboard({
 
               {/* all module progress rows */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {effective.progress.map((p) => (
+                {fProgress.map((p) => (
                   <ModuleProgressCard
                     key={`${p.academy_id}:${p.module_id}`}
                     academyId={p.academy_id}

@@ -76,6 +76,8 @@ export interface DemoLearningData {
   labels: Record<string, string>
   /** Minutes invested per day for the current week (index 0 = Monday). */
   weekByDayMinutes: number[]
+  /** Minutes invested per week for the current month (index 0 = week 1). */
+  monthByWeekMinutes: number[]
   /** Total seconds invested this month. */
   monthTotalSeconds: number
   /** Most-recently-accessed in-progress module for the generic resume CTA. */
@@ -85,6 +87,8 @@ export interface DemoLearningData {
 // Deterministic weekly shape (share of a module's minutes spread across the
 // last few days) — makes the week bars look like real daily activity.
 const WEEK_SHAPE = [0.18, 0.14, 0.22, 0.1, 0.16, 0.12, 0.08]
+// Deterministic monthly shape — share of the month's minutes per week (4 weeks).
+const MONTH_SHAPE = [0.2, 0.28, 0.22, 0.3]
 
 /**
  * @param academyId  BD_ACADEMY_ID / SALES_ACADEMY_ID to scope, or undefined
@@ -171,7 +175,9 @@ export function useDemoLearningData(academyId?: string): DemoLearningData {
     const totalMins = progress.reduce((s, p) => s + p.total_time_spent_seconds / 60, 0)
     const weekMins = Math.round(totalMins * 0.32) // a slice of lifetime landed "this week"
     const weekByDayMinutes = WEEK_SHAPE.map((f) => Math.round(weekMins * f))
-    const monthTotalSeconds = Math.round(totalMins * 0.62 * 60)
+    const monthMins = Math.round(totalMins * 0.62)
+    const monthByWeekMinutes = MONTH_SHAPE.map((f) => Math.round(monthMins * f))
+    const monthTotalSeconds = monthMins * 60
 
     const resumeRow = progress.find((p) => p.status === 'in_progress') ?? null
     const resume: DemoResume | null = resumeRow
@@ -184,6 +190,6 @@ export function useDemoLearningData(academyId?: string): DemoLearningData {
         }
       : null
 
-    return { progress, insights, labels, weekByDayMinutes, monthTotalSeconds, resume }
+    return { progress, insights, labels, weekByDayMinutes, monthByWeekMinutes, monthTotalSeconds, resume }
   }, [academyId, bdResults])
 }
