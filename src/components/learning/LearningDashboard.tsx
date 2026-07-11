@@ -17,6 +17,7 @@ import WeekMonthProgress from './WeekMonthProgress'
 import GenericResumeCTA from './GenericResumeCTA'
 import AcademyFilterTabs from './AcademyFilterTabs'
 import StrongWeakModules from './StrongWeakModules'
+import LearnerInsights from './LearnerInsights'
 
 const BD_ID = process.env.NEXT_PUBLIC_BD_ACADEMY_ID ?? 'business-development'
 const SALES_ID = process.env.NEXT_PUBLIC_SALES_ACADEMY_ID ?? 'sales'
@@ -272,6 +273,10 @@ export default function LearningDashboard({
 
                     {/* Strong vs weak modules by quiz performance + retakes/fails */}
                     <StrongWeakModules progress={fProgress} labelFor={labelFor} />
+
+                    {/* Insight-first learner analytics (AI insights, scores,
+                        test analytics, readiness, revision recs, alerts). */}
+                    <LearnerInsights progress={fProgress} insights={fInsights} />
                   </>
                 )
               ) : (
@@ -304,6 +309,9 @@ export default function LearningDashboard({
 
                       {/* Strong vs weak + retakes/fails for this academy. */}
                       <StrongWeakModules progress={fProgress} labelFor={labelFor} />
+
+                      {/* Insight-first learner analytics for this academy. */}
+                      <LearnerInsights progress={fProgress} insights={fInsights} />
                     </>
                   )}
 
