@@ -84,9 +84,11 @@ export default function StrongWeakModules({
   const weak = attempted
     .filter(
       (p) =>
-        (p.best_score_pct ?? 0) < WEAK_MAX ||
+        // Only judge on a score when one exists — a completed, no-fail module
+        // without a quiz score isn't "weak", it's just unscored.
+        (p.best_score_pct != null && p.best_score_pct < WEAK_MAX) ||
         (p.failed_attempts ?? 0) > 0 ||
-        p.status !== 'completed',
+        (p.status !== 'completed' && p.attempt_count > 0),
     )
     .map((p) => toItem(p, labelFor(p.module_id)))
 
