@@ -15,7 +15,6 @@ import {
 } from 'lucide-react'
 import { academies, recentlyAddedCourses, learningPaths, iconMap } from '@/data/academies'
 import AcademyProgressCard from '@/components/AcademyProgressCard'
-import BdLearnerDashboard from '@/components/BdLearnerDashboard'
 import KitchenBackdrop from '@/components/KitchenBackdrop'
 import type { CourseLevel } from '@/data/academies'
 
@@ -165,9 +164,6 @@ export default function Academies() {
           </div>
         </div>
       </motion.section>
-
-      {/* Section 1.5: BD Learner Progress Dashboard */}
-      <BdLearnerDashboard />
 
       {/* Section 2: Featured Academy */}
       <motion.section

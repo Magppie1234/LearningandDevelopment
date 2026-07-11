@@ -22,8 +22,7 @@ const SALES_ACADEMY_ID = process.env.NEXT_PUBLIC_SALES_ACADEMY_ID ?? 'sales'
 
 type DemoStatus = 'completed' | 'in_progress' | 'not_started'
 
-// Representative BD scenario — mirrors src/components/BdLearnerDashboard.tsx so
-// the home dashboard and the academies-page panel agree. score = best quiz %,
+// Representative BD scenario for the populated preview. score = best quiz %,
 // mins = synthesized time-on-task, attempts drives the trend.
 const BD_DEMO: { score: number; status: DemoStatus; mins: number; attempts: number }[] = [
   { score: 100, status: 'completed', mins: 42, attempts: 1 },
