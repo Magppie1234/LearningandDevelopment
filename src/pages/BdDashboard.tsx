@@ -108,10 +108,10 @@ export default function BdDashboard() {
       {/* ── header ── */}
       <section className="pb-6 border-b border-[rgba(0,59,70,0.08)]">
         <Link
-          href="/academy/business-development"
+          href="/academies"
           className="inline-flex items-center gap-1.5 text-sm text-ink-tertiary hover:text-ink-primary transition-colors mb-3"
         >
-          ← Business Development Executive
+          ← All academies
         </Link>
         <h1 className="font-serif text-4xl font-normal text-ink-primary">
           BD learning dashboard
