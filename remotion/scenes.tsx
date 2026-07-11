@@ -63,6 +63,13 @@ const Pop: React.FC<{ delay?: number; children: React.ReactNode; style?: React.C
 }
 
 /* ── ambient animated background ──────────────────────────────────────── */
+// Deterministic pseudo-random for particle placement (no Math.random —
+// renders must be reproducible frame to frame).
+const rnd = (i: number) => {
+  const x = Math.sin(i * 127.1 + 311.7) * 43758.5453
+  return x - Math.floor(x)
+}
+
 const Backdrop: React.FC = () => {
   const f = useCurrentFrame()
   const x1 = 62 + Math.sin(f / 95) * 14
@@ -90,9 +97,126 @@ const Backdrop: React.FC = () => {
           background: 'linear-gradient(90deg, transparent, rgba(200,130,85,0.07), transparent)',
         }}
       />
+      {/* floating copper motes */}
+      {Array.from({ length: 18 }, (_, i) => {
+        const baseX = rnd(i) * 100
+        const baseY = rnd(i + 50) * 100
+        const size = 2 + rnd(i + 100) * 4
+        const speed = 0.15 + rnd(i + 150) * 0.3
+        const y = (baseY - f * speed * 0.12 + 100) % 110 - 5
+        const x = baseX + Math.sin(f / 60 + i * 2) * 2.5
+        const tw = 0.25 + 0.35 * Math.abs(Math.sin(f / 40 + i * 1.7))
+        return (
+          <div
+            key={i}
+            style={{
+              position: 'absolute',
+              left: `${x}%`,
+              top: `${y}%`,
+              width: size,
+              height: size,
+              borderRadius: '50%',
+              background: i % 3 === 0 ? 'rgba(200,130,85,0.8)' : 'rgba(245,239,230,0.55)',
+              opacity: tw,
+              filter: 'blur(0.6px)',
+            }}
+          />
+        )
+      })}
       {/* fine grain vignette */}
       <AbsoluteFill style={{ boxShadow: 'inset 0 0 220px rgba(0,0,0,0.55)' }} />
     </AbsoluteFill>
+  )
+}
+
+/* ── the storyteller — an animated illustrated consultant ─────────────────
+   Blinks, breathes, gestures toward the content, and "speaks" while the
+   narration runs (mouth cadence). Free, on-brand stand-in for a filmed
+   presenter; swap for a Colossyan avatar render later if desired. */
+const Storyteller: React.FC<{ talkEnd: number }> = ({ talkEnd }) => {
+  const f = useCurrentFrame()
+  const enter = spring({ frame: f - 4, fps: FPS, config: { damping: 15 } })
+  const talking = f / FPS < talkEnd
+  // breathing sway
+  const sway = Math.sin(f / 22) * 1.6
+  const bob = Math.sin(f / 18) * 1.4
+  // blink every ~2.8s
+  const blinkT = f % 84
+  const blink = blinkT < 4 ? 1 - Math.abs(blinkT - 2) / 2 : 0
+  const eyeH = 3.4 * (1 - blink * 0.9)
+  // mouth cadence while narration is playing
+  const mouth = talking ? 2.2 + 4.6 * Math.abs(Math.sin(f * 0.55) * Math.sin(f * 0.21 + 1.3)) : 1.6
+  // gesturing forearm — periodically points toward the content
+  const gesture = Math.sin(f / 34) * 14 + Math.sin(f / 9) * (talking ? 3 : 0.5)
+  const brow = Math.sin(f / 47) > 0.86 ? -2.2 : 0
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        right: 34,
+        bottom: 0,
+        opacity: enter,
+        transform: `translateY(${(1 - enter) * 90}px)`,
+      }}
+    >
+      {/* soft spotlight behind the presenter */}
+      <div
+        style={{
+          position: 'absolute',
+          right: -30,
+          bottom: -40,
+          width: 300,
+          height: 300,
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(200,130,85,0.14), transparent 65%)',
+        }}
+      />
+      <svg width="220" height="250" viewBox="0 0 220 250" style={{ display: 'block' }}>
+        <g transform={`translate(${sway} ${bob})`}>
+          {/* body */}
+          <path d="M52 250 C52 196 78 172 110 172 C142 172 168 196 168 250 Z" fill="#8a5a38" />
+          <path d="M52 250 C52 196 78 172 110 172 C142 172 168 196 168 250 Z" fill="url(#shade)" opacity="0.35" />
+          {/* collar */}
+          <path d="M96 176 L110 196 L124 176 L110 184 Z" fill="#F5EFE6" opacity="0.9" />
+          {/* gesturing arm (left of body, pointing to content) */}
+          <g transform={`rotate(${-30 + gesture} 74 196)`}>
+            <rect x="20" y="188" width="60" height="17" rx="8.5" fill="#8a5a38" />
+            <circle cx="22" cy="196" r="10" fill="#c98f66" />
+          </g>
+          {/* resting arm */}
+          <rect x="146" y="192" width="18" height="46" rx="9" fill="#7c4f30" />
+          {/* neck */}
+          <rect x="99" y="152" width="22" height="26" rx="9" fill="#c98f66" />
+          {/* head */}
+          <ellipse cx="110" cy="118" rx="42" ry="46" fill="#d8a077" />
+          {/* hair — swept back into a bun */}
+          <path d="M68 110 C66 74 92 58 110 58 C128 58 154 74 152 110 C152 88 136 72 110 72 C84 72 68 88 68 110 Z" fill="#3a2a20" />
+          <circle cx="152" cy="86" r="13" fill="#3a2a20" />
+          {/* earring */}
+          <circle cx="72" cy="128" r="3.4" fill={COPPER} />
+          {/* brows */}
+          <rect x="86" y={96 + brow} width="17" height="3.6" rx="1.8" fill="#3a2a20" />
+          <rect x="117" y={96 + brow} width="17" height="3.6" rx="1.8" fill="#3a2a20" />
+          {/* eyes (blinking) */}
+          <ellipse cx="94" cy="110" rx="4.6" ry={eyeH} fill="#241E1A" />
+          <ellipse cx="126" cy="110" rx="4.6" ry={eyeH} fill="#241E1A" />
+          {/* nose */}
+          <path d="M110 116 L107 128 L113 128 Z" fill="#c48b62" />
+          {/* mouth (talking) */}
+          <ellipse cx="110" cy="140" rx="9.5" ry={mouth} fill="#7c3b2e" />
+          <ellipse cx="110" cy={140 - mouth * 0.25} rx="7" ry={Math.max(0.8, mouth * 0.4)} fill="#a35545" />
+          {/* bindi */}
+          <circle cx="110" cy="94" r="2.4" fill={COPPER} />
+        </g>
+        <defs>
+          <linearGradient id="shade" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stopColor="#000" stopOpacity="0.35" />
+            <stop offset="0.5" stopColor="#000" stopOpacity="0" />
+            <stop offset="1" stopColor="#000" stopOpacity="0.3" />
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
   )
 }
 
@@ -119,7 +243,8 @@ const Chrome: React.FC<{ mod: ModuleProps; idx: number; total: number }> = ({ mo
 const Body: React.FC<{ children: React.ReactNode; center?: boolean }> = ({ children, center }) => (
   <AbsoluteFill
     style={{
-      padding: '128px 64px 96px',
+      // right padding leaves room for the storyteller presenter
+      padding: '124px 250px 96px 64px',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: center ? 'center' : 'flex-start',
@@ -271,6 +396,7 @@ const DoDontScene: React.FC<any> = ({ heading, dont, dos }) => (
 )
 
 const IconFlowScene: React.FC<any> = ({ heading, items, to }) => {
+  const f = useCurrentFrame()
   const arrow = useIn(14 + items.length * 8)
   const target = useIn(20 + items.length * 8)
   return (
@@ -287,6 +413,7 @@ const IconFlowScene: React.FC<any> = ({ heading, items, to }) => {
                 border: '1px solid rgba(245,239,230,0.12)',
                 borderRadius: 16,
                 padding: '22px 12px',
+                transform: `translateY(${Math.sin(f / 19 + i * 1.4) * 5}px)`,
               }}
             >
               <div style={{ fontSize: 44 }}>{it.icon}</div>
@@ -403,7 +530,9 @@ const BarsScene: React.FC<any> = ({ heading, bars, caption }) => {
   )
 }
 
-const FlowScene: React.FC<any> = ({ heading, nodes, gates, vertical }) => (
+const FlowScene: React.FC<any> = ({ heading, nodes, gates, vertical }) => {
+  const f = useCurrentFrame()
+  return (
   <Body center={!vertical}>
     <H text={heading} small />
     <div
@@ -420,6 +549,7 @@ const FlowScene: React.FC<any> = ({ heading, nodes, gates, vertical }) => (
       {nodes.map((n: any, i: number) => {
         const s = useIn(8 + i * 7)
         const conn = useIn(12 + i * 7)
+        const bob = vertical ? 0 : Math.sin(f / 21 + i * 1.1) * 3.5
         return (
           <React.Fragment key={i}>
             {i > 0 && !vertical && (
@@ -437,7 +567,7 @@ const FlowScene: React.FC<any> = ({ heading, nodes, gates, vertical }) => (
             <div
               style={{
                 opacity: s,
-                transform: `translateY(${(1 - s) * 20}px) scale(${0.9 + s * 0.1})`,
+                transform: `translateY(${(1 - s) * 20 + bob}px) scale(${0.9 + s * 0.1})`,
                 background: `${n.color ?? '#5a4634'}${n.color ? '33' : ''}`,
                 backgroundColor: n.color ? `${n.color}2e` : 'rgba(255,255,255,0.06)',
                 border: `1.5px solid ${n.color ?? 'rgba(200,130,85,0.55)'}`,
@@ -458,7 +588,8 @@ const FlowScene: React.FC<any> = ({ heading, nodes, gates, vertical }) => (
       })}
     </div>
   </Body>
-)
+  )
+}
 
 const StatsScene: React.FC<any> = ({ heading, stats, caption }) => {
   const frame = useCurrentFrame()
@@ -715,10 +846,13 @@ export const SalesModuleVideo: React.FC<ModuleProps> = (mod) => {
         const frames = Math.round((sc.dur + PAD_S) * fps)
         const seq = (
           <Sequence key={i} from={from} durationInFrames={frames}>
-            <SceneFade frames={frames}>
+            <SceneTransition frames={frames} idx={i}>
               {React.createElement(SCENE_MAP[sc.type] ?? TitleScene, sc.props)}
               <Chrome mod={mod} idx={i} total={mod.scenes.length} />
-            </SceneFade>
+            </SceneTransition>
+            {/* the storyteller rides above every scene, talking through the
+                narration and idling in the pad */}
+            <Storyteller talkEnd={sc.dur} />
           </Sequence>
         )
         from += frames
@@ -728,11 +862,29 @@ export const SalesModuleVideo: React.FC<ModuleProps> = (mod) => {
   )
 }
 
-const SceneFade: React.FC<{ frames: number; children: React.ReactNode }> = ({ frames, children }) => {
+/** Directional scene transitions — alternating slide/rise + fade. */
+const SceneTransition: React.FC<{ frames: number; idx: number; children: React.ReactNode }> = ({
+  frames,
+  idx,
+  children,
+}) => {
   const frame = useCurrentFrame()
-  const opacity = interpolate(frame, [0, 12, frames - 12, frames - 1], [0, 1, 1, 0], {
+  const { fps } = useVideoConfig()
+  const enter = spring({ frame, fps, config: { damping: 18, mass: 0.8 } })
+  const opacity = interpolate(frame, [0, 10, frames - 12, frames - 1], [0, 1, 1, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   })
-  return <AbsoluteFill style={{ opacity }}>{children}</AbsoluteFill>
+  const dir = idx % 3 // 0: rise, 1: slide from right, 2: slide from left
+  const x = dir === 1 ? (1 - enter) * 90 : dir === 2 ? (1 - enter) * -90 : 0
+  const y = dir === 0 ? (1 - enter) * 60 : 0
+  const exitScale = interpolate(frame, [frames - 12, frames - 1], [1, 0.985], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  })
+  return (
+    <AbsoluteFill style={{ opacity, transform: `translate(${x}px, ${y}px) scale(${exitScale})` }}>
+      {children}
+    </AbsoluteFill>
+  )
 }
