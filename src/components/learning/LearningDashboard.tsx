@@ -16,6 +16,7 @@ import ModuleProgressCard from './ModuleProgressCard'
 import WeekMonthProgress from './WeekMonthProgress'
 import GenericResumeCTA from './GenericResumeCTA'
 import AcademyFilterTabs from './AcademyFilterTabs'
+import StrongWeakModules from './StrongWeakModules'
 
 const BD_ID = process.env.NEXT_PUBLIC_BD_ACADEMY_ID ?? 'business-development'
 const SALES_ID = process.env.NEXT_PUBLIC_SALES_ACADEMY_ID ?? 'sales'
@@ -157,6 +158,9 @@ export default function LearningDashboard({
           const s = summarizeProgress(fProgress, fInsights)
           const insightByModule = new Map(fInsights.map((i) => [i.module_id, i]))
           const withAttempts = fProgress.filter((p) => p.attempt_count > 0)
+          const resumeMods = fProgress.filter((p) => p.status === 'in_progress')
+          // Nothing studied yet → the report is just a "start to know" prompt.
+          const nothingStarted = withAttempts.length === 0 && resumeMods.length === 0
 
           // Scale the demo week/month to the filtered academy's share of time.
           const allSec = effective.progress.reduce((a, p) => a + p.total_time_spent_seconds, 0)
@@ -208,42 +212,92 @@ export default function LearningDashboard({
                 ))}
               </div>
 
-              {/* week + month with the Week/Month toggle (home only) */}
-              {showGlobalExtras && useDemo && (
-                <WeekMonthProgress
-                  weekByDayMinutes={weekByDay}
-                  monthByWeekMinutes={monthByWeek}
-                  monthTotalSeconds={monthSec}
-                />
-              )}
+              {showGlobalExtras ? (
+                // ── Home "My Progress Report" ─────────────────────────────
+                nothingStarted ? (
+                  // Not studied anything yet → just show "start to know".
+                  <div className="rounded-2xl border border-white/10 bg-stone-espresso p-8 text-center">
+                    <GraduationCap size={26} className="mx-auto text-accent-copper mb-2" />
+                    <p className="text-sm font-semibold text-stone-ivory">
+                      You haven&apos;t started studying yet
+                    </p>
+                    <p className="text-sm text-stone-ivory/60 mt-1 max-w-[440px] mx-auto">
+                      Open a module and take its quiz — your time, strong and weak areas, retakes,
+                      and scores will build this report in real time.
+                    </p>
+                    <a
+                      href="/academies"
+                      className="mt-4 inline-flex items-center rounded-full bg-accent-copper px-5 py-2 text-xs font-semibold text-stone-ink hover:brightness-95 transition"
+                    >
+                      Start to know
+                    </a>
+                  </div>
+                ) : (
+                  <>
+                    {/* week + month with the Week/Month toggle */}
+                    {useDemo && (
+                      <WeekMonthProgress
+                        weekByDayMinutes={weekByDay}
+                        monthByWeekMinutes={monthByWeek}
+                        monthTotalSeconds={monthSec}
+                      />
+                    )}
 
-              {/* insight cards (only modules with ≥1 attempt) */}
-              {withAttempts.length > 0 && (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-                  {withAttempts.map((p) => (
-                    <InsightCard
-                      key={`${p.academy_id}:${p.module_id}`}
-                      moduleLabel={labelFor(p.module_id)}
-                      progress={p}
-                      insight={insightByModule.get(p.module_id)}
-                    />
-                  ))}
-                </div>
-              )}
+                    {/* Only the module(s) to resume — not the full list */}
+                    {resumeMods.length > 0 && (
+                      <div>
+                        <h3 className="text-sm font-semibold text-stone-ivory mb-2">
+                          Continue where you left off
+                        </h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          {resumeMods.map((p) => (
+                            <ModuleProgressCard
+                              key={`${p.academy_id}:${p.module_id}`}
+                              academyId={p.academy_id}
+                              moduleLabel={labelFor(p.module_id)}
+                              progress={p}
+                              readOnly={readOnly || useDemo}
+                              onContinue={(pr) => onContinueModule?.(pr.module_id, pr.last_position, pr.last_position_kind)}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    )}
 
-              {/* all module progress rows */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {fProgress.map((p) => (
-                  <ModuleProgressCard
-                    key={`${p.academy_id}:${p.module_id}`}
-                    academyId={p.academy_id}
-                    moduleLabel={labelFor(p.module_id)}
-                    progress={p}
-                    readOnly={readOnly || useDemo}
-                    onContinue={(pr) => onContinueModule?.(pr.module_id, pr.last_position, pr.last_position_kind)}
-                  />
-                ))}
-              </div>
+                    {/* Strong vs weak modules by quiz performance + retakes/fails */}
+                    <StrongWeakModules progress={fProgress} labelFor={labelFor} />
+                  </>
+                )
+              ) : (
+                // ── Academy-scoped dashboard: insight cards + full module list
+                //    (each card is the entry point into its module). ─────────
+                <>
+                  {withAttempts.length > 0 && (
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                      {withAttempts.map((p) => (
+                        <InsightCard
+                          key={`${p.academy_id}:${p.module_id}`}
+                          moduleLabel={labelFor(p.module_id)}
+                          progress={p}
+                          insight={insightByModule.get(p.module_id)}
+                        />
+                      ))}
+                    </div>
+                  )}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {fProgress.map((p) => (
+                      <ModuleProgressCard
+                        key={`${p.academy_id}:${p.module_id}`}
+                        academyId={p.academy_id}
+                        moduleLabel={labelFor(p.module_id)}
+                        progress={p}
+                        readOnly={readOnly || useDemo}
+                        onContinue={(pr) => onContinueModule?.(pr.module_id, pr.last_position, pr.last_position_kind)}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
             </>
           )
         })()}

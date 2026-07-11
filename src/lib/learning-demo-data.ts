@@ -46,7 +46,12 @@ function row(
   status: DemoStatus,
   mins: number,
   attempts: number,
+  scorePct?: number,
 ): ModuleProgressRow {
+  // Failed attempts (retakes that didn't pass): a completed module passed on
+  // its last try, so prior attempts are treated as fails; an unpassed module's
+  // attempts all count as fails.
+  const failed = attempts === 0 ? 0 : status === 'completed' ? Math.max(0, attempts - 1) : attempts
   return {
     id: `demo-${academyId}-${moduleId}`,
     user_id: 'demo',
@@ -57,6 +62,8 @@ function row(
     last_position_kind: status === 'in_progress' ? 'scroll' : null,
     total_time_spent_seconds: Math.round(mins * 60),
     attempt_count: attempts,
+    best_score_pct: attempts > 0 ? scorePct : undefined,
+    failed_attempts: failed,
     last_accessed_at: status === 'not_started' ? null : nowIso(),
     updated_at: nowIso(),
   }
@@ -133,7 +140,7 @@ export function useDemoLearningData(academyId?: string): DemoLearningData {
         }
 
         labels[m.id] = `Module ${m.number}: ${m.title}`
-        progress.push(row(BD_ACADEMY_ID, m.id, status, mins, attempts))
+        progress.push(row(BD_ACADEMY_ID, m.id, status, mins, attempts, score))
 
         if (attempts > 0) {
           const strong = status === 'completed' && score >= 88 ? [m.competency] : []

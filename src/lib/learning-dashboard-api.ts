@@ -71,6 +71,10 @@ export interface ModuleProgressRow {
   /** Distinct video sessions opened (rewatches) — spec §4. Optional until the
    *  column is present; treat missing as 0. */
   video_watch_count?: number
+  /** Best quiz score % across attempts (drives strong/weak). Optional. */
+  best_score_pct?: number
+  /** Quiz attempts that did not pass (retakes that failed). Optional. */
+  failed_attempts?: number
   last_accessed_at: string | null
   updated_at: string
 }
