@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { format } from 'date-fns'
 import { cn } from '@/lib/utils'
+import { useWhisperDictation } from '@/lib/useWhisperDictation'
 import {
   Search,
   BookOpen,
@@ -11,6 +12,8 @@ import {
   Send,
   Paperclip,
   Mic,
+  Square,
+  Loader2,
   FileText,
   ShieldCheck,
   TrendingUp,
@@ -342,6 +345,19 @@ export default function AIAssistant() {
   const scrollRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
+  // Voice dictation ("whisper flow"): transcript is appended to the input so
+  // the user can review/edit before sending. Focus the field afterwards.
+  const {
+    status: micStatus,
+    error: micError,
+    supported: micSupported,
+    toggle: toggleMic,
+    clearError: clearMicError,
+  } = useWhisperDictation((text) => {
+    setInputValue((prev) => (prev ? `${prev} ${text}` : text))
+    inputRef.current?.focus()
+  })
+
   // Auto-scroll to bottom
   useEffect(() => {
     if (scrollRef.current) {
@@ -502,7 +518,13 @@ export default function AIAssistant() {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Ask me anything about courses, policies, products..."
+              placeholder={
+                micStatus === 'recording'
+                  ? 'Listening… tap the mic to stop'
+                  : micStatus === 'transcribing'
+                    ? 'Transcribing…'
+                    : 'Ask me anything about courses, policies, products…'
+              }
               className="flex-1 h-12 bg-parchment rounded-full px-5 text-sm text-ink-primary placeholder:text-ink-tertiary border border-[rgba(0,59,70,0.08)] focus:border-ink-primary focus:outline-none focus:ring-[3px] focus:ring-[rgba(0,59,70,0.08)] transition-all"
             />
 
@@ -519,10 +541,58 @@ export default function AIAssistant() {
               <Send size={18} />
             </button>
 
-            <button className="w-10 h-10 rounded-full bg-parchment flex items-center justify-center text-ink-tertiary hover:text-surface-rose transition-colors flex-shrink-0">
-              <Mic size={18} />
-            </button>
+            {/* Voice dictation ("whisper flow") */}
+            {micSupported && (
+              <button
+                type="button"
+                onClick={() => {
+                  clearMicError()
+                  toggleMic()
+                }}
+                disabled={micStatus === 'transcribing'}
+                aria-label={
+                  micStatus === 'recording'
+                    ? 'Stop recording'
+                    : micStatus === 'transcribing'
+                      ? 'Transcribing'
+                      : 'Start voice input'
+                }
+                title="Voice input (Whisper)"
+                className={cn(
+                  'w-10 h-10 rounded-full flex items-center justify-center transition-all flex-shrink-0',
+                  micStatus === 'recording'
+                    ? 'bg-surface-rose/90 text-parchment animate-pulse'
+                    : micStatus === 'transcribing'
+                      ? 'bg-parchment text-ink-tertiary'
+                      : 'bg-parchment text-ink-tertiary hover:text-surface-rose',
+                )}
+              >
+                {micStatus === 'recording' ? (
+                  <Square size={16} />
+                ) : micStatus === 'transcribing' ? (
+                  <Loader2 size={18} className="animate-spin" />
+                ) : (
+                  <Mic size={18} />
+                )}
+              </button>
+            )}
           </div>
+
+          {/* Voice status / error line */}
+          {(micStatus !== 'idle' || micError) && (
+            <p
+              className={cn(
+                'mt-2 pl-1 text-[12px]',
+                micError ? 'text-surface-rose' : 'text-ink-tertiary',
+              )}
+            >
+              {micError
+                ? micError
+                : micStatus === 'recording'
+                  ? '● Listening — speak your question, then tap the mic to stop.'
+                  : 'Transcribing your voice…'}
+            </p>
+          )}
         </div>
       </motion.section>
 
