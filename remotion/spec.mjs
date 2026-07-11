@@ -53,12 +53,12 @@ export const MODULE_SPECS = [
         props: {
           heading: 'Why the industry missed it',
           items: [
-            { icon: '🐛', label: 'Termites' },
-            { icon: '🍄', label: 'Mould' },
-            { icon: '💧', label: 'Water sagging' },
-            { icon: '☁️', label: 'Formaldehyde' },
+            { icon: 'Bug', label: 'Termites' },
+            { icon: 'Sprout', label: 'Mould' },
+            { icon: 'Droplets', label: 'Water sagging' },
+            { icon: 'Wind', label: 'Formaldehyde' },
           ],
-          to: { icon: '🪨', label: 'SilverStone' },
+          to: { icon: 'Gem', label: 'SilverStone' },
         },
       },
       {
@@ -84,11 +84,11 @@ export const MODULE_SPECS = [
         props: {
           heading: 'How SilverStone is made',
           items: [
-            { icon: '🏺', label: 'Porcelain clay' },
-            { icon: '🔥', label: '1,300°C' },
-            { icon: '✨', label: 'Silver + copper nano-particles' },
+            { icon: 'FlaskConical', label: 'Porcelain clay' },
+            { icon: 'Flame', label: '1,300°C' },
+            { icon: 'Sparkles', label: 'Silver + copper nano-particles' },
           ],
-          to: { icon: '🪨', label: 'SilverStone' },
+          to: { icon: 'Gem', label: 'SilverStone' },
         },
       },
       {
@@ -183,10 +183,10 @@ export const MODULE_SPECS = [
         props: {
           heading: 'Social proof — used sparingly',
           cards: [
-            { icon: '🏛', title: 'Business', lines: ['Mukesh & Anant Ambani', 'Peyush Bansal (Lenskart)'] },
-            { icon: '🏏', title: 'Sport', lines: ['M.S. Dhoni', 'Harbhajan Singh'] },
-            { icon: '🎬', title: 'Film', lines: ['Ranbir Kapoor', 'Shilpa Shetty'] },
-            { icon: '☝️', title: 'The rule', lines: ['2–3 names max per call', 'Never read the full list'], color: '#e0a04a' },
+            { icon: 'Building2', title: 'Business', lines: ['Mukesh & Anant Ambani', 'Peyush Bansal (Lenskart)'] },
+            { icon: 'Trophy', title: 'Sport', lines: ['M.S. Dhoni', 'Harbhajan Singh'] },
+            { icon: 'Clapperboard', title: 'Film', lines: ['Ranbir Kapoor', 'Shilpa Shetty'] },
+            { icon: 'ShieldAlert', title: 'The rule', lines: ['2–3 names max per call', 'Never read the full list'], color: '#e0a04a' },
           ],
         },
       },
@@ -196,9 +196,9 @@ export const MODULE_SPECS = [
         props: {
           heading: 'No showroom in their city? Offer one of three',
           cards: [
-            { icon: '📦', title: 'Sample delivery', lines: ['SilverStone sample to their home'] },
-            { icon: '🎥', title: 'Expert video call', lines: ['Quick call with a wellness consultant'] },
-            { icon: '🏠', title: 'Customer site visit', lines: ['See a real installation nearby'] },
+            { icon: 'Package', title: 'Sample delivery', lines: ['SilverStone sample to their home'] },
+            { icon: 'Video', title: 'Expert video call', lines: ['Quick call with a wellness consultant'] },
+            { icon: 'Home', title: 'Customer site visit', lines: ['See a real installation nearby'] },
           ],
         },
       },
@@ -260,8 +260,8 @@ export const MODULE_SPECS = [
         props: {
           heading: 'Budget before price',
           cards: [
-            { icon: '💎', title: 'Premium wellness', lines: ['→ Proceed to pricing'], color: '#9DB18F' },
-            { icon: '🪚', title: 'Basic carpentry', lines: ['“Magppie is not in the carpentry segment.”', '→ Value conversation first'], color: '#e0a04a' },
+            { icon: 'Gem', title: 'Premium wellness', lines: ['→ Proceed to pricing'], color: '#9DB18F' },
+            { icon: 'Hammer', title: 'Basic carpentry', lines: ['“Magppie is not in the carpentry segment.”', '→ Value conversation first'], color: '#e0a04a' },
           ],
         },
       },
@@ -328,9 +328,9 @@ export const MODULE_SPECS = [
         props: {
           heading: '“I need to think about it.”',
           cards: [
-            { icon: '🎬', title: 'WhatsApp video', lines: ['SilverStone film + real installations'] },
-            { icon: '🎥', title: 'Expert call', lines: ['10 minutes with a consultant'] },
-            { icon: '📦', title: 'Home sample', lines: ['Feel the material yourself'] },
+            { icon: 'Clapperboard', title: 'WhatsApp video', lines: ['SilverStone film + real installations'] },
+            { icon: 'Video', title: 'Expert call', lines: ['10 minutes with a consultant'] },
+            { icon: 'Package', title: 'Home sample', lines: ['Feel the material yourself'] },
           ],
         },
       },
@@ -352,9 +352,9 @@ export const MODULE_SPECS = [
         props: {
           heading: 'The technical three',
           cards: [
-            { icon: '🌍', title: 'Why not granite/marble?', lines: ['Mining harms the planet', 'Porous → stains & bacteria'] },
-            { icon: '⚖️', title: '“Too heavy?”', lines: ['Load engineered into the structure', 'Zero flooring impact'] },
-            { icon: '🏺', title: '“Will it break?”', lines: ['Stronger than granite', 'Jar-drop tested — intact'] },
+            { icon: 'Globe', title: 'Why not granite/marble?', lines: ['Mining harms the planet', 'Porous → stains & bacteria'] },
+            { icon: 'Scale', title: '“Too heavy?”', lines: ['Load engineered into the structure', 'Zero flooring impact'] },
+            { icon: 'FlaskConical', title: '“Will it break?”', lines: ['Stronger than granite', 'Jar-drop tested — intact'] },
           ],
         },
       },

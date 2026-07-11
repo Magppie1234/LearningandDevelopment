@@ -7,6 +7,18 @@ import {
   useCurrentFrame,
   useVideoConfig,
 } from 'remotion'
+import * as Lucide from 'lucide-react'
+
+/** Professional line icons (the portal's own icon set). `name` is a Lucide
+ *  export; anything unrecognized falls back to rendering as plain text. */
+const Icon: React.FC<{ name?: string; size?: number; color?: string }> = ({ name, size = 40, color }) => {
+  if (!name) return null
+  const C = (Lucide as any)[name]
+  if (C && (typeof C === 'function' || typeof C === 'object')) {
+    return <C size={size} color={color ?? '#C88255'} strokeWidth={1.6} />
+  }
+  return <span style={{ fontSize: size }}>{name}</span>
+}
 
 /**
  * Animated scene system for the Sales Academy module videos — real motion
@@ -129,93 +141,79 @@ const Backdrop: React.FC = () => {
   )
 }
 
-/* ── the storyteller — an animated illustrated consultant ─────────────────
-   Blinks, breathes, gestures toward the content, and "speaks" while the
-   narration runs (mouth cadence). Free, on-brand stand-in for a filmed
-   presenter; swap for a Colossyan avatar render later if desired. */
+/* ── the narrator plate — a professional speaker lower-third ──────────────
+   Monogram badge with a copper ring, name plate, and a live waveform that
+   animates while the narration plays. Swap for a Colossyan avatar film later
+   without touching the pipeline. */
 const Storyteller: React.FC<{ talkEnd: number }> = ({ talkEnd }) => {
   const f = useCurrentFrame()
-  const enter = spring({ frame: f - 4, fps: FPS, config: { damping: 15 } })
+  const enter = spring({ frame: f - 6, fps: FPS, config: { damping: 16 } })
   const talking = f / FPS < talkEnd
-  // breathing sway
-  const sway = Math.sin(f / 22) * 1.6
-  const bob = Math.sin(f / 18) * 1.4
-  // blink every ~2.8s
-  const blinkT = f % 84
-  const blink = blinkT < 4 ? 1 - Math.abs(blinkT - 2) / 2 : 0
-  const eyeH = 3.4 * (1 - blink * 0.9)
-  // mouth cadence while narration is playing
-  const mouth = talking ? 2.2 + 4.6 * Math.abs(Math.sin(f * 0.55) * Math.sin(f * 0.21 + 1.3)) : 1.6
-  // gesturing forearm — periodically points toward the content
-  const gesture = Math.sin(f / 34) * 14 + Math.sin(f / 9) * (talking ? 3 : 0.5)
-  const brow = Math.sin(f / 47) > 0.86 ? -2.2 : 0
+  const glow = talking ? 0.35 + 0.2 * Math.abs(Math.sin(f / 11)) : 0.15
   return (
     <div
       style={{
         position: 'absolute',
-        right: 34,
-        bottom: 0,
+        right: 64,
+        bottom: 84,
+        display: 'flex',
+        alignItems: 'center',
+        gap: 14,
+        padding: '12px 18px 12px 12px',
+        borderRadius: 16,
+        background: 'rgba(20,16,13,0.55)',
+        border: '1px solid rgba(245,239,230,0.10)',
         opacity: enter,
-        transform: `translateY(${(1 - enter) * 90}px)`,
+        transform: `translateY(${(1 - enter) * 40}px)`,
       }}
     >
-      {/* soft spotlight behind the presenter */}
+      {/* monogram badge */}
       <div
         style={{
-          position: 'absolute',
-          right: -30,
-          bottom: -40,
-          width: 300,
-          height: 300,
+          width: 46,
+          height: 46,
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(200,130,85,0.14), transparent 65%)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontFamily: SERIF,
+          fontSize: 22,
+          color: COPPER,
+          background: 'rgba(184,112,63,0.12)',
+          border: `1.5px solid rgba(200,130,85,${0.5 + glow})`,
+          boxShadow: `0 0 ${18 * glow + 4}px rgba(200,130,85,${glow})`,
         }}
-      />
-      <svg width="220" height="250" viewBox="0 0 220 250" style={{ display: 'block' }}>
-        <g transform={`translate(${sway} ${bob})`}>
-          {/* body */}
-          <path d="M52 250 C52 196 78 172 110 172 C142 172 168 196 168 250 Z" fill="#8a5a38" />
-          <path d="M52 250 C52 196 78 172 110 172 C142 172 168 196 168 250 Z" fill="url(#shade)" opacity="0.35" />
-          {/* collar */}
-          <path d="M96 176 L110 196 L124 176 L110 184 Z" fill="#F5EFE6" opacity="0.9" />
-          {/* gesturing arm (left of body, pointing to content) */}
-          <g transform={`rotate(${-30 + gesture} 74 196)`}>
-            <rect x="20" y="188" width="60" height="17" rx="8.5" fill="#8a5a38" />
-            <circle cx="22" cy="196" r="10" fill="#c98f66" />
-          </g>
-          {/* resting arm */}
-          <rect x="146" y="192" width="18" height="46" rx="9" fill="#7c4f30" />
-          {/* neck */}
-          <rect x="99" y="152" width="22" height="26" rx="9" fill="#c98f66" />
-          {/* head */}
-          <ellipse cx="110" cy="118" rx="42" ry="46" fill="#d8a077" />
-          {/* hair — swept back into a bun */}
-          <path d="M68 110 C66 74 92 58 110 58 C128 58 154 74 152 110 C152 88 136 72 110 72 C84 72 68 88 68 110 Z" fill="#3a2a20" />
-          <circle cx="152" cy="86" r="13" fill="#3a2a20" />
-          {/* earring */}
-          <circle cx="72" cy="128" r="3.4" fill={COPPER} />
-          {/* brows */}
-          <rect x="86" y={96 + brow} width="17" height="3.6" rx="1.8" fill="#3a2a20" />
-          <rect x="117" y={96 + brow} width="17" height="3.6" rx="1.8" fill="#3a2a20" />
-          {/* eyes (blinking) */}
-          <ellipse cx="94" cy="110" rx="4.6" ry={eyeH} fill="#241E1A" />
-          <ellipse cx="126" cy="110" rx="4.6" ry={eyeH} fill="#241E1A" />
-          {/* nose */}
-          <path d="M110 116 L107 128 L113 128 Z" fill="#c48b62" />
-          {/* mouth (talking) */}
-          <ellipse cx="110" cy="140" rx="9.5" ry={mouth} fill="#7c3b2e" />
-          <ellipse cx="110" cy={140 - mouth * 0.25} rx="7" ry={Math.max(0.8, mouth * 0.4)} fill="#a35545" />
-          {/* bindi */}
-          <circle cx="110" cy="94" r="2.4" fill={COPPER} />
-        </g>
-        <defs>
-          <linearGradient id="shade" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stopColor="#000" stopOpacity="0.35" />
-            <stop offset="0.5" stopColor="#000" stopOpacity="0" />
-            <stop offset="1" stopColor="#000" stopOpacity="0.3" />
-          </linearGradient>
-        </defs>
-      </svg>
+      >
+        P
+      </div>
+      <div>
+        <div style={{ fontFamily: SANS, fontSize: 15.5, fontWeight: 700, color: INK, letterSpacing: 0.3 }}>
+          Pooja
+        </div>
+        <div style={{ fontFamily: SANS, fontSize: 11.5, color: DIM, letterSpacing: 0.5, marginTop: 1 }}>
+          Wellness Consultant
+        </div>
+      </div>
+      {/* live waveform while speaking */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 3, height: 26, marginLeft: 6 }}>
+        {Array.from({ length: 5 }, (_, i) => {
+          const h = talking
+            ? 6 + 16 * Math.abs(Math.sin(f / (5 + i * 1.3) + i * 1.8) * Math.sin(f / 17 + i))
+            : 4
+          return (
+            <div
+              key={i}
+              style={{
+                width: 3.5,
+                height: h,
+                borderRadius: 2,
+                background: talking ? COPPER : 'rgba(245,239,230,0.25)',
+                transition: 'none',
+              }}
+            />
+          )
+        })}
+      </div>
     </div>
   )
 }
@@ -416,8 +414,10 @@ const IconFlowScene: React.FC<any> = ({ heading, items, to }) => {
                 transform: `translateY(${Math.sin(f / 19 + i * 1.4) * 5}px)`,
               }}
             >
-              <div style={{ fontSize: 44 }}>{it.icon}</div>
-              <div style={{ fontFamily: SANS, fontSize: 17, color: DIM, marginTop: 10 }}>{it.label}</div>
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <Icon name={it.icon} size={42} color="rgba(245,239,230,0.85)" />
+              </div>
+              <div style={{ fontFamily: SANS, fontSize: 17, color: DIM, marginTop: 12 }}>{it.label}</div>
             </div>
           </Pop>
         ))}
@@ -435,8 +435,10 @@ const IconFlowScene: React.FC<any> = ({ heading, items, to }) => {
                   padding: '26px 14px',
                 }}
               >
-                <div style={{ fontSize: 50 }}>{to.icon}</div>
-                <div style={{ fontFamily: SANS, fontSize: 18, color: INK, marginTop: 10, fontWeight: 700 }}>{to.label}</div>
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                  <Icon name={to.icon} size={48} />
+                </div>
+                <div style={{ fontFamily: SANS, fontSize: 18, color: INK, marginTop: 12, fontWeight: 700 }}>{to.label}</div>
               </div>
             </div>
           </>
@@ -650,7 +652,11 @@ const CardsScene: React.FC<any> = ({ heading, cards }) => (
               height: '100%',
             }}
           >
-            {c.icon && <div style={{ fontSize: 34, marginBottom: 10 }}>{c.icon}</div>}
+            {c.icon && (
+              <div style={{ marginBottom: 12 }}>
+                <Icon name={c.icon} size={30} color={c.color ?? COPPER} />
+              </div>
+            )}
             <div style={{ fontFamily: SERIF, fontSize: 25, color: INK, marginBottom: 10 }}>{c.title}</div>
             {(c.lines ?? []).map((l: string, j: number) => (
               <div key={j} style={{ fontFamily: SANS, fontSize: 18.5, color: 'rgba(245,239,230,0.75)', lineHeight: 1.5, marginBottom: 6 }}>
