@@ -225,9 +225,10 @@ export default function LearningDashboard({
                     <p className="text-sm font-semibold text-stone-ivory">
                       You haven&apos;t started studying yet
                     </p>
-                    <p className="text-sm text-stone-ivory/60 mt-1 max-w-[440px] mx-auto">
-                      Open a module and take its quiz — your time, strong and weak areas, retakes,
-                      and scores will build this report in real time.
+                    <p className="text-sm text-stone-ivory/60 mt-1 max-w-[480px] mx-auto">
+                      Open a module and take its quiz — this report will then show which quizzes you
+                      retook or failed, which modules you rewatched, your time invested, and your
+                      strong vs weak areas, live.
                     </p>
                     <a
                       href="/academies"
@@ -277,19 +278,34 @@ export default function LearningDashboard({
                 // ── Academy-scoped dashboard: week/month + strong/weak +
                 //    insight cards + the full module list (cards = entry point).
                 <>
-                  {/* This academy's week/month trend (spec §9), with the
-                      Day/Week/Month toggle and which-modules legend. */}
-                  {useDemo && (
-                    <WeekMonthProgress
-                      weekByDayMinutes={weekByDay}
-                      monthByWeekMinutes={monthByWeek}
-                      monthTotalSeconds={monthSec}
-                      activeModules={activeModuleLabels}
-                    />
-                  )}
+                  {nothingStarted ? (
+                    // Nothing studied here yet → say what the report will show.
+                    <div className="rounded-2xl border border-white/10 bg-stone-espresso p-6 text-center">
+                      <GraduationCap size={24} className="mx-auto text-accent-copper mb-2" />
+                      <p className="text-sm font-semibold text-stone-ivory">Start to know</p>
+                      <p className="text-sm text-stone-ivory/60 mt-1 max-w-[520px] mx-auto">
+                        You haven&apos;t studied anything here yet. Open a module below and take its
+                        quiz — this report will then show which quizzes you retook or failed, which
+                        modules you rewatched, your time invested, and your strong vs weak areas, live.
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      {/* This academy's week/month trend (spec §9), with the
+                          Day/Week/Month toggle and which-modules legend. */}
+                      {useDemo && (
+                        <WeekMonthProgress
+                          weekByDayMinutes={weekByDay}
+                          monthByWeekMinutes={monthByWeek}
+                          monthTotalSeconds={monthSec}
+                          activeModules={activeModuleLabels}
+                        />
+                      )}
 
-                  {/* Strong vs weak + retakes/fails for this academy (once studied). */}
-                  <StrongWeakModules progress={fProgress} labelFor={labelFor} />
+                      {/* Strong vs weak + retakes/fails for this academy. */}
+                      <StrongWeakModules progress={fProgress} labelFor={labelFor} />
+                    </>
+                  )}
 
                   {withAttempts.length > 0 && (
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
