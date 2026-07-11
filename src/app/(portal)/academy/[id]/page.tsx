@@ -9,9 +9,18 @@ const DASHBOARD_LANDING: Record<string, string> = {
   sales: '/academy/sales/dashboard',
 }
 
-export default async function Page({ params }: { params: Promise<{ id: string }> }) {
+export default async function Page({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>
+  searchParams: Promise<{ tab?: string }>
+}) {
   const { id } = await params
+  const { tab } = await searchParams
+  // Deep links to a specific tab (resources/leaderboard/curriculum) still open
+  // the overview; the default entry lands on the dashboard.
   const dest = DASHBOARD_LANDING[id]
-  if (dest) redirect(dest)
+  if (dest && !tab) redirect(dest)
   return <AcademyDetail />
 }

@@ -2,8 +2,9 @@
 
 import { useMemo } from 'react'
 import { BD_MODULES } from '@/data/bd-academy'
-import { getAcademyById } from '@/data/academies'
+import { SALES_MODULES } from '@/data/sales-academy'
 import { useBdProgress } from '@/lib/bd-progress-store'
+import { useSalesProgress } from '@/lib/sales-progress-store'
 import type { ModuleProgressRow, InsightSummaryRow } from '@/lib/learning-dashboard-api'
 
 /**
@@ -109,6 +110,7 @@ const POPULATED = process.env.NEXT_PUBLIC_DEMO_POPULATED === '1'
 
 export function useDemoLearningData(academyId?: string): DemoLearningData {
   const bdResults = useBdProgress((s) => s.results)
+  const salesResults = useSalesProgress((s) => s.results)
 
   return useMemo(() => {
     const progress: ModuleProgressRow[] = []
@@ -158,23 +160,36 @@ export function useDemoLearningData(academyId?: string): DemoLearningData {
       })
     }
 
-    // ── Sales: from the seeded course catalogue (no quiz insights) ──
+    // ── Sales: the 11 real Sales Academy modules, real quiz-store overlay ──
     if (wantSales) {
-      const sales = getAcademyById('sales')
-      for (const c of sales?.courses ?? []) {
-        // Zero-state by default; only reflect seeded course progress when the
-        // populated preview is explicitly enabled.
-        const status: DemoStatus = !POPULATED
-          ? 'not_started'
-          : c.status === 'Completed'
-            ? 'completed'
-            : c.status === 'In Progress'
-              ? 'in_progress'
-              : 'not_started'
-        const mins = POPULATED ? Math.round((c.durationHours * c.progress) / 100 * 60) : 0
-        labels[c.id] = c.title
-        progress.push(row(SALES_ACADEMY_ID, c.id, status, mins, status === 'not_started' ? 0 : 1))
-      }
+      SALES_MODULES.forEach((m) => {
+        const real = salesResults[m.id]
+        let status: DemoStatus = 'not_started'
+        let score: number | undefined
+        let attempts = 0
+        let mins = 0
+        if (real && (real.viewed || real.attempts > 0)) {
+          status = real.passed ? 'completed' : 'in_progress'
+          score = real.total > 0 ? Math.round((real.bestScore / real.total) * 100) : undefined
+          attempts = real.attempts
+          mins = 8 + real.attempts * 6 + (real.passed ? 20 : 0)
+        }
+        labels[m.id] = `Module ${m.number}: ${m.title}`
+        progress.push(row(SALES_ACADEMY_ID, m.id, status, mins, attempts, score))
+
+        if (attempts > 0 && m.topics[0]) {
+          insights.push({
+            id: `demo-ins-${m.id}`,
+            user_id: 'demo',
+            academy_id: SALES_ACADEMY_ID,
+            module_id: m.id,
+            weak_topics: score != null && score < 80 ? [m.topics[0]] : [],
+            strong_topics: status === 'completed' && (score ?? 0) >= 88 ? [m.topics[0]] : [],
+            trend: attempts >= 2 ? 'improving' : null,
+            updated_at: nowIso(),
+          })
+        }
+      })
     }
 
     // Week / month rollups + the generic-resume target.

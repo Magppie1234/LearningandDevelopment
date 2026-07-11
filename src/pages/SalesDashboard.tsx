@@ -28,6 +28,7 @@ import {
 } from '@/components/AcademyDashboardViz'
 import EstimatedCompletionCard from '@/components/learning/EstimatedCompletionCard'
 import LearningDashboard from '@/components/learning/LearningDashboard'
+import { SALES_MODULES } from '@/data/sales-academy'
 
 const SALES_ACADEMY_ID = process.env.NEXT_PUBLIC_SALES_ACADEMY_ID ?? 'sales'
 
@@ -99,9 +100,12 @@ export default function SalesDashboard() {
         <LearningDashboard
           academyId={SALES_ACADEMY_ID}
           viewerRole="learner"
-          moduleLabel={(id) => courses.find((c) => c.id === id)?.title ?? id}
-          onContinueModule={() => {
-            window.location.href = '/academy/sales?tab=curriculum'
+          moduleLabel={(id) => {
+            const m = SALES_MODULES.find((x) => x.id === id)
+            return m ? `Module ${m.number}: ${m.title}` : courses.find((c) => c.id === id)?.title ?? id
+          }}
+          onContinueModule={(id) => {
+            window.location.href = `/academy/sales/modules?module=${id}`
           }}
         />
       </section>
@@ -361,10 +365,10 @@ export default function SalesDashboard() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {[
             {
-              href: '/academy/sales?tab=curriculum',
+              href: '/academy/sales/modules',
               icon: BookOpen,
-              title: 'Curriculum',
-              sub: `${courses.length} courses from fundamentals to sales leadership`,
+              title: 'All modules',
+              sub: `${SALES_MODULES.length} modules — brand story to handoffs, each with a quiz`,
             },
             {
               href: '/academy/sales?tab=resources',
