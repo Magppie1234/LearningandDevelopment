@@ -169,6 +169,10 @@ export default function LearningDashboard({
           const weekByDay = demo.weekByDayMinutes.map((m) => Math.round(m * scale))
           const monthByWeek = demo.monthByWeekMinutes.map((m) => Math.round(m * scale))
           const monthSec = Math.round(demo.monthTotalSeconds * scale)
+          // Which modules the time went to (for the graph legend).
+          const activeModuleLabels = fProgress
+            .filter((p) => p.total_time_spent_seconds > 0)
+            .map((p) => labelFor(p.module_id))
 
           // Fully empty (not even module rows to list) → a short prompt.
           if (fProgress.length === 0) {
@@ -234,12 +238,13 @@ export default function LearningDashboard({
                   </div>
                 ) : (
                   <>
-                    {/* week + month with the Week/Month toggle */}
+                    {/* week + month with the Day/Week/Month toggle */}
                     {useDemo && (
                       <WeekMonthProgress
                         weekByDayMinutes={weekByDay}
                         monthByWeekMinutes={monthByWeek}
                         monthTotalSeconds={monthSec}
+                        activeModules={activeModuleLabels}
                       />
                     )}
 
@@ -269,9 +274,20 @@ export default function LearningDashboard({
                   </>
                 )
               ) : (
-                // ── Academy-scoped dashboard: strong/weak + insight cards +
-                //    the full module list (each card is the entry point). ─────
+                // ── Academy-scoped dashboard: week/month + strong/weak +
+                //    insight cards + the full module list (cards = entry point).
                 <>
+                  {/* This academy's week/month trend (spec §9), with the
+                      Day/Week/Month toggle and which-modules legend. */}
+                  {useDemo && (
+                    <WeekMonthProgress
+                      weekByDayMinutes={weekByDay}
+                      monthByWeekMinutes={monthByWeek}
+                      monthTotalSeconds={monthSec}
+                      activeModules={activeModuleLabels}
+                    />
+                  )}
+
                   {/* Strong vs weak + retakes/fails for this academy (once studied). */}
                   <StrongWeakModules progress={fProgress} labelFor={labelFor} />
 

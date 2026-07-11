@@ -40,10 +40,13 @@ export default function WeekMonthProgress({
   weekByDayMinutes,
   monthByWeekMinutes,
   monthTotalSeconds,
+  activeModules,
 }: {
   weekByDayMinutes: number[]
   monthByWeekMinutes: number[]
   monthTotalSeconds: number
+  /** Module labels time was invested in this period — shown under the graph. */
+  activeModules?: string[]
 }) {
   const [range, setRange] = useState<Range>('week')
   const [monthOff, setMonthOff] = useState(0)
@@ -177,6 +180,26 @@ export default function WeekMonthProgress({
             )
           })}
         </div>
+
+        {/* Which modules the time went to this period */}
+        {activeModules && activeModules.length > 0 && (
+          <div className="mt-3 pt-3 border-t border-white/5">
+            <p className="text-[10px] uppercase tracking-wide text-stone-ivory/40 mb-1.5">
+              Studying {range === 'day' ? 'today' : range === 'week' ? 'this week' : 'this month'}
+            </p>
+            <div className="flex flex-wrap gap-1.5">
+              {activeModules.map((m) => (
+                <span
+                  key={m}
+                  className="rounded-md bg-white/[0.06] px-2 py-0.5 text-[11px] text-stone-ivory/70 truncate max-w-[180px]"
+                  title={m}
+                >
+                  {m}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Cumulative headline for the selected range */}

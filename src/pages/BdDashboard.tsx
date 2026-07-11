@@ -33,6 +33,7 @@ import {
   ChartCard,
 } from '@/components/AcademyDashboardViz'
 import EstimatedCompletionCard from '@/components/learning/EstimatedCompletionCard'
+import LearningDashboard from '@/components/learning/LearningDashboard'
 
 // Academy-scoped instance key. Uses the real academies.id UUID once Supabase is
 // wired (via env); falls back to the slug so the scoped query is well-formed.
@@ -119,6 +120,24 @@ export default function BdDashboard() {
           Track your Business Development academy progress — course details, quiz
           performance, module status and your diagnostic baseline in one place.
         </p>
+      </section>
+
+      {/* ── Live progress report — same report as the home dashboard, scoped to
+             BD: week/month trend (with which-modules), strong vs weak, retakes
+             and fails, and the module cards. Dark "Obsidian" panel. ── */}
+      <section className="rounded-3xl bg-stone-charcoal p-5 sm:p-7 text-stone-ivory">
+        <h2 className="font-serif text-2xl font-light text-stone-ivory mb-4">Your progress report</h2>
+        <LearningDashboard
+          academyId={BD_ACADEMY_ID}
+          viewerRole="learner"
+          moduleLabel={(id) => {
+            const m = BD_MODULES.find((x) => x.id === id)
+            return m ? `Module ${m.number}: ${bdEffectiveTitle(overrides, m.id, m.title)}` : id
+          }}
+          onContinueModule={(id) => {
+            window.location.href = `/academy/business-development/modules?module=${id}`
+          }}
+        />
       </section>
 
       {/* ── KPI row (reference: course / progress / performance) ── */}

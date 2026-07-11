@@ -27,6 +27,7 @@ import {
   ChartCard,
 } from '@/components/AcademyDashboardViz'
 import EstimatedCompletionCard from '@/components/learning/EstimatedCompletionCard'
+import LearningDashboard from '@/components/learning/LearningDashboard'
 
 const SALES_ACADEMY_ID = process.env.NEXT_PUBLIC_SALES_ACADEMY_ID ?? 'sales'
 
@@ -88,6 +89,21 @@ export default function SalesDashboard() {
           Track your Sales Academy progress — courses taken and completed, hours
           invested, and where to pick up next, all in one place.
         </p>
+      </section>
+
+      {/* ── Live progress report — same report as the home dashboard, scoped to
+             Sales: week/month trend (with which-modules), strong vs weak,
+             retakes and fails, and the module cards. Dark "Obsidian" panel. ── */}
+      <section className="rounded-3xl bg-stone-charcoal p-5 sm:p-7 text-stone-ivory">
+        <h2 className="font-serif text-2xl font-light text-stone-ivory mb-4">Your progress report</h2>
+        <LearningDashboard
+          academyId={SALES_ACADEMY_ID}
+          viewerRole="learner"
+          moduleLabel={(id) => courses.find((c) => c.id === id)?.title ?? id}
+          onContinueModule={() => {
+            window.location.href = '/academy/sales?tab=curriculum'
+          }}
+        />
       </section>
 
       {/* ── KPI row (reference: course / time spent / progress) ── */}
