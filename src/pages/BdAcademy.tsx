@@ -274,11 +274,10 @@ function ModuleView({
       viewerRole="learner"
     >
     <div className="max-w-[760px] mx-auto">
-      {/* Persistent live session stopwatch (real auth only; null otherwise). */}
-      <div className="fixed top-20 right-5 z-40 hidden sm:block">
-        <LiveSessionClock />
-      </div>
-      {/* §5 navigation: persistent back arrow + breadcrumb trail */}
+      {/* §5 navigation: persistent back arrow + breadcrumb trail, with the live
+          session stopwatch pinned to the right of the row. Kept in normal flow
+          (not position:fixed) so framer-motion transforms on ancestor page
+          wrappers can't reparent/clip it. */}
       <div className="flex items-center gap-3 mb-4">
         <button
           type="button"
@@ -299,6 +298,9 @@ function ModuleView({
           <span className="mx-1.5">→</span>
           <span className="text-ink-primary font-medium">Module {module.number}</span>
         </nav>
+        <div className="ml-auto shrink-0">
+          <LiveSessionClock />
+        </div>
       </div>
 
       <div className="flex items-center gap-2 mb-1">
