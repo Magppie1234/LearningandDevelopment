@@ -68,6 +68,9 @@ export interface ModuleProgressRow {
   last_position_kind: 'video' | 'scroll' | null
   total_time_spent_seconds: number
   attempt_count: number
+  /** Distinct video sessions opened (rewatches) — spec §4. Optional until the
+   *  column is present; treat missing as 0. */
+  video_watch_count?: number
   last_accessed_at: string | null
   updated_at: string
 }

@@ -107,8 +107,29 @@ export default function InsightCard({
               </>
             )}
           </p>
+          {/* §4: explicit retake + rewatch counts as their own figures. */}
+          <div className="mt-1.5 flex flex-wrap gap-1.5">
+            {progress.attempt_count > 1 && (
+              <span className="rounded-md bg-white/[0.06] px-2 py-0.5 text-[11px] font-medium text-stone-ivory/70">
+                Retaken {progress.attempt_count - 1} time{progress.attempt_count - 1 === 1 ? '' : 's'}
+              </span>
+            )}
+            {(progress.video_watch_count ?? 0) > 1 && (
+              <span className="rounded-md bg-white/[0.06] px-2 py-0.5 text-[11px] font-medium text-stone-ivory/70">
+                Rewatched {(progress.video_watch_count ?? 0) - 1} time{(progress.video_watch_count ?? 0) - 1 === 1 ? '' : 's'}
+              </span>
+            )}
+          </div>
         </div>
       </div>
+
+      {/* §4: explicit "focus more on" line when there are weak topics. */}
+      {weak.length > 0 && (
+        <p className="mt-3 text-[13px] text-stone-ivory/80">
+          <span className="font-semibold" style={{ color: '#e0a04a' }}>You need to focus more on:</span>{' '}
+          {weak.join(', ')}
+        </p>
+      )}
 
       {/* Section 4: omit the topic rows entirely when there's nothing to show. */}
       {hasTopics && (

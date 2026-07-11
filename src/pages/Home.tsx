@@ -31,9 +31,12 @@ export default function Home() {
           global scope). Cream cards sit on the dark canvas as solid panels
           (no glass), per the design spec. */}
       <div className="mx-auto w-full max-w-[1100px]">
-        <h2 className="font-serif text-2xl font-light text-stone-ivory mb-4">
-          Your learning, across every academy
-        </h2>
+        <div className="mb-4">
+          <h2 className="font-serif text-3xl font-light text-stone-ivory">My Progress Report</h2>
+          <p className="text-sm text-stone-ivory/55 mt-1">
+            Your learning across every academy — time, scores, and insights, live as you go.
+          </p>
+        </div>
         <LearningDashboard
           viewerRole="learner"
           showGlobalExtras
