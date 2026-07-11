@@ -26,6 +26,7 @@ import { useSalesProgress } from '@/lib/sales-progress-store'
 import { apiRecordAttempt } from '@/lib/learning-dashboard-client'
 import { TimeTrackingProvider } from '@/components/learning/TimeTrackingProvider'
 import LiveSessionClock from '@/components/learning/LiveSessionClock'
+import SalesVideoPlayer from '@/components/SalesVideoPlayer'
 import { Block } from '@/pages/BdAcademy'
 
 // Academy-scoped key for live time-tracking + attempts (real uuid via env).
@@ -229,6 +230,12 @@ function ModuleView({
         <span className="text-[11px] font-medium text-ink-tertiary">Module {module.number}</span>
         <h1 className="font-serif text-3xl text-ink-primary">{module.title}</h1>
         <p className="text-sm text-ink-secondary mt-1">{module.summary}</p>
+
+        {/* video (same infrastructure as BD — plays when the Colossyan render
+            is dropped into public/assets/sales-academy; script until then) */}
+        <div className="mt-5">
+          <SalesVideoPlayer module={module} />
+        </div>
 
         {/* tabs */}
         <div className="mt-6 flex gap-1 border-b border-[rgba(0,59,70,0.1)]">
