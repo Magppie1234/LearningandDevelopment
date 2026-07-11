@@ -269,9 +269,12 @@ export default function LearningDashboard({
                   </>
                 )
               ) : (
-                // ── Academy-scoped dashboard: insight cards + full module list
-                //    (each card is the entry point into its module). ─────────
+                // ── Academy-scoped dashboard: strong/weak + insight cards +
+                //    the full module list (each card is the entry point). ─────
                 <>
+                  {/* Strong vs weak + retakes/fails for this academy (once studied). */}
+                  <StrongWeakModules progress={fProgress} labelFor={labelFor} />
+
                   {withAttempts.length > 0 && (
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
                       {withAttempts.map((p) => (
