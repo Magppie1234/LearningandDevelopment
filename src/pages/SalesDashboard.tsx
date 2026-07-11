@@ -26,6 +26,9 @@ import {
   StatTile,
   ChartCard,
 } from '@/components/AcademyDashboardViz'
+import EstimatedCompletionCard from '@/components/learning/EstimatedCompletionCard'
+
+const SALES_ACADEMY_ID = process.env.NEXT_PUBLIC_SALES_ACADEMY_ID ?? 'sales'
 
 const LEVELS: CourseLevel[] = ['Beginner', 'Intermediate', 'Advanced']
 const LEVEL_COLOR: Record<CourseLevel, string> = {
@@ -329,6 +332,11 @@ export default function SalesDashboard() {
             ))}
           </div>
         </div>
+      </section>
+
+      {/* ── estimated time to complete (academy-scoped, pace-based) ── */}
+      <section>
+        <EstimatedCompletionCard academyId={SALES_ACADEMY_ID} academyName="Sales Academy" />
       </section>
 
       {/* ── quick links ── */}
