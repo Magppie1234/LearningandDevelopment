@@ -824,7 +824,91 @@ const PillsScene: React.FC<any> = ({ heading, items }) => (
   </Body>
 )
 
+/** "Key notes" — a ruled notebook page on the dark canvas; each note writes
+ *  itself in with a copper highlighter sweep, like revision notes being read. */
+const NotesScene: React.FC<any> = ({ heading = 'Key notes', items }) => {
+  const paper = useIn(4)
+  const LINE_H = 52
+  return (
+    <Body center>
+      <div
+        style={{
+          width: 1010,
+          background: '#F1EAD9',
+          borderRadius: 14,
+          padding: '30px 42px 34px 86px',
+          position: 'relative',
+          boxShadow: '0 24px 60px rgba(0,0,0,0.5)',
+          opacity: paper,
+          transform: `translateY(${(1 - paper) * 40}px) rotate(${(1 - paper) * 1.2 - 0.4}deg)`,
+          backgroundImage: `repeating-linear-gradient(transparent, transparent ${LINE_H - 1}px, rgba(43,36,32,0.10) ${LINE_H - 1}px, rgba(43,36,32,0.10) ${LINE_H}px)`,
+          backgroundPositionY: 76,
+        }}
+      >
+        {/* red margin rule + spiral holes */}
+        <div style={{ position: 'absolute', top: 0, bottom: 0, left: 62, width: 2, background: 'rgba(217,118,98,0.45)' }} />
+        {Array.from({ length: 7 }, (_, i) => (
+          <div
+            key={i}
+            style={{
+              position: 'absolute',
+              left: 24,
+              top: 44 + i * 58,
+              width: 13,
+              height: 13,
+              borderRadius: '50%',
+              background: '#241E1A',
+              boxShadow: 'inset 0 2px 3px rgba(0,0,0,0.65)',
+            }}
+          />
+        ))}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
+          <Icon name="NotebookPen" size={30} color="#B8703F" />
+          <div style={{ fontFamily: SERIF, fontSize: 30, color: '#2B2420', fontWeight: 700 }}>{heading}</div>
+        </div>
+        {items.map((t: string, i: number) => {
+          const s = useIn(14 + i * 14, 16)
+          const hl = useIn(20 + i * 14, 20)
+          return (
+            <div key={i} style={{ position: 'relative', minHeight: LINE_H, display: 'flex', alignItems: 'center' }}>
+              {/* highlighter sweep behind the text */}
+              <div
+                style={{
+                  position: 'absolute',
+                  left: -8,
+                  right: undefined,
+                  width: `${hl * 100}%`,
+                  maxWidth: '100%',
+                  height: 30,
+                  borderRadius: 4,
+                  background: 'rgba(224,160,74,0.28)',
+                }}
+              />
+              <div
+                style={{
+                  position: 'relative',
+                  fontFamily: SERIF,
+                  fontStyle: 'italic',
+                  fontSize: 22.5,
+                  color: '#2B2420',
+                  lineHeight: 1.3,
+                  opacity: s,
+                  transform: `translateX(${(1 - s) * 24}px)`,
+                }}
+              >
+                <span style={{ color: '#B8703F', fontStyle: 'normal', fontWeight: 700, marginRight: 12 }}>{i + 1}.</span>
+                {t}
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    </Body>
+  )
+}
+
 const SCENE_MAP: Record<string, React.FC<any>> = {
+  notes: NotesScene,
   title: TitleScene,
   quote: QuoteScene,
   timeline: TimelineScene,

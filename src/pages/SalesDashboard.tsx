@@ -11,6 +11,7 @@ import {
   Clock,
   Crown,
   FolderOpen,
+  HelpCircle,
   Medal,
   Target,
   Users,
@@ -362,13 +363,19 @@ export default function SalesDashboard() {
       {/* ── quick links ── */}
       <section className="pb-4">
         <h2 className="font-serif text-2xl font-normal text-ink-primary mb-4">Quick links</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {[
             {
               href: '/academy/sales/modules',
               icon: BookOpen,
               title: 'All modules',
               sub: `${SALES_MODULES.length} modules — brand story to handoffs, each with a quiz`,
+            },
+            {
+              href: '/academy/sales/faq',
+              icon: HelpCircle,
+              title: 'Sales FAQ bank',
+              sub: 'Objections, pricing & process — flows, charts and comparisons',
             },
             {
               href: '/academy/sales?tab=resources',

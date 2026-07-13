@@ -385,6 +385,12 @@ export default function SalesAcademy() {
           Eleven modules from the vetted sales training. Pass each quiz at{' '}
           {Math.round(SALES_PASS_THRESHOLD * 100)}% to complete it.
         </p>
+        <Link
+          href="/academy/sales/faq"
+          className="mt-4 inline-flex items-center gap-2 rounded-full border border-accent-copper/50 bg-accent-copper/5 px-4 py-2 text-[13px] font-semibold text-accent-copper hover:bg-accent-copper/10 transition-colors"
+        >
+          Browse the Sales FAQ — flows, charts &amp; comparisons →
+        </Link>
       </div>
       <div className="space-y-2">
         {SALES_MODULES.map((m) => {

@@ -62,6 +62,19 @@ export const MODULE_SPECS = [
         },
       },
       {
+        type: 'notes',
+        vo: "Before the quiz, write these down. One — the mission: transform ordinary homes into wellness homes. Two — Magppie is a wellness movement: we sell health, safety, and twenty-five years of peace of mind. Three — one story, one order: fifty-plus years of group heritage, twenty-plus in kitchens, nine-plus of SilverStone. Four — never say thirty-five or forty years old, and never open with stainless steel.",
+        props: {
+          heading: 'Key notes — Module 1',
+          items: [
+            'Mission: transform ordinary homes into wellness homes.',
+            'Wellness movement — we sell health, safety & 25 years of peace of mind.',
+            'One story: 50+ yrs group → 20+ yrs kitchens → 9+ yrs SilverStone.',
+            'Never “35/40 years old”; never open with stainless steel.',
+          ],
+        },
+      },
+      {
         type: 'title',
         vo: 'Learn the story word for word — then take the quiz.',
         props: { title: 'Next: the quiz', subtitle: 'Pass mark 80%' },
@@ -148,6 +161,19 @@ export const MODULE_SPECS = [
         },
       },
       {
+        type: 'notes',
+        vo: 'Your notes for this module. One — porcelain clay, thirteen hundred degrees, silver and copper nano-particles. Two — seven safety pillars, always in order; drawers hold sixty kilos; up to sixty-two percent more storage. Three — non-porous and one hundred percent food-grade: you can eat directly off it. Four — maintenance is a damp cloth. No polishing, ever.',
+        props: {
+          heading: 'Key notes — Module 2',
+          items: [
+            'Porcelain clay + 1,300°C + silver & copper nano-particles.',
+            '7 Safety Pillars in order · 60 kg drawers · up to 62% more storage.',
+            'Non-porous, 100% food-grade — eat directly off it. Stronger than granite.',
+            'Maintenance: a damp cloth. No buffing or polishing, ever.',
+          ],
+        },
+      },
+      {
         type: 'title',
         vo: 'Stronger than granite, more elegant than marble, safer than wood. Now prove it — take the quiz.',
         props: { title: 'Next: the quiz', subtitle: 'Pass mark 80%' },
@@ -199,6 +225,18 @@ export const MODULE_SPECS = [
             { icon: 'Package', title: 'Sample delivery', lines: ['SilverStone sample to their home'] },
             { icon: 'Video', title: 'Expert video call', lines: ['Quick call with a wellness consultant'] },
             { icon: 'Home', title: 'Customer site visit', lines: ['See a real installation nearby'] },
+          ],
+        },
+      },
+      {
+        type: 'notes',
+        vo: "Note these three things. One — the award is Most Unexpected Innovation, KBIS twenty-twenty-six, Orlando. Two — celebrity names: two or three per conversation, never the whole list. Three — no showroom nearby? Offer a sample delivery, an expert video call, or a customer site visit.",
+        props: {
+          heading: 'Key notes — Module 3',
+          items: [
+            'Award: “Most Unexpected Innovation” — KBIS 2026, Orlando.',
+            'Celebrity names: 2–3 max per conversation — never the full list.',
+            'No showroom? Offer: sample delivery · expert video call · site visit.',
           ],
         },
       },
@@ -294,6 +332,19 @@ export const MODULE_SPECS = [
         },
       },
       {
+        type: 'notes',
+        vo: 'Your notes. One — eight stages: open, discover, agitate, solution, deep dive, budget, price, next step. Two — qualify the budget before any number: Magppie is not in the carpentry segment. Three — the range is eighty-four hundred to ten thousand eight hundred per square foot. Four — always close on the layout: customised estimate on WhatsApp.',
+        props: {
+          heading: 'Key notes — Module 4',
+          items: [
+            '8 stages: open → discover → agitate → solution → deep dive → budget → price → next step.',
+            'Budget BEFORE price — “Magppie is not in the carpentry segment.”',
+            'Range: ₹8,400–10,800/sq.ft · 10×10 ≈ ₹12–15 lakhs.',
+            'Close on the layout → customised estimate on WhatsApp.',
+          ],
+        },
+      },
+      {
         type: 'title',
         vo: 'Same flow, every channel. Take the quiz.',
         props: { title: 'Next: the quiz', subtitle: 'Pass mark 80%' },
@@ -355,6 +406,19 @@ export const MODULE_SPECS = [
             { icon: 'Globe', title: 'Why not granite/marble?', lines: ['Mining harms the planet', 'Porous → stains & bacteria'] },
             { icon: 'Scale', title: '“Too heavy?”', lines: ['Load engineered into the structure', 'Zero flooring impact'] },
             { icon: 'FlaskConical', title: '“Will it break?”', lines: ['Stronger than granite', 'Jar-drop tested — intact'] },
+          ],
+        },
+      },
+      {
+        type: 'notes',
+        vo: 'Write these down. One — price objection: compare lifetimes, not stickers — wood is often replaced in five to seven years; stone is guaranteed for twenty-five. Two — need to think? Equip, never push: video, call, or sample. Three — designer? Collaborate. No showroom? Systems. Unknown brand? Premium positioning. Four — heavy is engineered for; brittle is stronger than granite.',
+        props: {
+          heading: 'Key notes — Module 5',
+          items: [
+            'Price: lifetime cost — wood replaced in 5–7 yrs vs stone guaranteed 25.',
+            '“Need to think” → equip, never push: video · call · home sample.',
+            'Designer → collaborate · No showroom → systems · Unknown → premium.',
+            'Heavy? Load engineered. Brittle? Stronger than granite — jar-drop tested.',
           ],
         },
       },
@@ -436,6 +500,19 @@ export const MODULE_SPECS = [
         },
       },
       {
+        type: 'notes',
+        vo: 'Your pricing notes. One — kitchens eighty-four hundred to ten-eight per square foot; wardrobes seven thousand three hundred twenty; a ten-by-ten kitchen, twelve to fifteen lakhs. Two — guarantees: twenty-five years on stone, ten on hardware, two on lighting, and twenty-five annual services. Three — never cheap, discount, or negotiate. Four — on the payment split, only the fifty percent advance is common ground; the consultant confirms the rest during design.',
+        props: {
+          heading: 'Key notes — Module 6',
+          items: [
+            'Kitchen ₹8,400–10,800/sq.ft · Wardrobe ₹7,320 · 10×10 ≈ ₹12–15 L.',
+            'Guarantees: 25 yrs stone · 10 yrs hardware · 2 yrs lighting · 25 services.',
+            'Never “cheap / discount / negotiate” — fixed price, full transparency.',
+            'Payment split under review — quote only the 50% advance as common ground.',
+          ],
+        },
+      },
+      {
         type: 'title',
         vo: 'Fixed price. Complete transparency. Never the words cheap, discount, or negotiate. Quiz time.',
         props: { title: 'Next: the quiz', subtitle: 'Pass mark 80%' },
@@ -492,6 +569,19 @@ export const MODULE_SPECS = [
             'Pause 1s before any price · 1s after any health fact',
             'Max 15–18 words per sentence — one idea per breath',
             'Say “MAG-PEE” clearly; repeat if asked',
+          ],
+        },
+      },
+      {
+        type: 'notes',
+        vo: "Note the language rules. One — never carcinogen: say it can be very harmful for your health, and reports link it to cancer. Two — it's twenty-five complimentary annual services, never yearly deep cleaning. Three — turn statements into confirmation questions: right, sir? Four — pace it: two seconds after asking for time, one before a price, one after a health fact.",
+        props: {
+          heading: 'Key notes — Module 7',
+          items: [
+            'Never “carcinogen” → “very harmful for your health… reports link it to cancer.”',
+            '“25 complimentary annual services” — never “yearly deep cleaning.”',
+            'Statements → confirmation questions: “…right sir?”',
+            'Pauses: 2s after asking for time · 1s before price · 1s after health facts.',
           ],
         },
       },
@@ -553,6 +643,18 @@ export const MODULE_SPECS = [
         },
       },
       {
+        type: 'notes',
+        vo: 'Your process notes. One — layout, then proposal and estimate, then technical drawings, then production. Two — about three to four months from final order to installation. Three — four phases: sales-led acquisition, design-led detailing, factory-led production, aftercare. Sales owns phase one.',
+        props: {
+          heading: 'Key notes — Module 8',
+          items: [
+            'Layout → proposal & estimate → technical drawings → production.',
+            '≈ 3–4 months, final order to installation.',
+            'Four phases: Sales → Design → Factory → Aftercare (Sales owns Phase 1).',
+          ],
+        },
+      },
+      {
         type: 'title',
         vo: 'Three steps after the layout, three to four months to installation, four phases around it all. Quiz time.',
         props: { title: 'Next: the quiz', subtitle: 'Pass mark 80%' },
@@ -600,6 +702,18 @@ export const MODULE_SPECS = [
         type: 'quote',
         vo: "Service is pan-India, with international expansion under way. Asked about projects in a specific city? We've done multiple projects across India — I can check with our team about installations in your city. Precise, honest, helpful.",
         props: { label: 'The approved line', heading: 'Pan-India serviceability', text: 'We have done multiple projects across India. I can check with our team and let you know about installations in your city.' },
+      },
+      {
+        type: 'notes',
+        vo: "Note these. One — never say 'stores all across the country'; be specific. Two — open today: three Delhi stores, Mohali, Mumbai, Surat, and Florida; Bangalore and Hyderabad are on the way. Three — city not listed? Offer a sample delivery or an expert video call.",
+        props: {
+          heading: 'Key notes — Module 10',
+          items: [
+            'Never “stores all across the country” — specifics only.',
+            'Open: Delhi ×3 · Mohali · Mumbai · Surat · Florida. Soon: Bangalore, Hyderabad.',
+            'City not listed → sample delivery or expert video call.',
+          ],
+        },
       },
       {
         type: 'title',
