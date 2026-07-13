@@ -135,85 +135,50 @@ const Backdrop: React.FC = () => {
           />
         )
       })}
+      {/* slow-rotating conic sheen — a barely-there studio light */}
+      <AbsoluteFill
+        style={{
+          background: `conic-gradient(from ${f / 4}deg at 78% 22%, transparent 0deg, rgba(200,130,85,0.05) 40deg, transparent 90deg, rgba(157,177,143,0.03) 200deg, transparent 260deg)`,
+        }}
+      />
+      {/* drifting blueprint grid, very faint */}
+      <AbsoluteFill
+        style={{
+          backgroundImage:
+            'linear-gradient(rgba(245,239,230,0.022) 1px, transparent 1px), linear-gradient(90deg, rgba(245,239,230,0.022) 1px, transparent 1px)',
+          backgroundSize: '90px 90px',
+          backgroundPosition: `${-f * 0.18}px ${-f * 0.1}px`,
+        }}
+      />
       {/* fine grain vignette */}
       <AbsoluteFill style={{ boxShadow: 'inset 0 0 220px rgba(0,0,0,0.55)' }} />
     </AbsoluteFill>
   )
 }
 
-/* ── the narrator plate — a professional speaker lower-third ──────────────
-   Monogram badge with a copper ring, name plate, and a live waveform that
-   animates while the narration plays. Swap for a Colossyan avatar film later
-   without touching the pipeline. */
-const Storyteller: React.FC<{ talkEnd: number }> = ({ talkEnd }) => {
+/* ── live narration waveform — a discreet equalizer in the footer that
+   pulses while the voiceover plays, then settles flat. */
+const VoiceWave: React.FC<{ talkEnd: number }> = ({ talkEnd }) => {
   const f = useCurrentFrame()
-  const enter = spring({ frame: f - 6, fps: FPS, config: { damping: 16 } })
   const talking = f / FPS < talkEnd
-  const glow = talking ? 0.35 + 0.2 * Math.abs(Math.sin(f / 11)) : 0.15
   return (
-    <div
-      style={{
-        position: 'absolute',
-        right: 64,
-        bottom: 84,
-        display: 'flex',
-        alignItems: 'center',
-        gap: 14,
-        padding: '12px 18px 12px 12px',
-        borderRadius: 16,
-        background: 'rgba(20,16,13,0.55)',
-        border: '1px solid rgba(245,239,230,0.10)',
-        opacity: enter,
-        transform: `translateY(${(1 - enter) * 40}px)`,
-      }}
-    >
-      {/* monogram badge */}
-      <div
-        style={{
-          width: 46,
-          height: 46,
-          borderRadius: '50%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontFamily: SERIF,
-          fontSize: 22,
-          color: COPPER,
-          background: 'rgba(184,112,63,0.12)',
-          border: `1.5px solid rgba(200,130,85,${0.5 + glow})`,
-          boxShadow: `0 0 ${18 * glow + 4}px rgba(200,130,85,${glow})`,
-        }}
-      >
-        P
-      </div>
-      <div>
-        <div style={{ fontFamily: SANS, fontSize: 15.5, fontWeight: 700, color: INK, letterSpacing: 0.3 }}>
-          Pooja
-        </div>
-        <div style={{ fontFamily: SANS, fontSize: 11.5, color: DIM, letterSpacing: 0.5, marginTop: 1 }}>
-          Wellness Consultant
-        </div>
-      </div>
-      {/* live waveform while speaking */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 3, height: 26, marginLeft: 6 }}>
-        {Array.from({ length: 5 }, (_, i) => {
-          const h = talking
-            ? 6 + 16 * Math.abs(Math.sin(f / (5 + i * 1.3) + i * 1.8) * Math.sin(f / 17 + i))
-            : 4
-          return (
-            <div
-              key={i}
-              style={{
-                width: 3.5,
-                height: h,
-                borderRadius: 2,
-                background: talking ? COPPER : 'rgba(245,239,230,0.25)',
-                transition: 'none',
-              }}
-            />
-          )
-        })}
-      </div>
+    <div style={{ position: 'absolute', bottom: 38, left: '50%', transform: 'translateX(-50%)', display: 'flex', alignItems: 'center', gap: 3.5, height: 20 }}>
+      {Array.from({ length: 9 }, (_, i) => {
+        const h = talking
+          ? 4 + 13 * Math.abs(Math.sin(f / (5 + (i % 4) * 1.3) + i * 1.8) * Math.sin(f / 17 + i))
+          : 3
+        return (
+          <div
+            key={i}
+            style={{
+              width: 3,
+              height: h,
+              borderRadius: 2,
+              background: talking ? `rgba(200,130,85,${0.5 + 0.4 * Math.abs(Math.sin(f / 13 + i))})` : 'rgba(245,239,230,0.18)',
+            }}
+          />
+        )
+      })}
     </div>
   )
 }
@@ -241,8 +206,7 @@ const Chrome: React.FC<{ mod: ModuleProps; idx: number; total: number }> = ({ mo
 const Body: React.FC<{ children: React.ReactNode; center?: boolean }> = ({ children, center }) => (
   <AbsoluteFill
     style={{
-      // right padding leaves room for the storyteller presenter
-      padding: '124px 250px 96px 64px',
+      padding: '124px 90px 96px 64px',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: center ? 'center' : 'flex-start',
@@ -254,6 +218,9 @@ const Body: React.FC<{ children: React.ReactNode; center?: boolean }> = ({ child
 
 const H: React.FC<{ text: string; small?: boolean }> = ({ text, small }) => {
   const s = useIn(2)
+  const f = useCurrentFrame()
+  // a light dot pings along the underline every few seconds
+  const ping = ((f - 30) % 110) / 110
   return (
     <div
       style={{
@@ -266,14 +233,23 @@ const H: React.FC<{ text: string; small?: boolean }> = ({ text, small }) => {
       }}
     >
       {text}
-      <div
-        style={{
-          width: 64 * s,
-          height: 3,
-          background: COPPER_D,
-          marginTop: 14,
-        }}
-      />
+      <div style={{ position: 'relative', width: 64 * s, height: 3, background: COPPER_D, marginTop: 14 }}>
+        {f > 30 && ping >= 0 && ping < 0.35 && (
+          <div
+            style={{
+              position: 'absolute',
+              left: `${(ping / 0.35) * 100}%`,
+              top: -1.5,
+              width: 10,
+              height: 6,
+              borderRadius: 3,
+              background: 'rgba(245,239,230,0.9)',
+              filter: 'blur(1px)',
+              opacity: Math.sin((ping / 0.35) * Math.PI),
+            }}
+          />
+        )}
+      </div>
     </div>
   )
 }
@@ -283,18 +259,39 @@ const H: React.FC<{ text: string; small?: boolean }> = ({ text, small }) => {
 const TitleScene: React.FC<any> = ({ title, subtitle, kicker }) => {
   const s1 = useIn(4)
   const s2 = useIn(14)
+  const f = useCurrentFrame()
+  const words = String(title).split(' ')
   return (
     <Body center>
       {kicker && (
-        <div style={{ fontFamily: SANS, fontSize: 18, letterSpacing: 4, color: COPPER, marginBottom: 18, opacity: s1 }}>
-          {kicker.toUpperCase()}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 18, opacity: s1 }}>
+          <div style={{ width: 34 * s1, height: 2, background: COPPER }} />
+          <div style={{ fontFamily: SANS, fontSize: 18, letterSpacing: 4 + (1 - s1) * 6, color: COPPER }}>
+            {kicker.toUpperCase()}
+          </div>
         </div>
       )}
-      <div style={{ fontFamily: SERIF, fontSize: 64, lineHeight: 1.08, color: INK, maxWidth: 940, opacity: s1, transform: `translateY(${(1 - s1) * 30}px)` }}>
-        {title}
+      {/* words cascade in one by one */}
+      <div style={{ fontFamily: SERIF, fontSize: 64, lineHeight: 1.08, color: INK, maxWidth: 1050 }}>
+        {words.map((w, i) => {
+          const ws = spring({ frame: f - (6 + i * 3), fps: FPS, config: { damping: 15, mass: 0.6 } })
+          return (
+            <span
+              key={i}
+              style={{
+                display: 'inline-block',
+                marginRight: '0.26em',
+                opacity: ws,
+                transform: `translateY(${(1 - ws) * 34}px) rotate(${(1 - ws) * 2}deg)`,
+              }}
+            >
+              {w}
+            </span>
+          )
+        })}
       </div>
       {subtitle && (
-        <div style={{ fontFamily: SANS, fontSize: 24, color: DIM, marginTop: 22, maxWidth: 860, lineHeight: 1.5, opacity: s2, transform: `translateY(${(1 - s2) * 20}px)` }}>
+        <div style={{ fontFamily: SANS, fontSize: 24, color: DIM, marginTop: 22, maxWidth: 900, lineHeight: 1.5, opacity: s2, transform: `translateY(${(1 - s2) * 20}px)` }}>
           {subtitle}
         </div>
       )}
@@ -306,11 +303,36 @@ const QuoteScene: React.FC<any> = ({ label, text, heading }) => {
   const frame = useCurrentFrame()
   const bar = useIn(4)
   const chars = Math.floor(interpolate(frame, [8, 60], [0, text.length], { extrapolateRight: 'clamp' }))
+  const mark = useIn(2, 10)
   return (
     <Body center>
+      {/* oversized ghost quotation mark drifting behind the text */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 96,
+          left: 34,
+          fontFamily: SERIF,
+          fontSize: 300,
+          lineHeight: 1,
+          color: `rgba(200,130,85,${0.09 * mark})`,
+          transform: `scale(${0.7 + mark * 0.3}) translateY(${Math.sin(frame / 40) * 6}px)`,
+        }}
+      >
+        “
+      </div>
       {heading && <H text={heading} small />}
       <div style={{ display: 'flex', gap: 26, marginTop: heading ? 16 : 0 }}>
-        <div style={{ width: 5, background: COPPER_D, borderRadius: 3, transform: `scaleY(${bar})`, transformOrigin: 'top' }} />
+        <div
+          style={{
+            width: 5,
+            background: COPPER_D,
+            borderRadius: 3,
+            transform: `scaleY(${bar})`,
+            transformOrigin: 'top',
+            boxShadow: `0 0 ${10 + 8 * Math.abs(Math.sin(frame / 14))}px rgba(200,130,85,0.5)`,
+          }}
+        />
         <div style={{ maxWidth: 950 }}>
           {label && (
             <div style={{ fontFamily: SANS, fontSize: 15, letterSpacing: 3, color: AMBER, marginBottom: 14 }}>
@@ -339,14 +361,38 @@ const TimelineScene: React.FC<any> = ({ heading, items }) => {
           return (
             <React.Fragment key={i}>
               {i > 0 && (
-                <div style={{ width: 110, height: 3, background: `rgba(200,130,85,${s * 0.7})`, transform: `scaleX(${s})` }} />
+                <div style={{ position: 'relative', width: 110, height: 3, background: `rgba(200,130,85,${s * 0.7})`, transform: `scaleX(${s})` }}>
+                  {/* spark travelling along the connector */}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      left: `${((frame * 1.6 + i * 40) % 130) - 10}%`,
+                      top: -2,
+                      width: 12,
+                      height: 7,
+                      borderRadius: 4,
+                      background: 'rgba(245,239,230,0.85)',
+                      filter: 'blur(1.5px)',
+                      opacity: s * 0.8,
+                    }}
+                  />
+                </div>
               )}
-              <div style={{ textAlign: 'center', opacity: s, transform: `scale(${0.8 + s * 0.2})` }}>
-                <div style={{ fontFamily: SERIF, fontSize: 84, color: COPPER, lineHeight: 1 }}>
+              <div style={{ position: 'relative', textAlign: 'center', opacity: s, transform: `scale(${0.8 + s * 0.2}) translateY(${Math.sin(frame / 26 + i * 2) * 4}px)` }}>
+                {/* breathing halo behind each number */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    inset: '-28px -20px',
+                    borderRadius: '50%',
+                    background: `radial-gradient(circle, rgba(200,130,85,${0.10 + 0.05 * Math.sin(frame / 18 + i)}), transparent 68%)`,
+                  }}
+                />
+                <div style={{ position: 'relative', fontFamily: SERIF, fontSize: 84, color: COPPER, lineHeight: 1 }}>
                   {n}
                   <span style={{ fontSize: 44 }}>+</span>
                 </div>
-                <div style={{ fontFamily: SANS, fontSize: 19, color: DIM, marginTop: 10, maxWidth: 200 }}>{it.label}</div>
+                <div style={{ position: 'relative', fontFamily: SANS, fontSize: 19, color: DIM, marginTop: 10, maxWidth: 200 }}>{it.label}</div>
               </div>
             </React.Fragment>
           )
@@ -356,42 +402,60 @@ const TimelineScene: React.FC<any> = ({ heading, items }) => {
   )
 }
 
-const DoDontScene: React.FC<any> = ({ heading, dont, dos }) => (
-  <Body>
-    <H text={heading ?? 'Never say · Always say'} />
-    <div style={{ display: 'flex', gap: 28, marginTop: 26 }}>
-      {[
-        { title: 'NEVER', items: dont, color: RED, mark: '✕' },
-        { title: 'ALWAYS', items: dos, color: SAGE, mark: '✓' },
-      ].map((col, c) => (
-        <div key={c} style={{ flex: 1 }}>
-          <Pop delay={6 + c * 6}>
-            <div style={{ fontFamily: SANS, fontSize: 16, letterSpacing: 3, color: col.color, marginBottom: 16 }}>{col.title}</div>
-          </Pop>
-          {col.items.map((t: string, i: number) => (
-            <Pop key={i} delay={12 + c * 6 + i * 8}>
-              <div
-                style={{
-                  display: 'flex',
-                  gap: 14,
-                  alignItems: 'flex-start',
-                  background: 'rgba(255,255,255,0.045)',
-                  border: `1px solid ${col.color}33`,
-                  borderRadius: 12,
-                  padding: '16px 18px',
-                  marginBottom: 12,
-                }}
-              >
-                <span style={{ color: col.color, fontFamily: SANS, fontSize: 20, lineHeight: 1.3 }}>{col.mark}</span>
-                <span style={{ fontFamily: SANS, fontSize: 21, color: INK, lineHeight: 1.4 }}>{t}</span>
-              </div>
+const DoDontScene: React.FC<any> = ({ heading, dont, dos }) => {
+  const f = useCurrentFrame()
+  return (
+    <Body>
+      <H text={heading ?? 'Never say · Always say'} />
+      <div style={{ display: 'flex', gap: 28, marginTop: 26 }}>
+        {[
+          { title: 'NEVER', items: dont, color: RED, mark: '✕' },
+          { title: 'ALWAYS', items: dos, color: SAGE, mark: '✓' },
+        ].map((col, c) => (
+          <div key={c} style={{ flex: 1 }}>
+            <Pop delay={6 + c * 6}>
+              <div style={{ fontFamily: SANS, fontSize: 16, letterSpacing: 3, color: col.color, marginBottom: 16 }}>{col.title}</div>
             </Pop>
-          ))}
-        </div>
-      ))}
-    </div>
-  </Body>
-)
+            {col.items.map((t: string, i: number) => {
+              const markIn = useIn(18 + c * 6 + i * 8, 9)
+              return (
+                <Pop key={i} delay={12 + c * 6 + i * 8}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      gap: 14,
+                      alignItems: 'flex-start',
+                      background: 'rgba(255,255,255,0.045)',
+                      border: `1px solid ${col.color}${Math.round(32 + 24 * Math.abs(Math.sin(f / 22 + i))).toString(16)}`,
+                      borderRadius: 12,
+                      padding: '16px 18px',
+                      marginBottom: 12,
+                    }}
+                  >
+                    <span
+                      style={{
+                        color: col.color,
+                        fontFamily: SANS,
+                        fontSize: 20,
+                        lineHeight: 1.3,
+                        display: 'inline-block',
+                        transform: `scale(${0.4 + markIn * 0.6}) rotate(${(1 - markIn) * (c === 0 ? -90 : 90)}deg)`,
+                        opacity: markIn,
+                      }}
+                    >
+                      {col.mark}
+                    </span>
+                    <span style={{ fontFamily: SANS, fontSize: 21, color: INK, lineHeight: 1.4 }}>{t}</span>
+                  </div>
+                </Pop>
+              )
+            })}
+          </div>
+        ))}
+      </div>
+    </Body>
+  )
+}
 
 const IconFlowScene: React.FC<any> = ({ heading, items, to }) => {
   const f = useCurrentFrame()
@@ -423,8 +487,8 @@ const IconFlowScene: React.FC<any> = ({ heading, items, to }) => {
         ))}
         {to && (
           <>
-            <div style={{ fontFamily: SANS, fontSize: 44, color: COPPER, opacity: arrow, transform: `translateX(${(1 - arrow) * -16}px)` }}>→</div>
-            <div style={{ opacity: target, transform: `scale(${0.85 + target * 0.15})` }}>
+            <div style={{ fontFamily: SANS, fontSize: 44, color: COPPER, opacity: arrow, transform: `translateX(${(1 - arrow) * -16 + Math.sin(f / 11) * 4}px)` }}>→</div>
+            <div style={{ opacity: target, transform: `scale(${0.85 + target * 0.15 + Math.sin(f / 20) * 0.012})` }}>
               <div
                 style={{
                   width: 190,
@@ -433,6 +497,7 @@ const IconFlowScene: React.FC<any> = ({ heading, items, to }) => {
                   border: `1.5px solid ${COPPER_D}`,
                   borderRadius: 16,
                   padding: '26px 14px',
+                  boxShadow: `0 0 ${16 + 12 * Math.abs(Math.sin(f / 15))}px rgba(184,112,63,0.30)`,
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -448,10 +513,26 @@ const IconFlowScene: React.FC<any> = ({ heading, items, to }) => {
   )
 }
 
-const TableScene: React.FC<any> = ({ heading, columns, rows, accentCol }) => (
+const TableScene: React.FC<any> = ({ heading, columns, rows, accentCol }) => {
+  const f = useCurrentFrame()
+  const scanY = ((f * 1.1) % 160) / 100 // scanning light passes down the table
+  return (
   <Body>
     <H text={heading} small />
-    <div style={{ marginTop: 18, borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(245,239,230,0.12)' }}>
+    <div style={{ position: 'relative', marginTop: 18, borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(245,239,230,0.12)' }}>
+      {/* soft scan light drifting down the rows */}
+      <div
+        style={{
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          top: `${scanY * 100}%`,
+          height: 46,
+          background: 'linear-gradient(180deg, transparent, rgba(200,130,85,0.07), transparent)',
+          pointerEvents: 'none',
+          zIndex: 2,
+        }}
+      />
       <div style={{ display: 'flex', background: 'rgba(184,112,63,0.18)' }}>
         {columns.map((c: string, i: number) => (
           <div key={i} style={{ flex: i === 0 ? 1.1 : 2, padding: '13px 20px', fontFamily: SANS, fontSize: 17, fontWeight: 700, letterSpacing: 1, color: COPPER }}>
@@ -492,7 +573,8 @@ const TableScene: React.FC<any> = ({ heading, columns, rows, accentCol }) => (
       })}
     </div>
   </Body>
-)
+  )
+}
 
 const BarsScene: React.FC<any> = ({ heading, bars, caption }) => {
   const frame = useCurrentFrame()
@@ -512,12 +594,27 @@ const BarsScene: React.FC<any> = ({ heading, bars, caption }) => {
               </div>
               <div
                 style={{
+                  position: 'relative',
                   height: Math.max(6, h),
                   borderRadius: '10px 10px 4px 4px',
                   background: `linear-gradient(180deg, ${b.color ?? COPPER_D}, ${b.color ?? COPPER_D}88)`,
-                  boxShadow: `0 0 30px ${(b.color ?? COPPER_D)}44`,
+                  boxShadow: `0 0 ${26 + 10 * Math.abs(Math.sin(frame / 16 + i))}px ${(b.color ?? COPPER_D)}44`,
+                  overflow: 'hidden',
                 }}
-              />
+              >
+                {/* gloss shine sweeping up the bar after it grows */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    left: 0,
+                    right: 0,
+                    top: `${100 - (((frame * 1.4 + i * 45) % 170) / 170) * 130}%`,
+                    height: 34,
+                    background: 'linear-gradient(180deg, transparent, rgba(245,239,230,0.28), transparent)',
+                    opacity: grow,
+                  }}
+                />
+              </div>
               <div style={{ fontFamily: SANS, fontSize: 18, color: DIM, marginTop: 14, lineHeight: 1.3 }}>{b.label}</div>
             </div>
           )
@@ -557,14 +654,50 @@ const FlowScene: React.FC<any> = ({ heading, nodes, gates, vertical }) => {
             {i > 0 && !vertical && (
               <div style={{ display: 'flex', alignItems: 'center', opacity: conn }}>
                 {gates && i % Math.ceil(nodes.length / 3) === 0 ? (
-                  <div style={{ width: 16, height: 16, transform: `rotate(45deg) scale(${conn})`, background: AMBER, margin: '0 6px' }} />
+                  <div
+                    style={{
+                      width: 16,
+                      height: 16,
+                      transform: `rotate(${45 + Math.sin(f / 15 + i) * 10}deg) scale(${conn})`,
+                      background: AMBER,
+                      margin: '0 6px',
+                      boxShadow: `0 0 ${8 + 6 * Math.abs(Math.sin(f / 12 + i))}px rgba(224,160,74,0.6)`,
+                    }}
+                  />
                 ) : (
-                  <div style={{ width: 26, height: 2.5, background: COPPER, transform: `scaleX(${conn})` }} />
+                  <div style={{ position: 'relative', width: 26, height: 2.5, background: COPPER, transform: `scaleX(${conn})` }}>
+                    {/* pulse dot travelling node to node */}
+                    <div
+                      style={{
+                        position: 'absolute',
+                        left: `${((f * 3 + i * 37) % 120) - 10}%`,
+                        top: -2.2,
+                        width: 7,
+                        height: 7,
+                        borderRadius: '50%',
+                        background: 'rgba(245,239,230,0.9)',
+                        filter: 'blur(0.8px)',
+                      }}
+                    />
+                  </div>
                 )}
               </div>
             )}
             {i > 0 && vertical && (
-              <div style={{ width: 2.5, height: 16, background: COPPER, marginLeft: 30, opacity: conn }} />
+              <div style={{ position: 'relative', width: 2.5, height: 16, background: COPPER, marginLeft: 30, opacity: conn }}>
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: `${((f * 4 + i * 30) % 120) - 10}%`,
+                    left: -2,
+                    width: 6.5,
+                    height: 6.5,
+                    borderRadius: '50%',
+                    background: 'rgba(245,239,230,0.9)',
+                    filter: 'blur(0.8px)',
+                  }}
+                />
+              </div>
             )}
             <div
               style={{
@@ -609,13 +742,14 @@ const StatsScene: React.FC<any> = ({ heading, stats, caption }) => {
               style={{
                 flex: 1,
                 opacity: s,
-                transform: `translateY(${(1 - s) * 30}px)`,
+                transform: `translateY(${(1 - s) * 30 + Math.sin(frame / 24 + i * 1.7) * 4}px)`,
                 background: 'rgba(255,255,255,0.05)',
-                border: '1px solid rgba(245,239,230,0.12)',
+                border: `1px solid rgba(245,239,230,${0.1 + 0.07 * Math.abs(Math.sin(frame / 20 + i))})`,
                 borderRadius: 18,
                 padding: '34px 22px',
                 textAlign: 'center',
                 minWidth: 200,
+                boxShadow: `0 ${6 + Math.sin(frame / 24 + i * 1.7) * 3}px 26px rgba(0,0,0,0.28)`,
               }}
             >
               <div style={{ fontFamily: SERIF, fontSize: 62, color: COPPER, lineHeight: 1 }}>
@@ -636,7 +770,9 @@ const StatsScene: React.FC<any> = ({ heading, stats, caption }) => {
   )
 }
 
-const CardsScene: React.FC<any> = ({ heading, cards }) => (
+const CardsScene: React.FC<any> = ({ heading, cards }) => {
+  const f = useCurrentFrame()
+  return (
   <Body>
     <H text={heading} small />
     <div style={{ display: 'flex', gap: 22, marginTop: 26, flexWrap: 'wrap' }}>
@@ -650,10 +786,12 @@ const CardsScene: React.FC<any> = ({ heading, cards }) => (
               borderRadius: 16,
               padding: '22px 24px',
               height: '100%',
+              transform: `translateY(${Math.sin(f / 23 + i * 1.9) * 4}px)`,
+              boxShadow: `0 ${8 + Math.sin(f / 23 + i * 1.9) * 3}px 24px rgba(0,0,0,0.25)`,
             }}
           >
             {c.icon && (
-              <div style={{ marginBottom: 12 }}>
+              <div style={{ marginBottom: 12, display: 'inline-block', transform: `rotate(${Math.sin(f / 17 + i * 2.3) * 6}deg)` }}>
                 <Icon name={c.icon} size={30} color={c.color ?? COPPER} />
               </div>
             )}
@@ -668,16 +806,32 @@ const CardsScene: React.FC<any> = ({ heading, cards }) => (
       ))}
     </div>
   </Body>
-)
+  )
+}
 
-const ChecklistScene: React.FC<any> = ({ heading, items }) => (
+const ChecklistScene: React.FC<any> = ({ heading, items }) => {
+  const f = useCurrentFrame()
+  return (
   <Body>
     <H text={heading} small />
-    <div style={{ marginTop: 22, maxWidth: 1000 }}>
+    <div style={{ marginTop: 22, maxWidth: 1050 }}>
       {items.map((t: string, i: number) => {
         const s = useIn(8 + i * 8)
+        const tick = useIn(14 + i * 8, 9)
         return (
-          <div key={i} style={{ display: 'flex', gap: 16, alignItems: 'flex-start', marginBottom: 16, opacity: s, transform: `translateX(${(1 - s) * 30}px)` }}>
+          <div key={i} style={{ position: 'relative', display: 'flex', gap: 16, alignItems: 'flex-start', marginBottom: 16, opacity: s, transform: `translateX(${(1 - s) * 30}px)` }}>
+            {/* sweep highlight passing behind the row as it lands */}
+            <div
+              style={{
+                position: 'absolute',
+                left: -12,
+                top: -4,
+                bottom: -4,
+                width: `${Math.min(1, tick) * 100}%`,
+                borderRadius: 8,
+                background: `linear-gradient(90deg, rgba(157,177,143,${0.10 * (1 - tick * 0.7)}), transparent)`,
+              }}
+            />
             <div
               style={{
                 width: 30,
@@ -692,6 +846,8 @@ const ChecklistScene: React.FC<any> = ({ heading, items }) => (
                 fontSize: 17,
                 flexShrink: 0,
                 marginTop: 2,
+                transform: `scale(${0.3 + tick * 0.7}) rotate(${(1 - tick) * -80}deg)`,
+                boxShadow: `0 0 ${6 + 5 * Math.abs(Math.sin(f / 19 + i))}px rgba(157,177,143,0.35)`,
               }}
             >
               ✓
@@ -702,7 +858,8 @@ const ChecklistScene: React.FC<any> = ({ heading, items }) => (
       })}
     </div>
   </Body>
-)
+  )
+}
 
 const SwapScene: React.FC<any> = ({ heading, rows }) => (
   <Body>
@@ -728,7 +885,7 @@ const SwapScene: React.FC<any> = ({ heading, rows }) => (
             >
               {r.from}
             </div>
-            <div style={{ fontFamily: SANS, fontSize: 26, color: COPPER, opacity: flip, transform: `translateX(${(1 - flip) * -10}px)` }}>→</div>
+            <div style={{ fontFamily: SANS, fontSize: 26, color: COPPER, opacity: flip, transform: `translateX(${(1 - flip) * -10 + Math.sin(useCurrentFrame() / 12 + i) * 3}px)` }}>→</div>
             <div
               style={{
                 flex: 1.4,
@@ -781,7 +938,9 @@ const WarningScene: React.FC<any> = ({ label, text, heading }) => {
   )
 }
 
-const PillsScene: React.FC<any> = ({ heading, items }) => (
+const PillsScene: React.FC<any> = ({ heading, items }) => {
+  const f = useCurrentFrame()
+  return (
   <Body>
     <H text={heading} small />
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14, marginTop: 24 }}>
@@ -793,7 +952,7 @@ const PillsScene: React.FC<any> = ({ heading, items }) => (
             key={i}
             style={{
               opacity: s,
-              transform: `scale(${0.92 + s * 0.08})`,
+              transform: `scale(${0.92 + s * 0.08}) translateY(${Math.sin(f / 25 + i * 1.3) * 3}px)`,
               background: 'rgba(255,255,255,0.05)',
               border: '1px solid rgba(245,239,230,0.12)',
               borderRadius: 14,
@@ -822,12 +981,14 @@ const PillsScene: React.FC<any> = ({ heading, items }) => (
       })}
     </div>
   </Body>
-)
+  )
+}
 
 /** "Key notes" — a ruled notebook page on the dark canvas; each note writes
  *  itself in with a copper highlighter sweep, like revision notes being read. */
 const NotesScene: React.FC<any> = ({ heading = 'Key notes', items }) => {
   const paper = useIn(4)
+  const f = useCurrentFrame()
   const LINE_H = 52
   return (
     <Body center>
@@ -863,7 +1024,9 @@ const NotesScene: React.FC<any> = ({ heading = 'Key notes', items }) => {
           />
         ))}
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
-          <Icon name="NotebookPen" size={30} color="#B8703F" />
+          <div style={{ display: 'inline-block', transform: `rotate(${Math.sin(f / 9) * 7}deg)`, transformOrigin: '20% 90%' }}>
+            <Icon name="NotebookPen" size={30} color="#B8703F" />
+          </div>
           <div style={{ fontFamily: SERIF, fontSize: 30, color: '#2B2420', fontWeight: 700 }}>{heading}</div>
         </div>
         {items.map((t: string, i: number) => {
@@ -940,9 +1103,8 @@ export const SalesModuleVideo: React.FC<ModuleProps> = (mod) => {
               {React.createElement(SCENE_MAP[sc.type] ?? TitleScene, sc.props)}
               <Chrome mod={mod} idx={i} total={mod.scenes.length} />
             </SceneTransition>
-            {/* the storyteller rides above every scene, talking through the
-                narration and idling in the pad */}
-            <Storyteller talkEnd={sc.dur} />
+            {/* discreet equalizer pulsing with the narration */}
+            <VoiceWave talkEnd={sc.dur} />
           </Sequence>
         )
         from += frames
