@@ -8,16 +8,19 @@
  * Production: scripts live in docs/sales-academy-video-scripts.md (scene-by-
  * scene VO + on-screen cues) and are generated in Colossyan (colossyan.com);
  * drop each rendered MP4 into public/assets/sales-academy/module-{n}/en.mp4
- * and it plays with no code change. Modules 9 and 11 are [SOURCE PENDING] —
- * no scripts or videos until the Notion text arrives.
+ * and it plays with no code change. Modules 9 and 11 are [SOURCE PENDING]:
+ * module 9 has an honest "structure ready, awaiting source" video built only
+ * from its shell text (nothing invented); module 11 has none until the Notion
+ * text arrives.
  */
 
 import type { VideoVariant, ModuleVideoConfig } from '@/data/bd-media'
 export { DEFAULT_LANGUAGE_CODE } from '@/data/bd-media'
 export type { VideoVariant, ModuleVideoConfig }
 
-// Authored modules with scripts ready (9 of 11; 9 & 11 are source-pending).
-const SCRIPTED_MODULES = [1, 2, 3, 4, 5, 6, 7, 8, 10]
+// Modules with a rendered video (module 9's is the awaiting-source explainer;
+// module 11 stays video-less until its Notion text arrives).
+const SCRIPTED_MODULES = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 export const SALES_VIDEO_CONFIG: ModuleVideoConfig[] = SCRIPTED_MODULES.map((n) => ({
   moduleId: `sa-m${n}`,
@@ -57,6 +60,8 @@ export const SALES_VIDEO_NARRATION: Record<string, string> = {
     "Every rule in this module came from a real customer call that went wrong. This is how Magppie sounds — on every channel.\n\nSeven swaps, non-negotiable. Never 'carcinogen' — say it can be very harmful for your health, and that reports link it to cancer. 'Wonderful' — once per conversation, then vary it. Never 'yearly deep cleaning' — it's twenty-five complimentary annual services. Never 'wooden kitchens are bad' — most regular wooden kitchens have hidden issues. Never 'artificial stone' alone — engineered stone, or our own patented stone. Never cheap, discount, or negotiate — fixed price policy, complete transparency. And never 'I don't know' — let me check with our team and get back to you.\n\nFlat statements lose people. Convert them: 'these are the most commonly used materials' becomes 'these are the most commonly used materials, right sir?'\n\nAnd pacing: pause two seconds after asking for their time. One second before any price. One second after a health fact. Keep sentences under eighteen words. One idea per breath. And pronounce it mag-pee — repeat it if they ask.",
   'sa-m8':
     "The customer asked: what happens after I share my layout? This module gives you the whole journey — theirs and ours.\n\nThree steps. We prepare a customised proposal and estimate from their drawings. Once the budget aligns, Sales creates the detailed technical drawings. And on confirmation, the order enters production.\n\nEnd to end, final order to installation runs about three to four months, depending on site conditions and design complexity. Site visits come after design discussion and commercial alignment. Samples are always available. And assembly is factory-engineered: CNC-precision panels, pre-cut, edge-finished, fixed with specialised hardware — not just adhesives.\n\nNow zoom out. The full Magppie journey runs in four phases. Phase one, sales-led acquisition — that's you, with BD. Phase two, design-led detailing. Phase three, factory-led production. Phase four, aftercare. Know what happens before and after your phase — it's how you speak about the whole company with confidence.",
+  'sa-m9':
+    "CRM and lead vocabulary — the shared language of BD, Sales, and Management. This module has a structure ready, and a source on the way.\n\nWhy does this module exist? Because the same words must mean the same thing to everyone. When BD, Sales, and Management write identical CRM notes, a lead never gets lost in translation.\n\nHere is what this module will cover once its source lands: the canonical list of lead statuses and what each one means; lead types and opportunity stages; and the shared vocabulary Sales must recognise — DRF, Closure Form, Principally Agreed, BOQ — even where Design or Factory own the work.\n\nAnd the honest part: the content itself comes from two Notion pages — the CRM Funnel Taxonomy and the Glossary — that have not been pasted yet. Nothing here is invented. The module, and its flashcard quiz, unlock the moment the source text arrives.",
   'sa-m10':
     "Where are your stores? It's one of the first questions — and one of the easiest to get wrong.\n\nNever say 'we have stores all across the country' as a vague deflection. If their city isn't on the list, always offer a sample delivery or a video call with an expert.\n\nOpen today: three Delhi stores — Sultanpur, Kirti Nagar, and Saket at Select City Walk. Mohali. Mumbai at Lower Parel. Surat. And internationally, Gainesville, Florida. Coming up: Bangalore, Indiranagar — about a month out. And Hyderabad, Jubilee Hills — under renovation.\n\nService is pan-India, with international expansion under way. Asked about projects in a specific city? We've done multiple projects across India — I can check with our team about installations in your city. Precise, honest, helpful.",
 }

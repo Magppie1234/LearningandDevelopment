@@ -663,6 +663,73 @@ export const MODULE_SPECS = [
   },
 
   {
+    // 3.9 is a [SOURCE PENDING] shell — this video teaches only what the shell
+    // itself says: the structure that's ready and the fact that content waits
+    // for the Notion source. Nothing invented; no CRM terms are defined.
+    number: 9,
+    title: 'CRM & Lead Vocabulary',
+    scenes: [
+      {
+        type: 'title',
+        vo: 'C R M and lead vocabulary — the shared language of BD, Sales, and Management. This module has a structure ready, and a source on the way.',
+        props: { kicker: 'Module 9', title: 'CRM & Lead Vocabulary', subtitle: 'The shared language of BD, Sales & Management.' },
+      },
+      {
+        type: 'iconflow',
+        vo: 'Why does this module exist? Because the same words must mean the same thing to everyone. When BD, Sales, and Management write identical C R M notes, a lead never gets lost in translation.',
+        props: {
+          heading: 'Why identical CRM notes matter',
+          items: [
+            { icon: 'Users', label: 'BD' },
+            { icon: 'Handshake', label: 'Sales' },
+            { icon: 'BarChart3', label: 'Management' },
+          ],
+          to: { icon: 'MessageSquareText', label: 'One shared vocabulary' },
+        },
+      },
+      {
+        type: 'checklist',
+        vo: "Here is what this module will cover once its source lands. The canonical list of lead statuses and what each one means. Lead types and opportunity stages. The shared vocabulary Sales must recognise — D R F, Closure Form, Principally Agreed, B O Q — even where Design or Factory own the work.",
+        props: {
+          heading: 'What this module will cover — structure ready',
+          items: [
+            'Lead statuses — the canonical list and what each means',
+            'Lead types and opportunity stages',
+            'Shared vocabulary: DRF · Closure Form · Principally Agreed · BOQ',
+            'Why identical CRM notes matter across BD, Sales & Management',
+          ],
+        },
+      },
+      {
+        type: 'warning',
+        vo: 'And the honest part: the content itself comes from two Notion pages — the C R M funnel taxonomy and the glossary — that have not been pasted yet. Nothing here is invented. The module, and its flashcard quiz, unlock the moment the source text arrives.',
+        props: {
+          heading: 'Why this module is waiting',
+          label: 'SOURCE NEEDED — Notion: CRM Funnel Taxonomy + Glossary',
+          text: 'To keep training accurate, nothing is invented. The full module and its held quiz keys unlock when the Notion source text is provided.',
+        },
+      },
+      {
+        type: 'notes',
+        vo: 'Until then, note three things. One — this module is structure-ready, waiting only on its source. Two — the vocabulary to watch for: D R F, Closure Form, Principally Agreed, B O Q. Three — the goal: the same words meaning the same thing to BD, Sales, and Management.',
+        props: {
+          heading: 'Key notes — Module 9',
+          items: [
+            'Structure ready — content waits on the Notion source. Nothing is invented.',
+            'Vocabulary to watch for: DRF · Closure Form · Principally Agreed · BOQ.',
+            'Goal: the same words mean the same thing to BD, Sales & Management.',
+          ],
+        },
+      },
+      {
+        type: 'title',
+        vo: 'Module nine is on deck. Watch this space — the vocabulary lands with the source.',
+        props: { title: 'Awaiting source', subtitle: 'Unlocks when the Notion text arrives' },
+      },
+    ],
+  },
+
+  {
     number: 10,
     title: 'Locations & Serviceability',
     scenes: [
