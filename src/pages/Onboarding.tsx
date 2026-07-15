@@ -77,6 +77,12 @@ export default function Onboarding() {
             {doneCount}/{totalTasks}
           </span>
         </div>
+        <a
+          href="/onboarding/immersion"
+          className="mt-4 inline-flex items-center gap-2 rounded-full border border-accent-copper/50 bg-accent-copper/5 px-4 py-2 text-[13px] font-semibold text-accent-copper hover:bg-accent-copper/10 transition-colors"
+        >
+          Magppie Immersion Programme — 14 modules · 4 phases · all departments →
+        </a>
       </section>
 
       {[1, 2, 3, 4].map((phase) => {
