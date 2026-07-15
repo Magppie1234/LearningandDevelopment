@@ -37,6 +37,7 @@ import { Block as BdBlock } from '@/pages/BdAcademy'
 import BdVideoPlayer from '@/components/BdVideoPlayer'
 import BdModuleVisual, { bdModuleHasVisual, bdModuleVisualLabel } from '@/components/BdModuleVisuals'
 import BdResourcesTab from '@/components/BdResourcesTab'
+import SalesResourcesTab from '@/components/SalesResourcesTab'
 import ReadinessCheck from '@/components/ReadinessCheck'
 import { readinessBankFor } from '@/data/readiness-banks'
 import { useBdProgress } from '@/lib/bd-progress-store'
@@ -1294,8 +1295,12 @@ export default function AcademyDetail() {
           {activeTab === 'resources' &&
             (academy.id === 'business-development' ? (
               // Real BD resources: generated reading packs + team uploads + video
-              // series, replacing the seed placeholder cards (BD only).
+              // series, replacing the seed placeholder cards.
               <BdResourcesTab />
+            ) : academy.id === 'sales' ? (
+              // Real Sales resources: 11 generated reading packs, the 10-video
+              // series, team uploads and the FAQ bank.
+              <SalesResourcesTab />
             ) : (
               <ResourcesTab resources={academy.resources} />
             ))}
