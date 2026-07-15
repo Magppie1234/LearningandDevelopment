@@ -28,7 +28,7 @@ export interface SalesResource {
 }
 
 const PACK_META: Record<string, { pages: number; sizeKb: number }> = {
-  'sa-m1': { pages: 3, sizeKb: 55 },
+  'sa-m1': { pages: 4, sizeKb: 59 },
   'sa-m2': { pages: 4, sizeKb: 58 },
   'sa-m3': { pages: 3, sizeKb: 55 },
   'sa-m4': { pages: 3, sizeKb: 58 },
@@ -57,8 +57,17 @@ export const SALES_RESOURCES: SalesResource[] = [
     }),
   ),
 
-  // ── Group 2: provided by the team (add entries as files arrive) ──
-  // { id: 'provided-example', group: 'provided', title: '…', description: '…', file: '/resources/sales/….pdf' },
+  // ── Group 2: provided by the team ──
+  {
+    id: 'provided-brand-story',
+    group: 'provided',
+    title: 'The Magppie Brand Story — Material Science narrative',
+    description:
+      'The canonical founder narrative, verbatim (Notion "Magppie Brand", received Jul 2026): nature\'s material principle, the kitchen contradiction, the 2007→2026 journey, and the Wellness Interiors Systems category. Year/award flags apply — see Modules 1 & 3.',
+    file: '/resources/sales/magppie-brand-story.pdf',
+    pages: 6,
+    sizeKb: 65,
+  },
 
   // ── Group 3: video series — one entry per rendered module video ──
   ...SALES_MODULES.map((m): SalesResource => {

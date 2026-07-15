@@ -132,4 +132,37 @@ for (const m of SALES_MODULES) {
   made++
   console.log(`✓ ${path.basename(file)}`)
 }
-console.log(`\n${made} reading packs written to public/resources/sales/`)
+
+/* ── The Brand Story (docs/magppie-brand-story.md) as a standalone PDF ── */
+{
+  const md = fs.readFileSync(path.join(__dirname, '..', 'docs', 'magppie-brand-story.md'), 'utf8')
+  const file = path.join(OUT_DIR, 'magppie-brand-story.pdf')
+  const doc = newDoc(file)
+  doc.rect(0, 0, doc.page.width, 8).fill(COPPER)
+  doc.moveDown(6)
+  doc.font('bold').fontSize(9).fillColor(COPPER).text('MAGPPIE L&D · SALES ACADEMY', { characterSpacing: 1.8 })
+  doc.moveDown(1)
+  doc.font('bold').fontSize(24).fillColor(NAVY).text('The Magppie Brand Story')
+  doc.font('bold').fontSize(15).fillColor(NAVY).text('The Material Science narrative (canonical founder narrative)')
+  doc.moveDown(0.8)
+  doc.font('body').fontSize(10).fillColor(INK3)
+    .text('Verbatim from the Notion "Magppie Brand" page, received 2026-07-15. Carries the [CONFIRM YEAR], [VERIFY: Red Dot] and KBIS award-name flags — see Modules 1 and 3.', { lineGap: 2 })
+  doc.addPage()
+  let inQuote = false
+  for (const raw of md.split(/\r?\n/)) {
+    const line = raw.trim()
+    if (!line) { inQuote = false; continue }
+    if (line.startsWith('# ')) continue // cover already rendered
+    if (line.startsWith('## ')) { heading(doc, line.slice(3)) }
+    else if (line.startsWith('> ')) {
+      if (!inQuote) { doc.moveDown(0.2); inQuote = true }
+      doc.font('body').fontSize(9.5).fillColor(COPPER).text(line.slice(2), { indent: 10, lineGap: 2 })
+    } else if (/^[-*] /.test(line)) bullet(doc, line.slice(2))
+    else if (/^\d+\. /.test(line)) bullet(doc, line.replace(/^\d+\. /, ''), Number(line.match(/^(\d+)\./)![1]))
+    else para(doc, line)
+  }
+  doc.end()
+  made++
+  console.log('✓ magppie-brand-story.pdf')
+}
+console.log(`\n${made} PDFs written to public/resources/sales/`)

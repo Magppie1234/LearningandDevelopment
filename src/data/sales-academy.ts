@@ -92,12 +92,42 @@ export const SALES_MODULES: SalesModule[] = [
       {
         kind: 'callout',
         label: '[CONFIRM YEAR] — UNRESOLVED CONFLICT',
-        text: 'The AI Bot Master Training Document ("no variations") says the first SilverStone kitchen was late 2016. The Notion Brand Story (canonical founder narrative) says 2018. Do not resolve this yourself — flag stays until leadership confirms. The quiz does not test the year.',
+        text: 'The AI Bot Master Training Document ("no variations") says the first SilverStone kitchen was late 2016. The Notion Brand Story (canonical founder narrative, full text received 2026-07-15) says the first stone kitchen was 2018 — an 11-year research journey that began with the founder\'s 2007 question, ending with an installation in a New Delhi home. Do not resolve this yourself — flag stays until leadership confirms. The quiz does not test the year.',
       },
       { kind: 'heading', text: 'Why material science was ignored in kitchens' },
       {
         kind: 'paragraph',
         text: 'Through 20+ years of building kitchens, Magppie saw the same failures repeat: most regular wooden kitchens have hidden issues — termites, mould, water sagging, and formaldehyde released from plywood and MDF. The industry kept selling finishes; nobody fixed the material. That is the gap SilverStone was built to close, and it is the story a Sales conversation is anchored on.',
+      },
+
+      /* ── The Material Science story (Notion Brand Story — canonical) ── */
+      { kind: 'heading', text: 'The Material Science story (Brand Story — canonical founder narrative)' },
+      {
+        kind: 'paragraph',
+        text: 'Nature never makes mistakes: every material carries unique properties suited to specific applications — copper carries electricity, steel carries structural strength, glass carries transparency, and stone withstands heat, water, pressure and time. The principle: the right material in the right place creates the best performance. A car cannot be made from wood; a bridge cannot be built from paper.',
+      },
+      {
+        kind: 'paragraph',
+        text: 'The kitchen is not furniture — it is a food preparation laboratory, exposed daily to fire, steam, water, oil, heat, acids, heavy usage and food-contamination risks, operating 10–14 hours a day. Yet the material most commonly used worldwide for kitchen cabinets is compressed wood — particle boards, MDF, HDF, HDHMR, plywood — made from wood fibres, waste, glue, chemicals and resins. Wood was nature\'s fuel: the material traditionally used to create fire now surrounds the fire.',
+      },
+      {
+        kind: 'paragraph',
+        text: 'History already knew the answer: less than a century ago kitchens were built primarily from stone — naturally water-resistant, fire-resistant, durable, hygienic, long-lasting (temples and the Taj Mahal are stone). The challenge was never stone\'s performance; it was manufacturability and cost — stone has always been 5–7 times more expensive than compressed wood and hard to engineer, fabricate and commercialise at scale. Industrialisation chose easier and cheaper materials, not better ones.',
+      },
+      {
+        kind: 'table',
+        columns: ['Year', 'Milestone (per the Brand Story)'],
+        rows: [
+          ['2007', 'Founder Mr Vinod Jain asks: why can\'t we engineer stone to build an all-stone, zero-wood kitchen? An 11-year research journey begins.'],
+          ['2018', 'World\'s first stone-built kitchen installed in a New Delhi home. [CONFIRM YEAR — the AI Bot doc says late 2016]'],
+          ['2021', 'SilverStone: silver + copper infused via nano technology — world\'s first Wellness Kitchen; global patents acquired.'],
+          ['2023', 'World\'s first Wellness Wardrobe — clothes touch skin daily; conventional wardrobes use particle board/MDF with chemical adhesives.'],
+          ['2026', 'Global recognition at KBIS + Red Dot asserted by the Brand Story. [Award name and Red Dot carry flags — see Module 3]'],
+        ],
+      },
+      {
+        kind: 'paragraph',
+        text: 'The category this created: Wellness Interiors Systems — Wellness Kitchens, Wellness Wardrobes, Wellness Bath Vanities, and Wellness Surfaces for walls and floors. The closing frame: the future of homes will be defined by material intelligence, not decoration — as copper transformed electrical systems and silicon transformed computing, SilverStone transforms the spaces where we cook, live and thrive. Nature already chose the right materials; Magppie rediscovered them and engineered them for modern life.',
       },
     ],
   },
@@ -213,8 +243,8 @@ export const SALES_MODULES: SalesModule[] = [
       },
       {
         kind: 'callout',
-        label: '[CONFIRM YEAR] + [VERIFY: Red Dot award]',
-        text: 'Company-age claims here inherit the [CONFIRM YEAR] conflict (2016 vs 2018 first SilverStone kitchen). The Red Dot award appears in the original Material Science doc and Brand Story but is absent from the AI Bot doc — do not state it as confirmed fact; the quiz does not test it.',
+        label: '[CONFIRM YEAR] + [VERIFY: Red Dot] + [CONFIRM AWARD NAME]',
+        text: 'Company-age claims here inherit the [CONFIRM YEAR] conflict (2016 vs 2018 first stone kitchen). The full Notion Brand Story (received 2026-07-15) asserts a Red Dot international design award in 2026 — still absent from the AI Bot doc, so do not state it as confirmed fact. The Brand Story also names the KBIS award "World\'s Most Innovative Kitchen Brand", while the AI Bot doc\'s correction says "Most Unexpected Innovation" supersedes exactly that phrasing — until leadership reconciles the two, use "Most Unexpected Innovation" (the newer correction) with customers. The quiz tests neither.',
       },
     ],
   },

@@ -60,6 +60,30 @@ export const SALES_FAQ_ITEMS: FaqItem[] = [
     ],
   },
 
+  {
+    id: 'sfaq-28',
+    qNum: 28,
+    module: 'sa-m1',
+    question: 'How was the stone kitchen invented — the Brand Story timeline?',
+    type: 'flow',
+    flag: { label: '[CONFIRM YEAR]', tone: 'risk' },
+    answer:
+      'Per the canonical Brand Story: in 2007 founder Mr Vinod Jain asked why stone couldn\'t be engineered into an all-stone, zero-wood kitchen — an 11-year research journey. In 2018 the world\'s first stone-built kitchen was installed in a New Delhi home (the AI Bot doc says late 2016 — [CONFIRM YEAR] stays unresolved). In 2021, silver and copper were infused via nano technology to create SilverStone — the first Wellness Kitchen, with global patents. In 2023 came the world\'s first Wellness Wardrobe, and in 2026 global recognition at KBIS. The category created: Wellness Interiors Systems — kitchens, wardrobes, bath vanities, and wellness surfaces.',
+    nodes: [
+      { id: 'n1', title: '2007 — the question', kind: 'step', detail: 'Founder Mr Vinod Jain: why can\'t stone be engineered into an all-stone, zero-wood kitchen? 11-year research journey begins.' },
+      { id: 'n2', title: '2018 — first stone kitchen', kind: 'step', detail: 'World\'s first stone-built kitchen, installed in a New Delhi home. [CONFIRM YEAR: AI Bot doc says late 2016]' },
+      { id: 'n3', title: '2021 — SilverStone & Wellness Kitchen', kind: 'step', detail: 'Silver + copper infused via nano technology; global patents acquired.' },
+      { id: 'n4', title: '2023 — Wellness Wardrobe', kind: 'step', detail: 'World\'s first wardrobe built entirely in stone.' },
+      { id: 'n5', title: '2026 — global recognition', kind: 'outcome', tone: 'positive', detail: 'KBIS recognition (award name carries a flag — see Module 3) and the Wellness Interiors Systems category.' },
+    ],
+    edges: [
+      { from: 'n1', to: 'n2' },
+      { from: 'n2', to: 'n3' },
+      { from: 'n3', to: 'n4' },
+      { from: 'n4', to: 'n5' },
+    ],
+  },
+
   /* ── Module 2 · SilverStone — The Material Science ───────────────────── */
   {
     id: 'sfaq-4',
