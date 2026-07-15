@@ -42,6 +42,9 @@ import ReadinessCheck from '@/components/ReadinessCheck'
 import { readinessBankFor } from '@/data/readiness-banks'
 import { useBdProgress } from '@/lib/bd-progress-store'
 import { useBdTitles, bdEffectiveTitle } from '@/lib/bd-title-store'
+import { SALES_MODULES } from '@/data/sales-academy'
+import { useSalesProgress } from '@/lib/sales-progress-store'
+import SalesVideoPlayer from '@/components/SalesVideoPlayer'
 
 /* ------------------------------------------------------------------ */
 /*  Sub-components                                                      */
@@ -584,6 +587,172 @@ function BdCurriculumTab({ academyColor }: { academyColor: string }) {
                 <div className="mt-6 flex items-center gap-3">
                   <Link
                     href={`/academy/business-development/modules?module=${openModule.id}`}
+                    onClick={() => markViewed(openModule.id)}
+                    className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-secondary hover:text-ink-primary transition-colors"
+                  >
+                    Take the quiz <ArrowRight size={14} />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+/* ------------------------------------------------------------------ */
+/*  Tab: Curriculum (Sales — the real 11 vetted modules)                */
+/* ------------------------------------------------------------------ */
+
+// Mirrors BdCurriculumTab: real modules with the video and full reading
+// content inline (SALES_MODULES uses the same ContentBlock shape as BD, so
+// the BdBlock renderer applies as-is). Replaces the seed course cards.
+function SalesCurriculumTab({ academyColor }: { academyColor: string }) {
+  const results = useSalesProgress((s) => s.results)
+  const markViewed = useSalesProgress((s) => s.markViewed)
+  const [q, setQ] = useState('')
+  const [expandedId, setExpandedId] = useState<string | null>(null)
+
+  const modules = useMemo(() => {
+    if (!q.trim()) return SALES_MODULES
+    const needle = q.toLowerCase()
+    return SALES_MODULES.filter(
+      (m) =>
+        m.title.toLowerCase().includes(needle) ||
+        m.topics.some((t) => t.toLowerCase().includes(needle)),
+    )
+  }, [q])
+
+  const openModule = SALES_MODULES.find((m) => m.id === expandedId) ?? null
+
+  // Lock page scroll behind the overlay and let Escape close it.
+  useEffect(() => {
+    if (!openModule) return
+    const prevOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setExpandedId(null)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => {
+      document.body.style.overflow = prevOverflow
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [openModule])
+
+  return (
+    <div className="space-y-5">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <h3 className="font-serif text-2xl font-normal text-ink-primary">Curriculum</h3>
+          <span className="text-sm text-ink-tertiary">{SALES_MODULES.length} modules</span>
+        </div>
+        <Link
+          href="/academy/sales/modules"
+          className="text-sm font-medium text-ink-secondary hover:text-ink-primary transition-colors"
+        >
+          Open full academy →
+        </Link>
+      </div>
+
+      <div className="relative w-[280px]">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-tertiary" size={15} />
+        <input
+          type="text"
+          placeholder="Search modules..."
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          className="w-full bg-cream border border-[rgba(0,59,70,0.12)] rounded-lg pl-9 pr-3 py-2 text-sm text-ink-primary placeholder:text-ink-tertiary focus:outline-none focus:border-ink-primary transition-all"
+        />
+      </div>
+
+      <div className="space-y-2">
+        {modules.map((m) => {
+          const r = results[m.id]
+          const status: CourseStatus = r?.passed
+            ? 'Completed'
+            : r?.viewed
+              ? 'In Progress'
+              : 'Not Started'
+          return (
+            <button
+              key={m.id}
+              type="button"
+              onClick={() => setExpandedId(m.id)}
+              aria-haspopup="dialog"
+              className="group w-full flex items-center gap-4 bg-surface-warm rounded-xl border border-[rgba(0,59,70,0.10)] px-5 py-4 hover:bg-[#e2d6bf] hover:shadow-card transition-all text-left"
+            >
+              <span className="text-xs font-medium text-ink-tertiary w-6 flex-shrink-0">
+                {String(m.number).padStart(2, '0')}
+              </span>
+              <div className="flex-1 min-w-0">
+                <h4 className="text-[15px] font-semibold text-ink-primary truncate">{m.title}</h4>
+              </div>
+              {m.sourcePending && (
+                <span
+                  className="hidden sm:inline-block text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-md flex-shrink-0 text-ink-secondary"
+                  style={{ backgroundColor: `${academyColor}22` }}
+                >
+                  Source pending
+                </span>
+              )}
+              <StatusDot status={status} />
+              <span
+                aria-hidden
+                className="flex-shrink-0 w-8 h-8 rounded-full border border-[rgba(0,59,70,0.15)] flex items-center justify-center text-ink-secondary group-hover:text-ink-primary transition-colors"
+              >
+                <ChevronDown size={16} />
+              </span>
+            </button>
+          )
+        })}
+        {modules.length === 0 && (
+          <p className="text-sm text-ink-tertiary py-8 text-center">No modules match “{q}”.</p>
+        )}
+      </div>
+
+      {openModule && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={openModule.title}
+          className="fixed inset-0 z-[100] flex items-start justify-center bg-black/50 p-2 sm:p-4"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setExpandedId(null)
+          }}
+        >
+          <div className="w-full max-w-[1200px] max-h-[calc(100dvh-1rem)] sm:max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-2xl bg-card shadow-2xl">
+            <div className="sticky top-0 z-10 flex items-center gap-3 bg-card/95 backdrop-blur-sm border-b border-[rgba(0,59,70,0.1)] px-5 py-4">
+              <span className="text-xs font-medium text-ink-tertiary w-6 flex-shrink-0">
+                {String(openModule.number).padStart(2, '0')}
+              </span>
+              <h3 className="flex-1 min-w-0 truncate text-lg font-semibold text-ink-primary">
+                {openModule.title}
+              </h3>
+              <button
+                type="button"
+                onClick={() => setExpandedId(null)}
+                aria-label="Close"
+                className="flex-shrink-0 w-9 h-9 rounded-full border border-[rgba(0,59,70,0.15)] flex items-center justify-center text-ink-secondary hover:text-ink-primary hover:bg-black/[0.03] transition-colors"
+              >
+                <ChevronUp size={18} />
+              </button>
+            </div>
+
+            <div className="px-5 py-6">
+              <div className="max-w-[900px] mx-auto">
+                <p className="text-sm text-ink-secondary mb-4">{openModule.summary}</p>
+                <SalesVideoPlayer module={openModule} />
+                <div className="mt-5 space-y-3.5">
+                  {openModule.blocks.map((b, i) => (
+                    <BdBlock key={i} block={b} />
+                  ))}
+                </div>
+                <div className="mt-6 flex items-center gap-3">
+                  <Link
+                    href={`/academy/sales/modules?module=${openModule.id}`}
                     onClick={() => markViewed(openModule.id)}
                     className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-secondary hover:text-ink-primary transition-colors"
                   >
@@ -1280,6 +1449,9 @@ export default function AcademyDetail() {
           {activeTab === 'curriculum' &&
             (academy.id === 'business-development' ? (
               <BdCurriculumTab academyColor={academy.color} />
+            ) : academy.id === 'sales' ? (
+              // The real 11 vetted Sales modules — video + reading inline.
+              <SalesCurriculumTab academyColor={academy.color} />
             ) : (
               <CurriculumTab
                 courses={academy.courses}
