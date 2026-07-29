@@ -26,6 +26,7 @@ import {
   Map,
   ShieldCheck,
   Landmark,
+  Activity,
   Menu,
   X,
 } from 'lucide-react'
@@ -50,6 +51,7 @@ const navItems: { icon: typeof Home; label: string; path: string; status: NavSta
   { icon: Map, label: 'Process Learning Map', path: '/process-map', status: 'in-progress' },
   { icon: ShieldCheck, label: 'Approved Masters', path: '/masters', status: 'in-progress' },
   { icon: Landmark, label: 'Governance', path: '/governance', status: 'in-progress' },
+  { icon: Activity, label: 'Learning Ops', path: '/learning-ops', status: 'in-progress' },
   { icon: Library, label: 'Knowledge Center', path: '/knowledge', status: 'todo' },
   { icon: Award, label: 'Certifications', path: '/certifications', status: 'todo' },
   { icon: Route, label: 'Career Path', path: '/career', status: 'todo' },
