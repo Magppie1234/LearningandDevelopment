@@ -27,6 +27,8 @@ import {
   ShieldCheck,
   Landmark,
   Activity,
+  BadgeCheck,
+  Users,
   Menu,
   X,
 } from 'lucide-react'
@@ -46,7 +48,9 @@ const navItems: { icon: typeof Home; label: string; path: string; status: NavSta
   { icon: Network, label: 'Organization Flow', path: '/organization-flow', status: 'in-progress' },
   { icon: Footprints, label: 'Onboarding', path: '/onboarding', status: 'todo' },
   { icon: BookOpen, label: 'My Learning', path: '/my-learning', status: 'todo' },
+  { icon: BadgeCheck, label: 'Skills Passport', path: '/skills-passport', status: 'in-progress' },
   { icon: GraduationCap, label: 'Academies', path: '/academies', status: 'in-progress' },
+  { icon: Users, label: 'Manager Hub', path: '/manager', status: 'in-progress' },
   { icon: Workflow, label: 'Process Flow', path: '/journey', status: 'done' },
   { icon: Map, label: 'Process Learning Map', path: '/process-map', status: 'in-progress' },
   { icon: ShieldCheck, label: 'Approved Masters', path: '/masters', status: 'in-progress' },
