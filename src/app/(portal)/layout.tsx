@@ -26,6 +26,7 @@ const pageTitles: Record<string, { title: string; breadcrumb: string }> = {
   '/manager': { title: 'Manager Hub', breadcrumb: 'Home / Manager Hub' },
   '/department': { title: 'Department Dashboard', breadcrumb: 'Home / Department Dashboard' },
   '/executive': { title: 'Executive Dashboard', breadcrumb: 'Home / Executive Dashboard' },
+  '/control-centre': { title: 'HR / L&D Control Centre', breadcrumb: 'Home / HR Control Centre' },
   '/process-map': { title: 'Process Learning Map', breadcrumb: 'Home / Process Learning Map' },
   '/masters': { title: 'Approved Masters', breadcrumb: 'Home / Approved Masters' },
   '/governance': { title: 'L&D Governance', breadcrumb: 'Home / Governance' },
