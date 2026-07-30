@@ -1,7 +1,8 @@
 'use client'
 
+import { useState } from 'react'
 import { cn } from '@/lib/utils'
-import { AlertTriangle, CheckCircle2, Circle, Clock, HelpCircle } from 'lucide-react'
+import { AlertTriangle, CheckCircle2, Circle, Clock, HelpCircle, Info } from 'lucide-react'
 import {
   CHANNEL_LABEL,
   READINESS_LABEL,
@@ -202,6 +203,113 @@ export function PracticalChip({ row }: { row: ValidatedCompetency }) {
     >
       {s.label}
     </span>
+  )
+}
+
+export interface KpiMeta {
+  formula: string
+  source: string
+  owner: string
+  asOf: string
+}
+
+/**
+ * KPI tile with its definition one tap away — §13 requires every dashboard
+ * number to disclose formula, source, owner and refresh time in place.
+ */
+export function KpiTile({
+  label,
+  value,
+  sub,
+  meta,
+  tone = 'neutral',
+  icon: Icon,
+}: {
+  label: string
+  value: string
+  sub: string
+  meta: KpiMeta
+  tone?: 'neutral' | 'warn' | 'bad' | 'good'
+  icon: typeof Circle
+}) {
+  const [open, setOpen] = useState(false)
+  const toneCls =
+    tone === 'bad'
+      ? 'text-surface-rose'
+      : tone === 'warn'
+        ? 'text-accent-copper'
+        : tone === 'good'
+          ? 'text-surface-sage'
+          : 'text-ink-primary'
+  return (
+    <div className={cn(CARD, 'p-4')}>
+      <p className="flex items-start gap-2 text-xs uppercase tracking-wide text-ink-tertiary min-h-[2.25rem]">
+        <Icon size={14} className="text-accent-copper flex-shrink-0 mt-0.5" /> {label}
+      </p>
+      <p className={cn('text-2xl font-semibold leading-none', toneCls)}>{value}</p>
+      <p className="text-[11px] text-ink-tertiary mt-1">{sub}</p>
+      <button
+        onClick={() => setOpen(!open)}
+        className="mt-2 text-[11px] text-ink-secondary hover:text-ink-primary inline-flex items-center gap-1"
+      >
+        <Info size={11} /> {open ? 'Hide definition' : 'How is this calculated?'}
+      </button>
+      {open && (
+        <div className="mt-1.5 text-[11px] text-ink-tertiary space-y-0.5 border-t border-[rgba(0,59,70,0.06)] pt-1.5">
+          <p>
+            <strong className="text-ink-secondary">Formula:</strong> {meta.formula}
+          </p>
+          <p>
+            <strong className="text-ink-secondary">Source:</strong> {meta.source}
+          </p>
+          <p>
+            <strong className="text-ink-secondary">Owner:</strong> {meta.owner}
+          </p>
+          <p>
+            <strong className="text-ink-secondary">As of:</strong> {meta.asOf}
+          </p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+/**
+ * Readiness mix as one stacked bar — the same five states and colours
+ * everywhere a cohort is summarised.
+ */
+export function ReadinessMixBar({
+  mix,
+  className,
+}: {
+  mix: Record<ReadinessStatus, number> & { total: number }
+  className?: string
+}) {
+  const order: ReadinessStatus[] = [
+    'role_ready',
+    'developing',
+    'not_role_ready',
+    'not_assessed',
+    'no_framework',
+  ]
+  if (mix.total === 0) {
+    return <div className={cn('h-2 rounded-full bg-[rgba(0,59,70,0.06)]', className)} />
+  }
+  return (
+    <div className={cn('flex h-2 rounded-full overflow-hidden bg-[rgba(0,59,70,0.06)]', className)}>
+      {order.map((s) => {
+        const n = mix[s]
+        if (n === 0) return null
+        return (
+          <span
+            key={s}
+            className={cn('h-full', STATUS_STYLE[s].dot)}
+            style={{ width: `${(n / mix.total) * 100}%` }}
+            title={`${READINESS_LABEL[s]}: ${n} of ${mix.total}`}
+          />
+        )
+      })}
+    </div>
   )
 }
 

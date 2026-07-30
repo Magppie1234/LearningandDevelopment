@@ -29,6 +29,8 @@ import {
   Activity,
   BadgeCheck,
   Users,
+  Building2,
+  LineChart,
   Menu,
   X,
 } from 'lucide-react'
@@ -51,6 +53,8 @@ const navItems: { icon: typeof Home; label: string; path: string; status: NavSta
   { icon: BadgeCheck, label: 'Skills Passport', path: '/skills-passport', status: 'in-progress' },
   { icon: GraduationCap, label: 'Academies', path: '/academies', status: 'in-progress' },
   { icon: Users, label: 'Manager Hub', path: '/manager', status: 'in-progress' },
+  { icon: Building2, label: 'Department Dashboard', path: '/department', status: 'in-progress' },
+  { icon: LineChart, label: 'Executive Dashboard', path: '/executive', status: 'in-progress' },
   { icon: Workflow, label: 'Process Flow', path: '/journey', status: 'done' },
   { icon: Map, label: 'Process Learning Map', path: '/process-map', status: 'in-progress' },
   { icon: ShieldCheck, label: 'Approved Masters', path: '/masters', status: 'in-progress' },

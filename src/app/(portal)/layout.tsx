@@ -24,6 +24,8 @@ const pageTitles: Record<string, { title: string; breadcrumb: string }> = {
   },
   '/skills-passport': { title: 'Skills Passport', breadcrumb: 'Home / Skills Passport' },
   '/manager': { title: 'Manager Hub', breadcrumb: 'Home / Manager Hub' },
+  '/department': { title: 'Department Dashboard', breadcrumb: 'Home / Department Dashboard' },
+  '/executive': { title: 'Executive Dashboard', breadcrumb: 'Home / Executive Dashboard' },
   '/process-map': { title: 'Process Learning Map', breadcrumb: 'Home / Process Learning Map' },
   '/masters': { title: 'Approved Masters', breadcrumb: 'Home / Approved Masters' },
   '/governance': { title: 'L&D Governance', breadcrumb: 'Home / Governance' },

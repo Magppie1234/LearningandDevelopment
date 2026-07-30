@@ -753,9 +753,9 @@ export default function ManagerHub() {
               {risk.slice(0, 10).map((r) => (
                 <div
                   key={r.competencyId}
-                  className="flex items-center gap-3 border-b border-[rgba(0,59,70,0.06)] last:border-0 pb-2 last:pb-0"
+                  className="flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-[rgba(0,59,70,0.06)] last:border-0 pb-2 last:pb-0"
                 >
-                  <span className="flex-1 min-w-0">
+                  <span className="flex-[1_1_170px] min-w-0">
                     <span className="block text-sm text-ink-primary truncate">{r.name}</span>
                     <span className="flex items-center gap-1.5 mt-0.5">
                       <CriticalityChip criticality={r.criticality} />
