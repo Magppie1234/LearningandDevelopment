@@ -1,26 +1,19 @@
-import PipelineBoard from '@/components/PipelineBoard'
-import KitchenJourney from '@/components/KitchenJourney'
+import ProcessFlowchart from '@/components/ProcessFlowchart'
 
 /**
  * Process Flow.
  *
- * The BD → Sales journey board leads: pipeline stages left to right with the
- * touchpoints recorded at each. The existing step-by-step flows stay beneath
- * as the detail layer — the board is the summary, not a replacement for the
- * 130-odd documented steps.
+ * One flowchart per pipeline: the whole shape of a process on a single page,
+ * with each box carrying its own instruction and the longer detail behind a
+ * click. This replaced an earlier vertical step list and, before that, a
+ * left-to-right stage board — both are gone rather than stacked, because
+ * three views of the same process on one page is the opposite of the calm
+ * this page is meant to have.
  */
 export default function Page() {
   return (
-    <div className="max-w-[1100px] mx-auto space-y-8">
-      <PipelineBoard />
-      <div>
-        <h2 className="mb-3 font-serif text-xl text-ink-primary">Step by step</h2>
-        <p className="mb-4 text-[13.5px] text-ink-secondary max-w-[62ch]">
-          Every documented step behind those stages, including the CRM dispositions a lead can be
-          parked under and the post-sale production flow.
-        </p>
-        <KitchenJourney />
-      </div>
+    <div className="max-w-[1180px] mx-auto">
+      <ProcessFlowchart />
     </div>
   )
 }

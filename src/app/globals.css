@@ -1278,3 +1278,440 @@
     animation: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PROCESS FLOWCHART (.pf-*)
+
+   Replaces the old `.kjt-*` step list. Minimal and calm by intent: white
+   boxes on a near-white canvas, ONE accent (gold) marking where you are,
+   pale green for what is done, grey for what is not reached. Nothing else
+   competes — no coloured pipelines, no heavy icons, no shadows except on
+   the popover that genuinely sits above the page.
+   ═══════════════════════════════════════════════════════════════════════ */
+.pf {
+  --pf-ground: #f6f6f4;
+  --pf-panel: #ffffff;
+  --pf-text: #232a2f;
+  --pf-dim: rgba(35, 42, 47, 0.72);
+  --pf-line: rgba(50, 62, 72, 0.14);
+  --pf-gold: #9c7a1b;
+  --pf-gold-soft: #f5efdf;
+  --pf-green: #4e8c63;
+  --pf-green-soft: #e6f1e9;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(50, 62, 72, 0.1);
+  border-radius: 24px;
+  background: var(--pf-ground);
+  box-shadow: 0 24px 60px rgba(30, 42, 54, 0.09);
+  color: var(--pf-text);
+  font-family: var(--sans);
+}
+.pf-inner {
+  position: relative;
+  padding: clamp(22px, 3.5vw, 40px);
+}
+
+/* Kitchen scene — visible, but washed to near-ground before any box sits on it. */
+.pf-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.pf-bg img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(6px) saturate(0.8);
+  opacity: 0.5;
+  animation: pf-drift 30s ease-in-out infinite alternate;
+}
+@keyframes pf-drift {
+  from { transform: scale(1.06) translateY(0); }
+  to { transform: scale(1.12) translateY(-1.5%); }
+}
+.pf-bg span {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(246, 246, 244, 0.74) 0%,
+    rgba(246, 246, 244, 0.92) 38%,
+    rgba(246, 246, 244, 0.97) 100%
+  );
+}
+
+/* ── Tabs ── */
+.pf-tabs {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  background: rgba(50, 62, 72, 0.05);
+  border-radius: 999px;
+}
+.pf-tab {
+  border: none;
+  background: transparent;
+  border-radius: 999px;
+  padding: 7px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--pf-dim);
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+}
+.pf-tab:hover { color: var(--pf-text); }
+.pf-tab.active {
+  background: var(--pf-panel);
+  color: var(--pf-text);
+  box-shadow: 0 2px 8px rgba(30, 42, 54, 0.1);
+}
+.pf-tab:focus-visible,
+.pf-subtab:focus-visible,
+.pf-box:focus-visible,
+.pf-pop-close:focus-visible {
+  outline: 2px solid var(--pf-gold);
+  outline-offset: 2px;
+}
+
+.pf-subtabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 18px;
+  border-bottom: 1px solid var(--pf-line);
+}
+.pf-subtab {
+  border: none;
+  background: transparent;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 9px 12px 10px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--pf-dim);
+  cursor: pointer;
+  transition: color 0.18s, border-color 0.18s;
+}
+.pf-subtab:hover { color: var(--pf-text); }
+.pf-subtab.active {
+  color: var(--pf-text);
+  border-bottom-color: var(--pf-gold);
+}
+
+/* ── Explainer + progress ── */
+.pf-explainer {
+  margin: 22px 0 0;
+  max-width: 72ch;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--pf-text);
+}
+.pf-progress { margin-top: 20px; max-width: 460px; }
+.pf-progress-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.pf-progress-text { font-size: 12.5px; font-weight: 600; color: var(--pf-text); }
+.pf-progress-pct { font-size: 12.5px; font-weight: 700; color: #7a5f13; font-variant-numeric: tabular-nums; }
+.pf-bar {
+  margin-top: 7px;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(50, 62, 72, 0.1);
+  overflow: hidden;
+}
+.pf-bar span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--pf-gold);
+  transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.pf-note {
+  margin: 9px 0 0;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--pf-dim);
+  max-width: 64ch;
+}
+
+/* ── Canvas: boxes flow left→right and wrap ── */
+/* A fixed column count per breakpoint rather than flex-wrap: with wrapping,
+   the connector on the last box of a row points right into empty space. A
+   grid means the row ends are known, so those arrows can be hidden. */
+.pf-canvas {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 38px;
+  row-gap: 16px;
+  margin-top: 28px;
+}
+@media (max-width: 1180px) { .pf-canvas { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 860px) { .pf-canvas { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 620px) { .pf-canvas { grid-template-columns: 1fr; column-gap: 0; } }
+
+.pf-unit {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+/* Arrow lives in the column gap, so every box is the same width. */
+.pf-arrow {
+  position: absolute;
+  top: 52px;
+  right: -30px;
+  width: 22px;
+}
+.pf-canvas > .pf-unit:nth-child(4n) .pf-arrow,
+.pf-canvas > .pf-unit:last-child .pf-arrow { display: none; }
+@media (max-width: 1180px) {
+  .pf-canvas > .pf-unit:nth-child(4n) .pf-arrow { display: grid; }
+  .pf-canvas > .pf-unit:nth-child(3n) .pf-arrow { display: none; }
+}
+@media (max-width: 860px) {
+  .pf-canvas > .pf-unit:nth-child(3n) .pf-arrow { display: grid; }
+  .pf-canvas > .pf-unit:nth-child(2n) .pf-arrow { display: none; }
+}
+@media (max-width: 620px) {
+  /* :nth-child(n) matches everything but carries the same specificity as the
+     3n/4n rules above — without it those out-rank this and a stray arrow
+     survives into the single-column layout. */
+  .pf-canvas > .pf-unit:nth-child(n) .pf-arrow { display: none; }
+}
+
+.pf-box {
+  width: 100%;
+  min-height: 116px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  text-align: left;
+  padding: 13px 15px 14px;
+  border-radius: 14px;
+  background: var(--pf-panel);
+  border: 1px solid var(--pf-line);
+  cursor: pointer;
+  transition: border-color 0.18s, box-shadow 0.18s, transform 0.18s;
+}
+.pf-box:hover {
+  border-color: rgba(50, 62, 72, 0.26);
+  box-shadow: 0 6px 18px rgba(30, 42, 54, 0.08);
+  transform: translateY(-1px);
+}
+.pf-box.done { background: var(--pf-green-soft); border-color: rgba(78, 140, 99, 0.28); }
+.pf-box.current {
+  background: var(--pf-gold-soft);
+  border-color: rgba(156, 122, 27, 0.45);
+  /* Barely-there pulse so the eye lands on "where am I" without a glow. */
+  animation: pf-pulse 3.4s ease-in-out infinite;
+}
+@keyframes pf-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.9; }
+}
+.pf-box.selected {
+  border-color: var(--pf-gold);
+  box-shadow: 0 0 0 2px rgba(156, 122, 27, 0.18);
+}
+@media (prefers-reduced-motion: reduce) {
+  .pf-box.current { animation: none; }
+  .pf-bg img { animation: none; transform: scale(1.08); }
+}
+
+.pf-box-head { display: flex; align-items: center; gap: 8px; }
+.pf-mark {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+.pf-mark svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.pf-mark.done { background: #ffffff; border: 1.5px solid var(--pf-green); color: var(--pf-green); }
+.pf-mark.current { background: var(--pf-gold); color: #ffffff; }
+.pf-mark.todo { background: transparent; border: 1.5px solid rgba(50, 62, 72, 0.3); color: var(--pf-dim); }
+
+/* Checkmark draws itself in rather than appearing complete. */
+.pf-check path {
+  stroke-dasharray: 22;
+  stroke-dashoffset: 22;
+  animation: pf-draw 0.45s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+@keyframes pf-draw { to { stroke-dashoffset: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .pf-check path { animation: none; stroke-dashoffset: 0; }
+}
+
+.pf-step-label {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pf-dim);
+}
+.pf-box-title {
+  margin-top: 4px;
+  font-size: 13.5px;
+  font-weight: 650;
+  line-height: 1.3;
+  color: var(--pf-text);
+}
+.pf-box-action {
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--pf-dim);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.pf-box-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: auto; padding-top: 7px; }
+.pf-tag {
+  font-size: 9.5px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(40, 52, 62, 0.055);
+  color: var(--pf-dim);
+  white-space: nowrap;
+  max-width: 92px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pf-tag.more { background: transparent; padding-left: 2px; }
+
+/* ── Connectors ── */
+.pf-arrow {
+  display: grid;
+  place-items: center;
+  color: rgba(50, 62, 72, 0.34);
+}
+.pf-arrow svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Decision: a real diamond with two labelled exits. */
+.pf-decision {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 2px 0 6px;
+}
+.pf-diamond {
+  width: 15px;
+  height: 15px;
+  transform: rotate(45deg);
+  border: 1.5px solid var(--pf-gold);
+  background: var(--pf-panel);
+  flex-shrink: 0;
+}
+.pf-branches { display: flex; flex-direction: column; gap: 4px; }
+.pf-branch {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--pf-dim);
+  white-space: nowrap;
+}
+.pf-branch svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.pf-branch.exit { color: rgba(35, 42, 47, 0.5); }
+.pf-branch.exit svg { opacity: 0.6; }
+
+/* ── Popover ── */
+.pf-pop {
+  position: fixed;
+  z-index: 60;
+  width: min(340px, calc(100vw - 24px));
+  background: var(--pf-panel);
+  border: 1px solid var(--pf-line);
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(30, 42, 54, 0.18);
+  padding: 15px 17px 17px;
+  font-family: var(--sans);
+  /* Opacity is set explicitly rather than left to the animation's end state:
+     relying on the keyframe meant a popover whose animation never ran stayed
+     invisible. The entry animation now only moves it. */
+  opacity: 1;
+  animation: pf-pop-in 0.16s ease-out;
+}
+@keyframes pf-pop-in {
+  from { transform: translateY(-4px); }
+  to { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pf-pop { animation: none; }
+}
+.pf-pop-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.pf-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 3.5px 10px;
+  border-radius: 999px;
+}
+.pf-badge.done { background: var(--pf-green-soft); color: #2c6b45; }
+.pf-badge.current { background: var(--pf-gold-soft); color: #6b5410; }
+.pf-badge.todo { background: rgba(50, 62, 72, 0.07); color: var(--pf-dim); }
+.pf-pop-close {
+  border: none;
+  background: transparent;
+  color: var(--pf-dim);
+  cursor: pointer;
+  padding: 3px;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+}
+.pf-pop-close:hover { background: rgba(50, 62, 72, 0.07); color: var(--pf-text); }
+.pf-pop-step {
+  margin: 11px 0 0;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pf-dim);
+}
+.pf-pop-title { margin: 3px 0 0; font-size: 16px; font-weight: 650; line-height: 1.3; color: var(--pf-text); }
+.pf-pop-action { margin: 9px 0 0; font-size: 13px; font-weight: 600; line-height: 1.5; color: var(--pf-text); }
+.pf-pop-desc { margin: 7px 0 0; font-size: 12.5px; line-height: 1.55; color: var(--pf-dim); }
+.pf-pop-sub {
+  margin: 14px 0 6px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--pf-dim);
+}
+.pf-checklist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+.pf-checklist li {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--pf-text);
+}
+.pf-checklist li svg { color: var(--pf-green); flex-shrink: 0; margin-top: 2px; }
+.pf-checklist.forks li { color: var(--pf-dim); padding-left: 19px; position: relative; }
+.pf-checklist.forks li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--pf-gold);
+}
+
+@media (max-width: 620px) {
+  .pf-box { min-height: 0; }
+}
