@@ -297,7 +297,9 @@
   --kjt-line: rgba(50, 62, 72, 0.13);
   --kjt-ring: rgba(50, 62, 72, 0.16);
   --kjt-chip: rgba(40, 52, 62, 0.05);
-  --kjt-gold: #9c7a1b;
+  /* Same gold as Our Story (#7E6318) so the two pages read as related.
+     Darkened from var(--kjt-gold), which fell to 4.0:1 under white label text. */
+  --kjt-gold: #7E6318;
   --seg: #b8935a;
   position: relative;
   color: var(--kjt-text);
@@ -599,7 +601,7 @@
   transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
 .kjt-node.current {
-  box-shadow: 0 4px 12px rgba(156, 122, 27, 0.35);
+  box-shadow: 0 4px 12px rgba(126, 99, 24, 0.35);
 }
 .kjt-node svg {
   width: 16px;
@@ -619,9 +621,41 @@
   color: #1f5b38;
 }
 .kjt-node.current {
-  background: #9c7a1b;
-  border: 2px solid #9c7a1b;
+  background: var(--kjt-gold);
+  border: 2px solid var(--kjt-gold);
   color: #ffffff;
+  /* Barely-there opacity drift so the eye finds "where am I" without
+     anything glowing or changing colour. */
+  animation: kjt-pulse 3.2s ease-in-out infinite;
+}
+@keyframes kjt-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.82;
+  }
+}
+/* The completed tick draws itself in rather than snapping to green. */
+.kjt-node.done svg path {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  animation: kjt-draw 0.42s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes kjt-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kjt-node.current {
+    animation: none;
+  }
+  .kjt-node.done svg path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
 }
 .kjt-node.todo {
   background: var(--kjt-panel);
@@ -802,7 +836,7 @@
   /* The expanded step is the reference's highlighted status card: a white
      card lifted off the page by a soft shadow, ringed in gold. */
   background: var(--kjt-panel);
-  box-shadow: 0 10px 30px rgba(30, 42, 54, 0.1), inset 0 0 0 1.5px rgba(156, 122, 27, 0.35);
+  box-shadow: 0 10px 30px rgba(30, 42, 54, 0.1), inset 0 0 0 1.5px rgba(126, 99, 24, 0.35);
   padding-top: 16px;
   padding-bottom: 16px;
 }
@@ -898,6 +932,211 @@
   background: rgba(50, 62, 72, 0.08);
   color: var(--kjt-dim);
 }
+/* ── Explainer, progress tracker, step-map scrubber ────────────────── */
+.kjt-explainer {
+  margin: 0 0 16px;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--kjt-text);
+  max-width: 66ch;
+}
+.kjt-tracker {
+  margin-bottom: 16px;
+}
+.kjt-tracker-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 7px;
+}
+.kjt-tracker-count {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--kjt-text);
+}
+.kjt-tracker-pct {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--kjt-dim);
+  font-variant-numeric: tabular-nums;
+}
+.kjt-progress {
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(50, 62, 72, 0.09);
+  overflow: hidden;
+}
+.kjt-progress > span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: #b9d6c2;
+  transition: width 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.kjt-scrub {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+  padding: 4px 0 2px;
+  touch-action: none;
+  cursor: pointer;
+}
+.kjt-scrub-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: 9.5px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.15s, background 0.2s, border-color 0.2s;
+}
+.kjt-scrub-dot:hover {
+  transform: scale(1.18);
+}
+.kjt-scrub-dot.done {
+  background: #dcefe1;
+  border: 1.5px solid #8cbb98;
+  color: #1f5b38;
+}
+.kjt-scrub-dot.current {
+  background: var(--kjt-gold);
+  border: 1.5px solid var(--kjt-gold);
+  color: #ffffff;
+}
+.kjt-scrub-dot.todo {
+  background: var(--kjt-panel);
+  border: 1.5px solid rgba(50, 62, 72, 0.3);
+  /* Full-strength ink: at 9.5px the dimmed value fell to 4.0:1. */
+  color: var(--kjt-text);
+}
+.kjt-scrub-dot:focus-visible {
+  outline: 2px solid var(--kjt-gold);
+  outline-offset: 2px;
+}
+/* Floating title preview that tracks the pointer across the scrubber. */
+.kjt-scrub-preview {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  transform: translateX(-50%);
+  white-space: nowrap;
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background: var(--kjt-text);
+  color: #ffffff;
+  font-size: 11.5px;
+  line-height: 1.3;
+  padding: 5px 10px;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(30, 42, 54, 0.22);
+  pointer-events: none;
+  z-index: 3;
+}
+.kjt-scrub-preview b {
+  font-weight: 700;
+  opacity: 0.72;
+  margin-right: 4px;
+}
+
+/* ── Action line, checklist, fork markers ──────────────────────────── */
+.kjt-row-action {
+  margin: 0 0 5px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--kjt-text);
+  max-width: 64ch;
+}
+.kjt-checklist {
+  margin-top: 12px;
+}
+.kjt-checklist-head {
+  margin: 0 0 6px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--kjt-dim);
+}
+.kjt-checklist ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 5px 16px;
+}
+.kjt-checklist li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--kjt-text);
+}
+.kjt-tick {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #e8f2ea;
+  border: 1px solid #b9d6c2;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.kjt-tick svg {
+  width: 9px;
+  height: 9px;
+  fill: none;
+  stroke: #3f7a56;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.kjt-fork {
+  grid-column: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 2px 0 0 2px;
+  padding-top: 8px;
+}
+.kjt-fork-path {
+  position: relative;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--kjt-dim);
+  background: var(--kjt-chip);
+  border: 1px dashed var(--kjt-ring);
+  border-radius: 999px;
+  padding: 3px 11px 3px 22px;
+}
+.kjt-fork-path::before {
+  content: '';
+  position: absolute;
+  left: 9px;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  margin-top: -3px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.55;
+}
+.kjt-fork-path.exit {
+  color: #8a6a33;
+}
+.kjt-fork-path.loop {
+  color: #4a6b6e;
+}
+
 .kjt-status-note {
   margin: 0 0 14px;
   font-size: 11.5px;

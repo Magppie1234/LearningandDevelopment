@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { ChevronDown, Maximize2, Minimize2, Search, X } from 'lucide-react'
 import { FLOWS } from '@/data/flows'
+import { FLOW_EXPLAINER, STEP_ACTION, STEP_FORKS } from '@/data/flow-guidance'
 
 /* Icon library — inner SVG markup keyed by the `ic` field on each step. */
 const ICONS: Record<string, string> = {
@@ -67,7 +68,10 @@ export default function KitchenJourney() {
   const [position, setPosition] = useState<number | null>(null)
   const [fullscreen, setFullscreen] = useState(false)
   const [query, setQuery] = useState('')
+  // Step title previewed while dragging/hovering the scrubber, before any click.
+  const [preview, setPreview] = useState<{ n: number; t: string; x: number } | null>(null)
   const rootRef = useRef<HTMLDivElement>(null)
+  const scrubRef = useRef<HTMLDivElement>(null)
 
   const flow = FLOWS.find((f) => f.id === flowId) ?? FLOWS[0]
 
@@ -107,6 +111,33 @@ export default function KitchenJourney() {
     setOpenStep(firstStepOfPhase)
     setPosition(firstStepOfPhase)
   }, [firstStepOfPhase])
+
+  // The active pipeline's steps drive the tracker and the step-map.
+  const phaseSteps = useMemo(
+    () => groups.find((g) => g.phase.name === activePhase)?.steps ?? [],
+    [groups, activePhase],
+  )
+  const doneCount = position === null ? 0 : phaseSteps.filter((x) => x.n < position).length
+  const progressPct = phaseSteps.length ? Math.round((doneCount / phaseSteps.length) * 100) : 0
+
+  /** Map a pointer x-position across the scrubber to the step under it. */
+  const stepAtPointer = (clientX: number) => {
+    const el = scrubRef.current
+    if (!el || phaseSteps.length === 0) return null
+    const r = el.getBoundingClientRect()
+    const ratio = Math.min(1, Math.max(0, (clientX - r.left) / r.width))
+    const idx = Math.min(phaseSteps.length - 1, Math.floor(ratio * phaseSteps.length))
+    return { item: phaseSteps[idx], x: ratio * r.width }
+  }
+  const onScrub = (clientX: number, commit: boolean) => {
+    const hit = stepAtPointer(clientX)
+    if (!hit) return
+    setPreview({ n: hit.item.n, t: hit.item.s.t, x: hit.x })
+    if (commit) {
+      setPosition(hit.item.n)
+      setOpenStep(hit.item.n)
+    }
+  }
 
   const statusOf = (n: number): 'done' | 'current' | 'todo' => {
     if (position === null) return 'todo'
@@ -223,6 +254,76 @@ export default function KitchenJourney() {
               <span className="kjt-subtab-count">{p.count}</span>
             </button>
           ))}
+        </div>
+      )}
+
+      {/* Plain-language explainer: what this pipeline is, for someone who has
+          never seen it. Authored — see data/flow-guidance.ts. */}
+      {FLOW_EXPLAINER[flow.id] && (
+        <p className="kjt-explainer">{FLOW_EXPLAINER[flow.id]}</p>
+      )}
+
+      {phaseSteps.length > 0 && !searching && (
+        <div className="kjt-tracker">
+          <div className="kjt-tracker-head">
+            <span className="kjt-tracker-count">
+              {doneCount} of {phaseSteps.length} steps completed
+            </span>
+            <span className="kjt-tracker-pct">{progressPct}%</span>
+          </div>
+          <div
+            className="kjt-progress"
+            role="progressbar"
+            aria-valuenow={progressPct}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-label={`${activePhase} progress`}
+          >
+            <span style={{ width: `${progressPct}%` }} />
+          </div>
+
+          {/* Step-map scrubber: drag across it to preview each step's title,
+              click or release to jump there. */}
+          <div
+            ref={scrubRef}
+            className="kjt-scrub"
+            onPointerDown={(e) => {
+              e.currentTarget.setPointerCapture(e.pointerId)
+              onScrub(e.clientX, true)
+            }}
+            onPointerMove={(e) => {
+              if (e.buttons > 0) onScrub(e.clientX, true)
+              else onScrub(e.clientX, false)
+            }}
+            onPointerLeave={() => setPreview(null)}
+          >
+            {preview && (
+              <span
+                className="kjt-scrub-preview"
+                style={{ left: `${preview.x}px` }}
+                aria-hidden
+              >
+                <b>Step {preview.n}</b> {preview.t}
+              </span>
+            )}
+            {phaseSteps.map(({ s: st, n }) => {
+              const status = statusOf(n)
+              return (
+                <button
+                  key={n}
+                  type="button"
+                  className={`kjt-scrub-dot ${status}`}
+                  aria-label={`Step ${n}: ${st.t}`}
+                  onClick={() => {
+                    setPosition(n)
+                    setOpenStep(n)
+                  }}
+                >
+                  {n}
+                </button>
+              )
+            })}
+          </div>
         </div>
       )}
 
@@ -355,8 +456,38 @@ export default function KitchenJourney() {
                     {open && (
                       <div id={`kjt-step-${flow.id}-${n}`} className="kjt-row-body">
                         <span className={`kjt-status-badge ${badge.cls}`}>{badge.label}</span>
+                        {/* The instruction leads; the recorded definition of the
+                            stage follows underneath in smaller type. */}
+                        {STEP_ACTION[`${flow.id}:${s.t}`] && (
+                          <p className="kjt-row-action">{STEP_ACTION[`${flow.id}:${s.t}`]}</p>
+                        )}
                         <p className="kjt-row-desc">{s.d}</p>
-                        {s.disp && (
+
+                        {/* Checklist = the fields this step records. Only shown
+                            where every disposition is a capture; a step whose
+                            dispositions are exit reasons has no checklist, and
+                            inventing one would misstate the process. */}
+                        {s.disp && !s.disp.some((x) => x.terminal) && (
+                          <div className="kjt-checklist">
+                            <p className="kjt-checklist-head">To move on, record:</p>
+                            <ul>
+                              {s.disp.map((x) => (
+                                <li key={x.label} title={x.desc && x.desc !== x.label ? x.desc : undefined}>
+                                  <span className="kjt-tick" aria-hidden>
+                                    <svg viewBox="0 0 24 24">
+                                      <path d="M5 12.5l4.5 4.5L19 7.5" />
+                                    </svg>
+                                  </span>
+                                  {x.label}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+
+                        {/* Exit reasons stay as chips — they are outcomes, not
+                            a checklist of things to do. */}
+                        {s.disp && s.disp.some((x) => x.terminal) && (
                           <div className="kjt-row-chips">
                             {s.disp.map((x) => (
                               <span
@@ -372,6 +503,17 @@ export default function KitchenJourney() {
                       </div>
                     )}
                   </div>
+                  {/* This step branches rather than flowing straight on — the
+                      fork is drawn on the line rather than implied. */}
+                  {STEP_FORKS[`${flow.id}:${s.t}`] && (
+                    <div className="kjt-fork">
+                      {STEP_FORKS[`${flow.id}:${s.t}`].map((f) => (
+                        <span key={f.label} className={`kjt-fork-path ${f.kind}`}>
+                          {f.label}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )
             })}
