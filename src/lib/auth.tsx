@@ -81,9 +81,14 @@ export function useAuth(): AuthState {
 }
 
 /**
- * Non-throwing variant. Returns null when no AuthProvider is present — used by
- * components under src/pages/, which Next also exposes as standalone (legacy
- * Pages Router) routes that get prerendered without the portal's AuthProvider.
+ * Non-throwing variant. Returns null when no AuthProvider is present.
+ *
+ * Originally a workaround: page components lived in `src/pages/`, which Next
+ * also treated as the legacy Pages Router, so each one was additionally
+ * exposed as a standalone route (`/ManagerHub`, `/Assessments`, …) prerendered
+ * outside the portal shell — with no AuthProvider above it. That directory is
+ * now `src/screens/`, so those phantom routes are gone. The hook is kept for
+ * components that legitimately render outside the provider.
  */
 export function useAuthOptional(): AuthState | null {
   return useContext(AuthContext) ?? null

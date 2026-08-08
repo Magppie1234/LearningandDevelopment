@@ -15,7 +15,7 @@ export default function CategoryCards({
       {cards.map((card) => (
         <div
           key={card.title}
-          className="rounded-[12px] border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream px-4 py-3"
+          className="rounded-[12px] border-[0.5px] border-[rgb(var(--rule)/0.14)] bg-cream px-4 py-3"
         >
           <p className="text-[13px] font-semibold text-ink-primary">{card.title}</p>
           <p className="mt-1 text-[12.5px] leading-relaxed text-ink-secondary">{card.body}</p>

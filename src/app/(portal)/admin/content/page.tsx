@@ -1,5 +1,10 @@
-import AdminContent from '@/pages/AdminContent'
+import RoleGuard from '@/components/RoleGuard'
+import AdminContent from '@/screens/AdminContent'
 
 export default function Page() {
-  return <AdminContent />
+  return (
+    <RoleGuard requires="ld_admin">
+      <AdminContent />
+    </RoleGuard>
+  )
 }

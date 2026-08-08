@@ -62,13 +62,13 @@ function nodeVisual(node: FaqNode, isOpen: boolean) {
   }
   if (node.kind === 'outcome') {
     if (node.tone === 'muted') {
-      return { fill: 'rgba(0,59,70,0.05)', stroke: 'rgba(0,59,70,0.2)', text: 'rgb(var(--m-ink-tertiary))' }
+      return { fill: 'rgb(var(--rule)/0.05)', stroke: 'rgb(var(--rule)/0.2)', text: 'rgb(var(--m-ink-tertiary))' }
     }
     return { fill: 'var(--status-ontrack-bg)', stroke: 'var(--status-ontrack-fg)', text: 'var(--status-ontrack-fg)' }
   }
   return {
-    fill: isOpen ? 'rgba(184,112,63,0.1)' : 'rgba(0,59,70,0.04)',
-    stroke: isOpen ? 'rgb(var(--m-accent-copper))' : 'rgba(0,59,70,0.16)',
+    fill: isOpen ? 'rgba(184,112,63,0.1)' : 'rgb(var(--rule)/0.04)',
+    stroke: isOpen ? 'rgb(var(--m-accent-copper))' : 'rgb(var(--rule)/0.16)',
     text: 'rgb(var(--m-ink-primary))',
   }
 }
@@ -131,7 +131,7 @@ export default function FlowChart({
             markerHeight="7"
             orient="auto-start-reverse"
           >
-            <path d="M0,0 L10,5 L0,10 z" fill="rgba(0,59,70,0.35)" />
+            <path d="M0,0 L10,5 L0,10 z" fill="rgb(var(--rule)/0.35)" />
           </marker>
         </defs>
 
@@ -150,7 +150,7 @@ export default function FlowChart({
                 y1={y1}
                 x2={x2}
                 y2={y2}
-                stroke="rgba(0,59,70,0.35)"
+                stroke="rgb(var(--rule)/0.35)"
                 strokeWidth={1.5}
                 markerEnd={`url(#${uid}-arrow)`}
               />

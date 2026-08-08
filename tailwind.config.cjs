@@ -65,6 +65,38 @@ module.exports = {
           secondary: 'rgb(var(--m-ink-secondary) / <alpha-value>)',
           tertiary: 'rgb(var(--m-ink-tertiary) / <alpha-value>)',
         },
+        // Semantic status ramp — the ONLY status colours in the portal.
+        // success = achieved/passed/completed · warning = at risk/approaching
+        // danger = overdue/failed/critical · info = neutral progress/active
+        // neutral = not started/inactive. Definitions in globals.css.
+        success: {
+          DEFAULT: 'rgb(var(--sem-success) / <alpha-value>)',
+          bg: 'rgb(var(--sem-success-bg) / <alpha-value>)',
+          fg: 'rgb(var(--sem-success-fg) / <alpha-value>)',
+        },
+        warning: {
+          DEFAULT: 'rgb(var(--sem-warning) / <alpha-value>)',
+          bg: 'rgb(var(--sem-warning-bg) / <alpha-value>)',
+          fg: 'rgb(var(--sem-warning-fg) / <alpha-value>)',
+        },
+        danger: {
+          DEFAULT: 'rgb(var(--sem-danger) / <alpha-value>)',
+          bg: 'rgb(var(--sem-danger-bg) / <alpha-value>)',
+          fg: 'rgb(var(--sem-danger-fg) / <alpha-value>)',
+        },
+        info: {
+          DEFAULT: 'rgb(var(--sem-info) / <alpha-value>)',
+          bg: 'rgb(var(--sem-info-bg) / <alpha-value>)',
+          fg: 'rgb(var(--sem-info-fg) / <alpha-value>)',
+        },
+        'sem-neutral': {
+          DEFAULT: 'rgb(var(--sem-neutral) / <alpha-value>)',
+          bg: 'rgb(var(--sem-neutral-bg) / <alpha-value>)',
+          fg: 'rgb(var(--sem-neutral-fg) / <alpha-value>)',
+        },
+        // Theme-aware hairline / tint. Replaces the 467 hardcoded
+        // rgba(0,59,70,x) values, which were invisible in dark mode.
+        hairline: 'rgb(var(--rule) / <alpha-value>)',
         // §4 copper/silver accent duo (SilverStone story). Copper = primary
         // actions/active/progress; silver = certified/complete/secondary.
         'accent-copper': 'rgb(var(--m-accent-copper) / <alpha-value>)',
@@ -91,6 +123,10 @@ module.exports = {
           sage: 'rgb(var(--stone-sage) / <alpha-value>)',
           ivory: 'rgb(var(--stone-ivory) / <alpha-value>)',
           ink: 'rgb(var(--stone-ink) / <alpha-value>)',
+          // Hairlines and tints ON a stone surface. Replaces the literal
+          // `white/N` these panels used to carry, which silently assumed the
+          // surface beneath was dark.
+          veil: 'rgb(var(--stone-veil) / <alpha-value>)',
         },
       },
       fontFamily: {
@@ -107,10 +143,12 @@ module.exports = {
         xs: 'calc(var(--radius) - 6px)',
       },
       boxShadow: {
-        xs: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
-        card: '0 4px 20px rgba(0, 59, 70, 0.08)',
-        elevated: '0 8px 30px rgba(0, 59, 70, 0.12)',
-        inner: 'inset 0 2px 4px rgba(0,0,0,0.04)',
+        // Restrained elevation ladder: cards barely lift, only overlays float.
+        xs: '0 1px 2px 0 rgb(24 20 16 / 0.05)',
+        card: '0 1px 2px rgb(24 20 16 / 0.04), 0 1px 3px rgb(24 20 16 / 0.06)',
+        raised: '0 2px 4px rgb(24 20 16 / 0.05), 0 4px 12px rgb(24 20 16 / 0.07)',
+        elevated: '0 8px 24px rgb(24 20 16 / 0.12), 0 2px 6px rgb(24 20 16 / 0.06)',
+        inner: 'inset 0 2px 4px rgb(24 20 16 / 0.04)',
       },
       keyframes: {
         'accordion-down': {

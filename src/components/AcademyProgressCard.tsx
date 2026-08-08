@@ -170,7 +170,7 @@ export default function AcademyProgressCard({
   if (variant === 'inline') return <div className={className}>{body}</div>
 
   const cardClass = cn(
-    'block bg-cream rounded-[12px] border-[0.5px] border-[rgba(0,59,70,0.14)] dark:border-[rgba(255,255,255,0.1)] p-4 transition-shadow duration-200 hover:shadow-card',
+    'block bg-cream rounded-[12px] border-[0.5px] border-[rgb(var(--rule)/0.14)] dark:border-[rgba(255,255,255,0.1)] p-4 transition-shadow duration-200 hover:shadow-card',
     className,
   )
   if (href) {

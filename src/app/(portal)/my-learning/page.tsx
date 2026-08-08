@@ -1,5 +1,10 @@
-import MyLearning from '@/pages/MyLearning'
+import ScreenBoundary from '@/components/ScreenBoundary'
+import MyLearning from '@/screens/MyLearning'
 
 export default function Page() {
-  return <MyLearning />
+  return (
+    <ScreenBoundary>
+      <MyLearning />
+    </ScreenBoundary>
+  )
 }

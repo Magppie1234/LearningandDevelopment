@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import BdAcademy from '@/pages/BdAcademy'
+import BdAcademy from '@/screens/BdAcademy'
 
 // BdAcademy reads useSearchParams (?module=…) for deep-linking, which Next
 // requires to sit under a Suspense boundary so the build can prerender.

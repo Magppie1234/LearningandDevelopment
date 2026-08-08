@@ -26,7 +26,7 @@ const DEPT_SLUGS: Record<string, string> = {
 }
 
 function gapCellClass(gap: number): string {
-  if (gap >= 3) return 'bg-red-500/70 text-white'
+  if (gap >= 3) return 'bg-danger text-white'
   if (gap === 2) return 'bg-accent-gold/70 text-ink-primary'
   if (gap === 1) return 'bg-surface-gold/40 text-ink-primary'
   return 'bg-surface-sage/25 text-ink-tertiary'
@@ -80,8 +80,8 @@ export default function SkillGapHeatmap() {
   )
 
   return (
-    <div className="bg-cream rounded-[12px] border-[0.5px] border-[rgba(0,59,70,0.14)] dark:border-[rgba(255,255,255,0.1)] overflow-hidden transition-shadow hover:shadow-card">
-      <header className="px-5 py-4 border-b border-[rgba(0,59,70,0.06)] flex flex-wrap items-center justify-between gap-2">
+    <div className="bg-cream rounded-[12px] border-[0.5px] border-[rgb(var(--rule)/0.14)] dark:border-[rgba(255,255,255,0.1)] overflow-hidden transition-shadow hover:shadow-card">
+      <header className="px-5 py-4 border-b border-[rgb(var(--rule)/0.06)] flex flex-wrap items-center justify-between gap-2">
         <div>
           <p className="text-sm font-semibold text-ink-primary">Skill-Gap Heatmap</p>
           <p className="text-[11px] text-ink-tertiary mt-0.5">
@@ -91,14 +91,14 @@ export default function SkillGapHeatmap() {
         <div className="flex items-center gap-2 text-[10px] text-ink-tertiary">
           <span className="inline-block w-3 h-3 rounded-sm bg-surface-gold/40" /> 1
           <span className="inline-block w-3 h-3 rounded-sm bg-accent-gold/70" /> 2
-          <span className="inline-block w-3 h-3 rounded-sm bg-red-500/70" /> 3+
+          <span className="inline-block w-3 h-3 rounded-sm bg-danger" /> 3+
         </div>
       </header>
       <div className="overflow-x-auto">
         <table className="w-full text-left">
           <tbody>
             {rows.map((r) => (
-              <tr key={r.name} className="border-b-[0.5px] border-[rgba(0,59,70,0.06)] dark:border-[rgba(255,255,255,0.06)] last:border-0 align-top">
+              <tr key={r.name} className="border-b-[0.5px] border-[rgb(var(--rule)/0.06)] dark:border-[rgba(255,255,255,0.06)] last:border-0 align-top">
                 <td className="px-5 py-3 whitespace-nowrap w-64">
                   <button
                     type="button"
@@ -145,7 +145,7 @@ export default function SkillGapHeatmap() {
                     ))}
                   </div>
                   {expanded === r.name && (
-                    <div className="mt-3 rounded-[12px] border-[0.5px] border-[rgba(0,59,70,0.12)] dark:border-[rgba(255,255,255,0.1)] bg-parchment p-3">
+                    <div className="mt-3 rounded-[12px] border-[0.5px] border-[rgb(var(--rule)/0.12)] dark:border-[rgba(255,255,255,0.1)] bg-parchment p-3">
                       <p className="text-[11px] font-medium text-ink-secondary mb-2">
                         {r.name} — proficiency vs role requirement
                       </p>

@@ -1,4 +1,4 @@
-import ImmersionProgramme from '@/pages/ImmersionProgramme'
+import ImmersionProgramme from '@/screens/ImmersionProgramme'
 
 export const metadata = { title: 'Immersion Programme · Magppie L&D' }
 

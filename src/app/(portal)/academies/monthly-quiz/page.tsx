@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { ChevronRight } from 'lucide-react'
-import MonthlyQuiz from '@/pages/MonthlyQuiz'
+import MonthlyQuiz from '@/screens/MonthlyQuiz'
 
 export default function Page() {
   return (

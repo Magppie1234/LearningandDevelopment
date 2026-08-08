@@ -17,7 +17,7 @@ import {
  * aggregate pass/fail, and module access is unaffected either way.
  */
 
-const CARD = 'rounded-[12px] border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream'
+const CARD = 'rounded-[12px] border-[0.5px] border-[rgb(var(--rule)/0.14)] bg-cream'
 
 /* ── per-module breakdown (shared by employee + manager views) ── */
 
@@ -127,8 +127,8 @@ function DiagnosticQuiz({ onDone }: { onDone: () => void }) {
                   className={cn(
                     'w-full text-left rounded-lg border px-3 py-2 text-[13px] transition-colors',
                     chosen
-                      ? 'border-ink-primary bg-[rgba(0,59,70,0.04)]'
-                      : 'border-[rgba(0,59,70,0.12)] hover:bg-[rgba(0,59,70,0.02)]',
+                      ? 'border-ink-primary bg-[rgb(var(--rule)/0.04)]'
+                      : 'border-[rgb(var(--rule)/0.12)] hover:bg-[rgb(var(--rule)/0.02)]',
                   )}
                 >
                   {opt}
@@ -178,7 +178,7 @@ function DiagnosticModal({ onClose }: { onClose: () => void }) {
         className="w-full max-w-[560px] max-h-[85vh] flex flex-col rounded-2xl bg-parchment shadow-elevated overflow-hidden"
       >
         {/* header */}
-        <div className="flex items-start justify-between gap-3 px-6 pt-5 pb-4 border-b-[0.5px] border-[rgba(0,59,70,0.1)]">
+        <div className="flex items-start justify-between gap-3 px-6 pt-5 pb-4 border-b-[0.5px] border-[rgb(var(--rule)/0.1)]">
           <div className="flex items-center gap-3">
             <span
               className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
@@ -226,7 +226,7 @@ function DiagnosticModal({ onClose }: { onClose: () => void }) {
                 <button
                   type="button"
                   onClick={onClose}
-                  className="rounded-lg border border-[rgba(0,59,70,0.15)] px-4 py-2.5 text-[13px] font-medium text-ink-secondary hover:bg-black/[0.03] transition"
+                  className="rounded-lg border border-[rgb(var(--rule)/0.15)] px-4 py-2.5 text-[13px] font-medium text-ink-secondary hover:bg-black/[0.03] transition"
                 >
                   Maybe later
                 </button>
@@ -277,7 +277,7 @@ export default function BdDiagnosticBanner() {
               setClosedThisView(false)
               reopen()
             }}
-            className="shrink-0 inline-flex items-center gap-1 text-[11px] font-medium rounded-full border border-[rgba(0,59,70,0.15)] px-2.5 py-1 hover:bg-black/[0.03] transition"
+            className="shrink-0 inline-flex items-center gap-1 text-[11px] font-medium rounded-full border border-[rgb(var(--rule)/0.15)] px-2.5 py-1 hover:bg-black/[0.03] transition"
           >
             <RotateCcw size={11} /> Retake
           </button>

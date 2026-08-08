@@ -76,7 +76,7 @@ export default function SalesFaqPage() {
           {(Object.entries(counts) as [string, number][]).map(([type, n]) => (
             <span
               key={type}
-              className="inline-flex items-center gap-1.5 rounded-full border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream px-2.5 py-1 text-[11.5px] text-ink-secondary"
+              className="inline-flex items-center gap-1.5 rounded-full border-[0.5px] border-[rgb(var(--rule)/0.14)] bg-cream px-2.5 py-1 text-[11.5px] text-ink-secondary"
             >
               <span className="font-semibold text-ink-primary tabular-nums">{n}</span>
               {type}

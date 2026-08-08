@@ -13,7 +13,7 @@ import { SALES_RESOURCES, type SalesResource } from '@/data/sales-resources'
  * FAQ bank.
  */
 
-const CARD = 'rounded-[12px] border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream'
+const CARD = 'rounded-[12px] border-[0.5px] border-[rgb(var(--rule)/0.14)] bg-cream'
 
 function PackCard({ r }: { r: SalesResource }) {
   return (
@@ -116,7 +116,7 @@ export default function SalesResourcesTab() {
             <FolderOpen size={18} className="text-ink-tertiary shrink-0" />
             <p className="text-[12.5px] text-ink-tertiary">
               Nothing here yet — share a PDF and it appears in this group. Files live in{' '}
-              <code className="text-[11px] bg-[rgba(0,59,70,0.05)] rounded px-1.5 py-0.5">
+              <code className="text-[11px] bg-[rgb(var(--rule)/0.05)] rounded px-1.5 py-0.5">
                 public/resources/sales/
               </code>
             </p>

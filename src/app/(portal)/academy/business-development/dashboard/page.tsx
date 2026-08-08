@@ -1,4 +1,4 @@
-import BdDashboard from '@/pages/BdDashboard'
+import BdDashboard from '@/screens/BdDashboard'
 
 export default function Page() {
   return <BdDashboard />

@@ -36,11 +36,11 @@ export default function FaqAccordion({
     <Accordion
       type="single"
       collapsible
-      className="rounded-[12px] border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream overflow-hidden"
+      className="rounded-[12px] border-[0.5px] border-[rgb(var(--rule)/0.14)] bg-cream overflow-hidden"
     >
       {items.map((item) => (
-        <AccordionItem key={item.id} value={item.id} className="border-[rgba(0,59,70,0.06)]">
-          <AccordionTrigger className="px-4 py-3 text-[13.5px] font-medium text-ink-primary hover:no-underline hover:bg-[rgba(0,59,70,0.02)] rounded-none">
+        <AccordionItem key={item.id} value={item.id} className="border-[rgb(var(--rule)/0.06)]">
+          <AccordionTrigger className="px-4 py-3 text-[13.5px] font-medium text-ink-primary hover:no-underline hover:bg-[rgb(var(--rule)/0.02)] rounded-none">
             <span className="flex items-baseline gap-3">
               {item.qNum ? (
                 <span className="w-8 shrink-0 text-[11px] font-normal text-ink-tertiary tabular-nums">

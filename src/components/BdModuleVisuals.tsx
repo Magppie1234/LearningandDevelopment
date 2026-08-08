@@ -32,11 +32,11 @@ function tableBlock(id: string) {
 }
 
 const CARD =
-  'rounded-[12px] border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream'
+  'rounded-[12px] border-[0.5px] border-[rgb(var(--rule)/0.14)] bg-cream'
 
 function Chip({ children }: { children: React.ReactNode }) {
   return (
-    <span className="inline-flex items-center rounded-full border-[0.5px] border-[rgba(0,59,70,0.14)] bg-[rgba(0,59,70,0.03)] px-2.5 py-1 text-[12px] text-ink-secondary">
+    <span className="inline-flex items-center rounded-full border-[0.5px] border-[rgb(var(--rule)/0.14)] bg-[rgb(var(--rule)/0.03)] px-2.5 py-1 text-[12px] text-ink-secondary">
       {children}
     </span>
   )
@@ -121,7 +121,7 @@ function SilverStoneProcess() {
                 'flex-1 rounded-[10px] px-3 py-3 text-center text-[13px] font-medium',
                 i === M2_STEPS.length - 1
                   ? 'bg-accent-gold/15 border border-accent-gold text-ink-primary'
-                  : 'bg-[rgba(0,59,70,0.04)] text-ink-secondary',
+                  : 'bg-[rgb(var(--rule)/0.04)] text-ink-secondary',
               )}
             >
               {s}
@@ -157,7 +157,7 @@ function SafetyPillars() {
           return (
             <div
               key={i}
-              className="rounded-[12px] border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream px-4 py-3"
+              className="rounded-[12px] border-[0.5px] border-[rgb(var(--rule)/0.14)] bg-cream px-4 py-3"
             >
               <div className="flex items-center gap-2.5">
                 <span className="shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-semibold bg-accent-gold/15 border border-accent-gold text-ink-primary">
@@ -184,7 +184,7 @@ function SafetyPillars() {
           ].map((s) => (
             <div
               key={s.small}
-              className="rounded-[10px] border-[0.5px] border-[rgba(0,59,70,0.14)] bg-[rgba(0,59,70,0.02)] px-4 py-3 text-center"
+              className="rounded-[10px] border-[0.5px] border-[rgb(var(--rule)/0.14)] bg-[rgb(var(--rule)/0.02)] px-4 py-3 text-center"
             >
               <p className="text-xl font-semibold text-ink-primary">{s.big}</p>
               <p className="text-[11.5px] text-ink-tertiary mt-0.5">{s.small}</p>
@@ -198,9 +198,9 @@ function SafetyPillars() {
           ].map((b, i) => (
             <div key={b.label} className="flex items-center gap-3">
               <span className="w-44 shrink-0 text-[12px] text-ink-secondary">{b.label}</span>
-              <div className="flex-1 h-4 rounded-full bg-[rgba(0,59,70,0.05)] overflow-hidden">
+              <div className="flex-1 h-4 rounded-full bg-[rgb(var(--rule)/0.05)] overflow-hidden">
                 <div
-                  className={cn('h-full rounded-full', i === 1 ? 'bg-accent-gold' : 'bg-[rgba(0,59,70,0.22)]')}
+                  className={cn('h-full rounded-full', i === 1 ? 'bg-accent-gold' : 'bg-[rgb(var(--rule)/0.22)]')}
                   style={{ width: `${b.pct}%` }}
                 />
               </div>
@@ -279,7 +279,7 @@ function ComparisonMatrix() {
         <div className="overflow-x-auto">
           <table className="w-full text-[12.5px]">
             <thead>
-              <tr className="border-b-[0.5px] border-[rgba(0,59,70,0.14)]">
+              <tr className="border-b-[0.5px] border-[rgb(var(--rule)/0.14)]">
                 <th className="text-left font-semibold text-ink-tertiary px-4 py-2.5">Attribute</th>
                 {M7_COLS.map((c, i) => (
                   <th
@@ -296,7 +296,7 @@ function ComparisonMatrix() {
             </thead>
             <tbody>
               {M7_ROWS.map((row) => (
-                <tr key={row.attr} className="border-b-[0.5px] border-[rgba(0,59,70,0.06)] last:border-0">
+                <tr key={row.attr} className="border-b-[0.5px] border-[rgb(var(--rule)/0.06)] last:border-0">
                   <td className="text-ink-secondary px-4 py-2.5">{row.attr}</td>
                   {row.vals.map((v, i) => (
                     <td key={i} className={cn('text-center px-3 py-2.5', i === 0 && 'bg-accent-copper/10')}>
@@ -325,7 +325,7 @@ function ComparisonMatrix() {
           ].map((b) => (
             <div key={b.label} className="flex items-center gap-3">
               <span className="w-44 shrink-0 text-[12.5px] text-ink-secondary">{b.label}</span>
-              <div className="flex-1 h-2.5 rounded-full bg-[rgba(0,59,70,0.06)] overflow-hidden">
+              <div className="flex-1 h-2.5 rounded-full bg-[rgb(var(--rule)/0.06)] overflow-hidden">
                 <div
                   className={cn('h-full rounded-full', b.primary ? 'bg-accent-copper' : 'bg-accent-silver')}
                   style={{ width: `${b.pct}%` }}
@@ -355,7 +355,7 @@ function ComparisonMatrix() {
 const M8_PAYMENT = [
   { label: 'Advance', pct: 50, color: 'var(--status-ontrack-fg)' },
   { label: 'Before dispatch', pct: 40, color: 'rgb(var(--m-accent-copper))' },
-  { label: 'After installation', pct: 10, color: 'rgba(0,59,70,0.35)' },
+  { label: 'After installation', pct: 10, color: 'rgb(var(--rule)/0.35)' },
 ]
 const M8_GUARANTEES = [
   { label: 'Stone guarantee', years: 25 },
@@ -382,9 +382,9 @@ function PricingCharts() {
           {M8_MATERIAL.map((m) => (
             <div key={m.label} className="flex items-center gap-3">
               <span className="w-32 shrink-0 text-[12.5px] text-ink-secondary">{m.label}</span>
-              <div className="flex-1 h-4 rounded-full bg-[rgba(0,59,70,0.06)] overflow-hidden">
+              <div className="flex-1 h-4 rounded-full bg-[rgb(var(--rule)/0.06)] overflow-hidden">
                 <div
-                  className={cn('h-full rounded-full', m.accent ? 'bg-accent-gold' : 'bg-[rgba(0,59,70,0.3)]')}
+                  className={cn('h-full rounded-full', m.accent ? 'bg-accent-gold' : 'bg-[rgb(var(--rule)/0.3)]')}
                   style={{ width: `${(m.rs / 500) * 100}%` }}
                 />
               </div>
@@ -425,7 +425,7 @@ function PricingCharts() {
           {M8_GUARANTEES.map((g) => (
             <div key={g.label} className="flex items-center gap-3">
               <span className="w-32 shrink-0 text-[12.5px] text-ink-secondary">{g.label}</span>
-              <div className="flex-1 h-2.5 rounded-full bg-[rgba(0,59,70,0.06)] overflow-hidden">
+              <div className="flex-1 h-2.5 rounded-full bg-[rgb(var(--rule)/0.06)] overflow-hidden">
                 <div
                   className="h-full rounded-full bg-accent-gold"
                   style={{ width: `${(g.years / 25) * 100}%` }}
@@ -461,7 +461,7 @@ function CommunicationSwaps() {
           Turn statements into questions
         </p>
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-[13px]">
-          <span className="flex-1 rounded-[10px] bg-[rgba(0,59,70,0.04)] px-3 py-2 text-ink-secondary">
+          <span className="flex-1 rounded-[10px] bg-[rgb(var(--rule)/0.04)] px-3 py-2 text-ink-secondary">
             “These are the most commonly used materials.”
           </span>
           <ArrowRight size={16} className="hidden sm:block text-ink-tertiary shrink-0" />
@@ -518,7 +518,7 @@ function EscalationFlow() {
           Customer situation
         </div>
         <ArrowDown size={16} className="text-ink-tertiary my-1.5" />
-        <div className="rounded-[10px] border-[0.5px] border-[rgba(0,59,70,0.14)] bg-[rgba(0,59,70,0.03)] px-4 py-2 text-[13px] font-medium text-ink-primary">
+        <div className="rounded-[10px] border-[0.5px] border-[rgb(var(--rule)/0.14)] bg-[rgb(var(--rule)/0.03)] px-4 py-2 text-[13px] font-medium text-ink-primary">
           Does it match any of these 7 triggers?
         </div>
       </div>

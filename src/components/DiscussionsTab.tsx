@@ -144,7 +144,7 @@ export default function DiscussionsTab({ academyId }: { academyId: string }) {
   return (
     <div className="max-w-[760px] space-y-6">
       {/* Ask */}
-      <div className="bg-cream rounded-2xl border border-[rgba(0,59,70,0.08)] p-5">
+      <div className="bg-cream rounded-2xl border border-[rgb(var(--rule)/0.08)] p-5">
         <p className="text-sm font-semibold text-ink-primary flex items-center gap-2">
           <MessageCircle size={16} /> Ask your peers
         </p>
@@ -152,14 +152,14 @@ export default function DiscussionsTab({ academyId }: { academyId: string }) {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="One-line question…"
-          className="mt-3 w-full bg-parchment border border-[rgba(0,59,70,0.12)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-ink-primary"
+          className="mt-3 w-full bg-parchment border border-[rgb(var(--rule)/0.12)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-ink-primary"
         />
         <textarea
           value={body}
           onChange={(e) => setBody(e.target.value)}
           placeholder="Context (optional)"
           rows={2}
-          className="mt-2 w-full bg-parchment border border-[rgba(0,59,70,0.12)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-ink-primary resize-none"
+          className="mt-2 w-full bg-parchment border border-[rgb(var(--rule)/0.12)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-ink-primary resize-none"
         />
         <button
           type="button"
@@ -186,7 +186,7 @@ export default function DiscussionsTab({ academyId }: { academyId: string }) {
       {questions.map((q) => (
         <div
           key={q.id}
-          className="bg-cream rounded-2xl border border-[rgba(0,59,70,0.08)] p-5"
+          className="bg-cream rounded-2xl border border-[rgb(var(--rule)/0.08)] p-5"
         >
           <div className="flex items-start gap-3">
             <span className="w-8 h-8 shrink-0 rounded-full bg-surface-blue flex items-center justify-center text-[11px] font-semibold text-ink-primary">
@@ -210,7 +210,7 @@ export default function DiscussionsTab({ academyId }: { academyId: string }) {
                 'mt-3 ml-11 rounded-xl px-4 py-3 border',
                 a.isAccepted
                   ? 'border-surface-sage/50 bg-surface-sage/10'
-                  : 'border-[rgba(0,59,70,0.06)] bg-parchment',
+                  : 'border-[rgb(var(--rule)/0.06)] bg-parchment',
               )}
             >
               <div className="flex items-center justify-between gap-2">
@@ -247,7 +247,7 @@ export default function DiscussionsTab({ academyId }: { academyId: string }) {
                   }
                 }}
                 placeholder="Share what you know…"
-                className="flex-1 bg-parchment border border-[rgba(0,59,70,0.12)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-ink-primary"
+                className="flex-1 bg-parchment border border-[rgb(var(--rule)/0.12)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-ink-primary"
               />
               <button
                 type="button"

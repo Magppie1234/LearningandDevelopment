@@ -12,7 +12,7 @@ import BdDmTemplates from '@/components/BdDmTemplates'
  * separate with honest production status).
  */
 
-const CARD = 'rounded-[12px] border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream'
+const CARD = 'rounded-[12px] border-[0.5px] border-[rgb(var(--rule)/0.14)] bg-cream'
 
 function PackCard({ r }: { r: BdResource }) {
   return (
@@ -81,7 +81,7 @@ export default function BdResourcesTab() {
             <FolderOpen size={18} className="text-ink-tertiary shrink-0" />
             <p className="text-[12.5px] text-ink-tertiary">
               Nothing here yet — share a PDF and it appears in this group. Files live in{' '}
-              <code className="text-[11px] bg-[rgba(0,59,70,0.05)] rounded px-1.5 py-0.5">
+              <code className="text-[11px] bg-[rgb(var(--rule)/0.05)] rounded px-1.5 py-0.5">
                 public/resources/bd/
               </code>
             </p>

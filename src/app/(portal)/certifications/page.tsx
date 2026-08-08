@@ -1,4 +1,4 @@
-import Certifications from '@/pages/Certifications'
+import Certifications from '@/screens/Certifications'
 
 export default function Page() {
   return <Certifications />

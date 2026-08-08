@@ -24,7 +24,7 @@ function Ring({ pct, color }: { pct: number; color: string }) {
   return (
     <div className="relative shrink-0" style={{ width: size, height: size }}>
       <svg width={size} height={size} className="-rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(245,239,230,0.12)" strokeWidth={sw} />
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgb(var(--stone-ivory)/0.12)" strokeWidth={sw} />
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -87,13 +87,13 @@ export default function InsightCard({
   const hasTopics = weak.length > 0 || strong.length > 0
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-stone-espresso p-5">
+    <div className="rounded-2xl border border-stone-veil/10 bg-stone-espresso p-5">
       <div className="flex items-start gap-4">
         <Ring pct={bestPct} color={tMeta?.color ?? 'rgb(var(--stone-sage))'} />
         <div className="min-w-0 flex-1">
           <p className="text-sm font-semibold text-stone-ivory">{moduleLabel}</p>
           {/* plain-language read */}
-          <p className="text-[13px] text-stone-ivory/60 mt-0.5">
+          <p className="text-[13px] text-stone-ivory/72 mt-0.5">
             {progress.attempt_count} attempt{progress.attempt_count === 1 ? '' : 's'}
             {tMeta && (
               <>
@@ -110,12 +110,12 @@ export default function InsightCard({
           {/* §4: explicit retake + rewatch counts as their own figures. */}
           <div className="mt-1.5 flex flex-wrap gap-1.5">
             {progress.attempt_count > 1 && (
-              <span className="rounded-md bg-white/[0.06] px-2 py-0.5 text-[11px] font-medium text-stone-ivory/70">
+              <span className="rounded-md bg-stone-veil/[0.06] px-2 py-0.5 text-[11px] font-medium text-stone-ivory/80">
                 Retaken {progress.attempt_count - 1} time{progress.attempt_count - 1 === 1 ? '' : 's'}
               </span>
             )}
             {(progress.video_watch_count ?? 0) > 1 && (
-              <span className="rounded-md bg-white/[0.06] px-2 py-0.5 text-[11px] font-medium text-stone-ivory/70">
+              <span className="rounded-md bg-stone-veil/[0.06] px-2 py-0.5 text-[11px] font-medium text-stone-ivory/80">
                 Rewatched {(progress.video_watch_count ?? 0) - 1} time{(progress.video_watch_count ?? 0) - 1 === 1 ? '' : 's'}
               </span>
             )}
@@ -136,7 +136,7 @@ export default function InsightCard({
         <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
           {weak.length > 0 && (
             <div>
-              <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-stone-ivory/45 mb-1.5">
+              <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-stone-ivory/72 mb-1.5">
                 <Target size={12} style={{ color: '#e0a04a' }} /> Focus here
               </p>
               <TopicChips topics={weak} tone="weak" />
@@ -144,7 +144,7 @@ export default function InsightCard({
           )}
           {strong.length > 0 && (
             <div>
-              <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-stone-ivory/45 mb-1.5">
+              <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-stone-ivory/72 mb-1.5">
                 <Sparkles size={12} style={{ color: 'rgb(var(--stone-sage))' }} /> You&apos;re strong here
               </p>
               <TopicChips topics={strong} tone="strong" />

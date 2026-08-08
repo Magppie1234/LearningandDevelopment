@@ -119,7 +119,7 @@ function Plate({
   label: string
 }) {
   return (
-    <span className="kcc-plate inline-flex items-center gap-2 rounded-full bg-stone-espresso px-3.5 py-2 text-stone-ivory shadow-[0_6px_20px_rgba(0,0,0,0.35)] ring-1 ring-inset ring-white/[0.06]">
+    <span className="kcc-plate inline-flex items-center gap-2 rounded-full bg-stone-espresso px-3.5 py-2 text-stone-ivory shadow-[0_6px_20px_rgba(0,0,0,0.35)] ring-1 ring-inset ring-stone-veil/[0.06]">
       <span className="flex h-6 w-6 items-center justify-center rounded-full bg-accent-copper/90 text-stone-charcoal">
         <Icon size={14} />
       </span>
@@ -187,7 +187,7 @@ export default function KitchenCommandCenter() {
   return (
     <section
       aria-label="Kitchen command center — choose where to go next"
-      className="kcc-root relative w-full overflow-hidden rounded-2xl bg-stone-charcoal ring-1 ring-white/[0.06]"
+      className="kcc-root relative w-full overflow-hidden rounded-2xl bg-stone-charcoal ring-1 ring-stone-veil/[0.06]"
     >
       {/* ── Desktop: interactive tilt scene with overlaid hotspots ── */}
       <div
@@ -215,7 +215,7 @@ export default function KitchenCommandCenter() {
               key={zone.href}
               href={zone.href}
               aria-label={zone.ariaLabel}
-              className={`kcc-tile flex items-center gap-2.5 rounded-xl bg-stone-espresso px-3.5 py-3 text-stone-ivory ring-1 ring-inset ring-white/[0.06] outline-none ${
+              className={`kcc-tile flex items-center gap-2.5 rounded-xl bg-stone-espresso px-3.5 py-3 text-stone-ivory ring-1 ring-inset ring-stone-veil/[0.06] outline-none ${
                 zone.primary ? 'col-span-2' : ''
               }`}
             >

@@ -47,7 +47,7 @@ export function CSuiteNode({
     <div
       className="w-[164px] shrink rounded-2xl bg-cream border shadow-card overflow-hidden transition-shadow"
       style={{
-        borderColor: expanded ? color.bar : 'rgba(0,59,70,0.08)',
+        borderColor: expanded ? color.bar : 'rgb(var(--rule)/0.08)',
         boxShadow: expanded ? `0 0 0 2px ${color.bar}` : undefined,
       }}
     >
@@ -92,7 +92,7 @@ export function CSuiteNode({
           <button
             type="button"
             onClick={(e) => e.stopPropagation()}
-            className="inline-flex items-center gap-0.5 rounded-full border border-dashed border-[rgba(0,59,70,0.2)] px-1.5 py-0.5 text-[9px] font-medium text-ink-tertiary hover:border-ink-secondary hover:text-ink-secondary transition-colors"
+            className="inline-flex items-center gap-0.5 rounded-full border border-dashed border-[rgb(var(--rule)/0.2)] px-1.5 py-0.5 text-[9px] font-medium text-ink-tertiary hover:border-ink-secondary hover:text-ink-secondary transition-colors"
           >
             <Plus size={8} /> Add
           </button>
@@ -102,7 +102,7 @@ export function CSuiteNode({
       <button
         type="button"
         onClick={onToggle}
-        className="w-full flex items-center justify-center gap-1 py-1.5 border-t border-[rgba(0,59,70,0.06)] text-[9px] text-ink-tertiary hover:text-ink-secondary transition-colors"
+        className="w-full flex items-center justify-center gap-1 py-1.5 border-t border-[rgb(var(--rule)/0.06)] text-[9px] text-ink-tertiary hover:text-ink-secondary transition-colors"
       >
         <span className="truncate">
           {departmentCount > 0

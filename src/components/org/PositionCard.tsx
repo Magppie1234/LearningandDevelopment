@@ -38,7 +38,7 @@ function EmployeeCard({ position }: { position: OrgPosition }) {
       <PositionEditor position={position}>
         <button
           type="button"
-          className="w-full rounded-xl border-2 border-dashed border-[rgba(0,59,70,0.18)] px-3 py-3 text-xs font-medium text-ink-tertiary hover:border-ink-secondary hover:text-ink-secondary transition-colors flex items-center justify-center gap-1.5"
+          className="w-full rounded-xl border-2 border-dashed border-[rgb(var(--rule)/0.18)] px-3 py-3 text-xs font-medium text-ink-tertiary hover:border-ink-secondary hover:text-ink-secondary transition-colors flex items-center justify-center gap-1.5"
         >
           <Plus size={14} /> Add Person
         </button>
@@ -59,7 +59,7 @@ function EmployeeCard({ position }: { position: OrgPosition }) {
           <PositionEditor position={position} key={a.id}>
             <button
               type="button"
-              className="w-full rounded-xl bg-cream border border-[rgba(0,59,70,0.08)] px-3 py-2.5 text-left shadow-xs hover:shadow-card hover:-translate-y-0.5 transition-all flex items-center gap-2.5"
+              className="w-full rounded-xl bg-cream border border-[rgb(var(--rule)/0.08)] px-3 py-2.5 text-left shadow-xs hover:shadow-card hover:-translate-y-0.5 transition-all flex items-center gap-2.5"
             >
               <span className="w-8 h-8 shrink-0 rounded-full bg-surface-blue flex items-center justify-center text-[11px] font-semibold text-ink-primary">
                 {initials(name)}
@@ -98,7 +98,7 @@ export function PositionColumn({ position }: { position: OrgPosition }) {
           type="button"
           aria-label={`Remove ${position.title} position`}
           onClick={() => setConfirmOpen(true)}
-          className="shrink-0 text-ink-tertiary hover:text-red-600 transition-colors"
+          className="shrink-0 text-ink-tertiary hover:text-danger transition-colors"
         >
           <Trash2 size={13} />
         </button>
@@ -120,7 +120,7 @@ export function PositionColumn({ position }: { position: OrgPosition }) {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => removePosition(position.id)}
-              className="bg-red-600 hover:bg-red-700 focus-visible:ring-red-300"
+              className="bg-danger hover:brightness-95 focus-visible:ring-danger/40"
             >
               Remove
             </AlertDialogAction>

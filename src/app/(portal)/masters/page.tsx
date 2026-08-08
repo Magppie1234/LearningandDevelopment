@@ -1,5 +1,10 @@
-import ApprovedMasters from '@/pages/ApprovedMasters'
+import RoleGuard from '@/components/RoleGuard'
+import ApprovedMasters from '@/screens/ApprovedMasters'
 
 export default function Page() {
-  return <ApprovedMasters />
+  return (
+    <RoleGuard requires="ld_admin">
+      <ApprovedMasters />
+    </RoleGuard>
+  )
 }

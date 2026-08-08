@@ -90,7 +90,7 @@ export function TreeConnectorSvg({ segments }: { segments: Segment[] }) {
   return (
     <svg className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden>
       {segments.map((s) => (
-        <path key={s.key} d={s.d} stroke="rgba(0,59,70,0.22)" strokeWidth={1.5} fill="none" />
+        <path key={s.key} d={s.d} stroke="rgb(var(--rule)/0.22)" strokeWidth={1.5} fill="none" />
       ))}
     </svg>
   )

@@ -1,5 +1,10 @@
-import ExecutiveDashboard from '@/pages/ExecutiveDashboard'
+import RoleGuard from '@/components/RoleGuard'
+import ExecutiveDashboard from '@/screens/ExecutiveDashboard'
 
 export default function Page() {
-  return <ExecutiveDashboard />
+  return (
+    <RoleGuard requires="leadership">
+      <ExecutiveDashboard />
+    </RoleGuard>
+  )
 }

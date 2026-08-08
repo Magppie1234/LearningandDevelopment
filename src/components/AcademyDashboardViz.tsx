@@ -43,7 +43,7 @@ export function KpiCard({
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, delay }}
-      className="rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream p-5 flex flex-col items-center text-center shadow-card hover:shadow-elevated hover:-translate-y-0.5 transition-all duration-300"
+      className="rounded-2xl border-[0.5px] border-[rgb(var(--rule)/0.14)] bg-cream p-5 flex flex-col items-center text-center shadow-card hover:shadow-elevated hover:-translate-y-0.5 transition-all duration-300"
     >
       <div
         className="w-10 h-10 rounded-full flex items-center justify-center mb-3 border"
@@ -98,7 +98,7 @@ export function ProgressBarsChart({
               className={cn('flex-1 border-t', refLine && g === refLine.pct && 'border-dashed')}
               style={{
                 borderColor:
-                  refLine && g === refLine.pct ? 'var(--status-ontrack)' : 'rgba(0,59,70,0.07)',
+                  refLine && g === refLine.pct ? 'var(--status-ontrack)' : 'rgb(var(--rule)/0.07)',
               }}
             />
           </div>
@@ -124,7 +124,7 @@ export function ProgressBarsChart({
               onMouseLeave={() => setHover(null)}
             >
               {d.pct === null ? (
-                <div className="w-full max-w-[26px] h-[3px] rounded-full bg-[rgba(0,59,70,0.10)]" />
+                <div className="w-full max-w-[26px] h-[3px] rounded-full bg-[rgb(var(--rule)/0.10)]" />
               ) : (
                 <motion.div
                   initial={{ height: 0 }}
@@ -216,7 +216,7 @@ export function Pictograph({
                 href={d.href}
                 onMouseEnter={() => setHover(d.id)}
                 onMouseLeave={() => setHover(null)}
-                className="relative flex flex-col items-center rounded-xl py-2.5 hover:bg-[rgba(0,59,70,0.04)] transition-colors"
+                className="relative flex flex-col items-center rounded-xl py-2.5 hover:bg-[rgb(var(--rule)/0.04)] transition-colors"
                 aria-label={`${d.lines[0]} — ${STATUS_VIZ[d.status].label}`}
               >
                 <Icon
@@ -241,7 +241,7 @@ export function Pictograph({
           )
         })}
       </div>
-      <div className="mt-4 pt-4 border-t border-[rgba(0,59,70,0.08)] space-y-2">
+      <div className="mt-4 pt-4 border-t border-[rgb(var(--rule)/0.08)] space-y-2">
         {order.map((k) => {
           const { color, label, icon: LegendIcon } = STATUS_VIZ[k]
           return (
@@ -267,7 +267,7 @@ export function Pictograph({
 /* ─────────────────── small stat tile ─────────────────── */
 export function StatTile({ label, value, sub }: { label: string; value: string; sub?: string }) {
   return (
-    <div className="rounded-[12px] border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream p-4 shadow-card hover:shadow-elevated hover:-translate-y-0.5 transition-all duration-300">
+    <div className="rounded-[12px] border-[0.5px] border-[rgb(var(--rule)/0.14)] bg-cream p-4 shadow-card hover:shadow-elevated hover:-translate-y-0.5 transition-all duration-300">
       <p className="text-2xl font-bold text-ink-primary tabular-nums">{value}</p>
       <p className="text-[11px] font-medium uppercase tracking-wide text-ink-tertiary mt-0.5">{label}</p>
       {sub && <p className="text-[11px] text-ink-tertiary mt-1">{sub}</p>}
@@ -286,7 +286,7 @@ export function ChartCard({
   children: React.ReactNode
 }) {
   return (
-    <div className="rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream p-5 shadow-card">
+    <div className="rounded-2xl border-[0.5px] border-[rgb(var(--rule)/0.14)] bg-cream p-5 shadow-card">
       <div className="flex items-center gap-2 mb-4">
         <Icon size={16} className="text-ink-tertiary" />
         <h2 className="text-sm font-semibold text-ink-primary">{title}</h2>

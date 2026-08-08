@@ -1,5 +1,13 @@
-import DepartmentDashboard from '@/pages/DepartmentDashboard'
+import RoleGuard from '@/components/RoleGuard'
+import ScreenBoundary from '@/components/ScreenBoundary'
+import DepartmentDashboard from '@/screens/DepartmentDashboard'
 
 export default function Page() {
-  return <DepartmentDashboard />
+  return (
+    <RoleGuard requires="hod">
+      <ScreenBoundary>
+        <DepartmentDashboard />
+      </ScreenBoundary>
+    </RoleGuard>
+  )
 }

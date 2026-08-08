@@ -1,4 +1,4 @@
-import AIAssistant from '@/pages/AIAssistant'
+import AIAssistant from '@/screens/AIAssistant'
 
 export default function Page() {
   return <AIAssistant />

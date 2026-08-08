@@ -43,7 +43,7 @@ function LikertRow({
               'w-8 h-8 rounded-full border-[1.5px] transition-colors',
               value === n
                 ? 'bg-accent-copper border-accent-copper'
-                : 'border-[rgba(0,59,70,0.2)] group-hover:border-accent-copper',
+                : 'border-[rgb(var(--rule)/0.2)] group-hover:border-accent-copper',
             )}
           />
           <span className="text-[10px] text-ink-tertiary h-3">{LIKERT_LABELS[n - 1]}</span>
@@ -152,7 +152,7 @@ function GrowthMap({ bank, onClose }: { bank: ReadinessBank; onClose: () => void
         <button
           type="button"
           onClick={() => reopen(bank.academySlug)}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-[rgba(0,59,70,0.15)] px-4 py-2.5 text-[13px] font-medium text-ink-secondary hover:bg-black/[0.03] transition"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-[rgb(var(--rule)/0.15)] px-4 py-2.5 text-[13px] font-medium text-ink-secondary hover:bg-black/[0.03] transition"
         >
           <RotateCcw size={13} /> Retake
         </button>
@@ -175,7 +175,7 @@ function Questions({ bank, onDone }: { bank: ReadinessBank; onDone: () => void }
         practising first.
       </p>
       {bank.questions.map((q, i) => (
-        <div key={q.id} className="rounded-[12px] border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream p-4">
+        <div key={q.id} className="rounded-[12px] border-[0.5px] border-[rgb(var(--rule)/0.14)] bg-cream p-4">
           <p className="text-[11px] font-medium text-ink-tertiary mb-1">Question {i + 1}</p>
           <p className="text-sm font-medium text-ink-primary mb-3">{q.text}</p>
           {q.type === 'likert' ? (
@@ -196,7 +196,7 @@ function Questions({ bank, onDone }: { bank: ReadinessBank; onDone: () => void }
                       'w-full text-left rounded-lg border px-3 py-2 text-[13px] transition-colors',
                       chosen
                         ? 'border-accent-copper bg-accent-copper/[0.06]'
-                        : 'border-[rgba(0,59,70,0.12)] hover:bg-[rgba(0,59,70,0.02)]',
+                        : 'border-[rgb(var(--rule)/0.12)] hover:bg-[rgb(var(--rule)/0.02)]',
                     )}
                   >
                     {opt.label}
@@ -245,7 +245,7 @@ function Modal({ bank, onClose }: { bank: ReadinessBank; onClose: () => void }) 
         onClick={(e) => e.stopPropagation()}
         className="w-full max-w-[560px] max-h-[85vh] flex flex-col rounded-2xl bg-parchment shadow-elevated overflow-hidden border-t-2 border-accent-copper"
       >
-        <div className="flex items-start justify-between gap-3 px-6 pt-5 pb-4 border-b-[0.5px] border-[rgba(0,59,70,0.1)]">
+        <div className="flex items-start justify-between gap-3 px-6 pt-5 pb-4 border-b-[0.5px] border-[rgb(var(--rule)/0.1)]">
           <div className="flex items-center gap-3">
             <span
               className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
@@ -293,7 +293,7 @@ function Modal({ bank, onClose }: { bank: ReadinessBank; onClose: () => void }) 
                 <button
                   type="button"
                   onClick={onClose}
-                  className="rounded-lg border border-[rgba(0,59,70,0.15)] px-4 py-2.5 text-[13px] font-medium text-ink-secondary hover:bg-black/[0.03] transition"
+                  className="rounded-lg border border-[rgb(var(--rule)/0.15)] px-4 py-2.5 text-[13px] font-medium text-ink-secondary hover:bg-black/[0.03] transition"
                 >
                   Skip for now
                 </button>
@@ -356,7 +356,7 @@ export function ReadinessAdminPanel({ academySlug }: { academySlug: string }) {
   const state = useReadiness((s) => s.get(academySlug))
   if (!bank) return null
   return (
-    <div className="rounded-[12px] border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream p-5">
+    <div className="rounded-[12px] border-[0.5px] border-[rgb(var(--rule)/0.14)] bg-cream p-5">
       <p className="text-sm font-semibold text-ink-primary flex items-center gap-2">
         <Compass size={16} /> Readiness check — {bank.academyName}
       </p>

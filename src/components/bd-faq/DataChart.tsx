@@ -24,7 +24,7 @@ import {
 const SERIES_COLORS = [
   'rgb(var(--m-accent-copper))',
   'rgb(var(--m-accent-silver))',
-  'rgba(0,59,70,0.35)',
+  'rgb(var(--rule)/0.35)',
   'var(--status-ontrack)',
   'var(--status-risk)',
 ]
@@ -41,7 +41,7 @@ function ChartTooltip({
   if (!active || !payload?.length) return null
   const p = payload[0]
   return (
-    <div className="rounded-[8px] border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream px-2.5 py-1.5 shadow-card">
+    <div className="rounded-[8px] border-[0.5px] border-[rgb(var(--rule)/0.14)] bg-cream px-2.5 py-1.5 shadow-card">
       <p className="text-[11px] text-ink-tertiary">{p.payload?.label}</p>
       <p className="text-[13px] font-semibold text-ink-primary tabular-nums">
         {p.value?.toLocaleString('en-IN')}
@@ -104,7 +104,7 @@ export default function DataChart({
           <XAxis
             dataKey="label"
             tick={{ fontSize: 11, fill: 'rgb(var(--m-ink-tertiary))' }}
-            axisLine={{ stroke: 'rgba(0,59,70,0.14)' }}
+            axisLine={{ stroke: 'rgb(var(--rule)/0.14)' }}
             tickLine={false}
           />
           <YAxis
@@ -132,7 +132,7 @@ export default function DataChart({
         <XAxis
           type="number"
           tick={{ fontSize: 11, fill: 'rgb(var(--m-ink-tertiary))' }}
-          axisLine={{ stroke: 'rgba(0,59,70,0.14)' }}
+          axisLine={{ stroke: 'rgb(var(--rule)/0.14)' }}
           tickLine={false}
         />
         <YAxis
@@ -143,7 +143,7 @@ export default function DataChart({
           axisLine={false}
           tickLine={false}
         />
-        <Tooltip content={<ChartTooltip unit={unit} />} cursor={{ fill: 'rgba(0,59,70,0.04)' }} />
+        <Tooltip content={<ChartTooltip unit={unit} />} cursor={{ fill: 'rgb(var(--rule)/0.04)' }} />
         <Bar dataKey="value" radius={[0, 4, 4, 0]} barSize={18}>
           {data.map((_, i) => (
             <Cell key={i} fill={i === 0 ? 'rgb(var(--m-accent-copper))' : 'rgb(var(--m-accent-silver))'} />

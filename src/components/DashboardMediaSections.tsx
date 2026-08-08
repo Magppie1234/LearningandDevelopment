@@ -118,7 +118,7 @@ export function ContinueWatchingCard() {
 
       <Link
         href={(inProgress ?? firstAssigned).href}
-        className="group flex items-center gap-5 rounded-[12px] border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream p-4 hover:shadow-card transition-shadow"
+        className="group flex items-center gap-5 rounded-[12px] border-[0.5px] border-[rgb(var(--rule)/0.14)] bg-cream p-4 hover:shadow-card transition-shadow"
       >
         {/* Thumbnail — navy block with copper play until a real frame exists */}
         <div className="relative w-40 sm:w-48 aspect-video shrink-0 rounded-lg overflow-hidden bg-[#062a33] flex items-center justify-center">
@@ -196,7 +196,7 @@ export function ExploreVisuallyStrip() {
           <Link
             key={d.key}
             href={d.href}
-            className="group rounded-[12px] border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream p-4 hover:shadow-card transition-shadow"
+            className="group rounded-[12px] border-[0.5px] border-[rgb(var(--rule)/0.14)] bg-cream p-4 hover:shadow-card transition-shadow"
           >
             <span
               className={cn(

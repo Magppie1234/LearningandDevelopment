@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation'
-import AcademyDetail from '@/pages/AcademyDetail'
+import AcademyDetail from '@/screens/AcademyDetail'
 
 // Academies whose dashboard IS their landing page (spec §11): opening the
 // academy goes straight to its real-time dashboard, not an intermediate

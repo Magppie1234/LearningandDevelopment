@@ -30,10 +30,10 @@ const TREND = {
 
 function Tile({ label, value, sub }: { label: string; value: string; sub?: string }) {
   return (
-    <div className="rounded-[12px] border border-white/10 bg-stone-espresso p-3">
+    <div className="rounded-[12px] border border-stone-veil/10 bg-stone-espresso p-3">
       <p className="text-lg font-bold text-stone-ivory tabular-nums leading-tight">{value}</p>
-      <p className="text-[10px] font-medium uppercase tracking-wide text-stone-ivory/45 mt-0.5">{label}</p>
-      {sub && <p className="text-[10px] text-stone-ivory/40 mt-0.5">{sub}</p>}
+      <p className="text-[10px] font-medium uppercase tracking-wide text-stone-ivory/72 mt-0.5">{label}</p>
+      {sub && <p className="text-[10px] text-stone-ivory/70 mt-0.5">{sub}</p>}
     </div>
   )
 }
@@ -59,7 +59,7 @@ export default function LearnerInsights({
   return (
     <div className="space-y-3">
       {/* AI Insights + the single recommended action */}
-      <div className="rounded-2xl border border-white/10 bg-stone-espresso p-5">
+      <div className="rounded-2xl border border-stone-veil/10 bg-stone-espresso p-5">
         <div className="flex items-center gap-2 mb-3">
           <Sparkles size={16} className="text-accent-copper" />
           <h3 className="text-sm font-semibold text-stone-ivory">AI insights</h3>
@@ -75,8 +75,8 @@ export default function LearnerInsights({
         </div>
         <ul className="space-y-1.5">
           {d.insights.map((line, i) => (
-            <li key={i} className="flex items-start gap-2 text-[13px] text-stone-ivory/75">
-              <Info size={13} className="mt-0.5 shrink-0 text-stone-ivory/35" />
+            <li key={i} className="flex items-start gap-2 text-[13px] text-stone-ivory/84">
+              <Info size={13} className="mt-0.5 shrink-0 text-stone-ivory/68" />
               {line}
             </li>
           ))}
@@ -93,9 +93,9 @@ export default function LearnerInsights({
 
       {/* Score summary + readiness */}
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-3">
-        <div className="rounded-2xl border border-white/10 bg-stone-espresso p-5">
+        <div className="rounded-2xl border border-stone-veil/10 bg-stone-espresso p-5">
           <div className="flex items-center gap-2 mb-3">
-            <Target size={15} className="text-stone-ivory/50" />
+            <Target size={15} className="text-stone-ivory/74" />
             <h3 className="text-sm font-semibold text-stone-ivory">Score summary</h3>
             {d.vsPassStandard != null && (
               <span
@@ -116,14 +116,14 @@ export default function LearnerInsights({
         </div>
 
         {/* Readiness meter */}
-        <div className="rounded-2xl border border-white/10 bg-stone-espresso p-5 flex items-center gap-4 min-w-[220px]">
+        <div className="rounded-2xl border border-stone-veil/10 bg-stone-espresso p-5 flex items-center gap-4 min-w-[220px]">
           <Ring value={d.readiness} />
           <div>
             <div className="flex items-center gap-1.5">
-              <Gauge size={14} className="text-stone-ivory/50" />
+              <Gauge size={14} className="text-stone-ivory/74" />
               <p className="text-sm font-semibold text-stone-ivory">Readiness</p>
             </div>
-            <p className="text-[12px] text-stone-ivory/55 mt-1 max-w-[150px]">
+            <p className="text-[12px] text-stone-ivory/70 mt-1 max-w-[150px]">
               {d.readiness >= 80
                 ? 'Certification-ready on current performance.'
                 : `${80 - d.readiness}% to certification readiness.`}
@@ -133,9 +133,9 @@ export default function LearnerInsights({
       </div>
 
       {/* Test analytics */}
-      <div className="rounded-2xl border border-white/10 bg-stone-espresso p-5">
+      <div className="rounded-2xl border border-stone-veil/10 bg-stone-espresso p-5">
         <div className="flex items-center gap-2 mb-3">
-          <ClipboardList size={15} className="text-stone-ivory/50" />
+          <ClipboardList size={15} className="text-stone-ivory/74" />
           <h3 className="text-sm font-semibold text-stone-ivory">Test analytics</h3>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
@@ -150,16 +150,16 @@ export default function LearnerInsights({
 
       {/* Weak topics to revise */}
       {d.weakTopics.length > 0 && (
-        <div className="rounded-2xl border border-white/10 bg-stone-espresso p-5">
+        <div className="rounded-2xl border border-stone-veil/10 bg-stone-espresso p-5">
           <div className="flex items-center gap-2 mb-3">
             <Target size={15} style={{ color: '#e0a04a' }} />
             <h3 className="text-sm font-semibold text-stone-ivory">Topics to revise</h3>
           </div>
           <div className="space-y-2">
             {d.weakTopics.slice(0, 4).map((w) => (
-              <div key={w.topic} className="flex items-center justify-between gap-3 rounded-lg bg-white/[0.04] px-3 py-2">
+              <div key={w.topic} className="flex items-center justify-between gap-3 rounded-lg bg-stone-veil/[0.04] px-3 py-2">
                 <span className="text-[13px] text-stone-ivory">{w.topic}</span>
-                <span className="text-[12px] text-stone-ivory/55">
+                <span className="text-[12px] text-stone-ivory/70">
                   weak in {w.count} module{w.count === 1 ? '' : 's'} · revise ~2h
                 </span>
               </div>
@@ -170,9 +170,9 @@ export default function LearnerInsights({
 
       {/* Smart alerts */}
       {d.alerts.length > 0 && (
-        <div className="rounded-2xl border border-white/10 bg-stone-espresso p-5">
+        <div className="rounded-2xl border border-stone-veil/10 bg-stone-espresso p-5">
           <div className="flex items-center gap-2 mb-3">
-            <AlertTriangle size={15} className="text-stone-ivory/50" />
+            <AlertTriangle size={15} className="text-stone-ivory/74" />
             <h3 className="text-sm font-semibold text-stone-ivory">Smart alerts</h3>
           </div>
           <div className="space-y-1.5">
@@ -201,7 +201,7 @@ function Ring({ value }: { value: number }) {
   return (
     <div className="relative shrink-0" style={{ width: size, height: size }}>
       <svg width={size} height={size} className="-rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(245,239,230,0.12)" strokeWidth={sw} />
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgb(var(--stone-ivory)/0.12)" strokeWidth={sw} />
         <circle
           cx={size / 2}
           cy={size / 2}

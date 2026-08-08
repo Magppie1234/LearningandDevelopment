@@ -57,8 +57,8 @@ export default function BdVideoPlayer({ module }: { module: BdModule }) {
 
   if (variants.length === 0 || !active) {
     return (
-      <div className="rounded-[12px] border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream overflow-hidden">
-        <div className="aspect-video flex flex-col items-center justify-center gap-3 bg-[rgba(0,59,70,0.03)]">
+      <div className="rounded-[12px] border-[0.5px] border-[rgb(var(--rule)/0.14)] bg-cream overflow-hidden">
+        <div className="aspect-video flex flex-col items-center justify-center gap-3 bg-[rgb(var(--rule)/0.03)]">
           <span
             className="w-12 h-12 rounded-full flex items-center justify-center"
             style={{ backgroundColor: 'var(--status-risk-bg)' }}
@@ -70,7 +70,7 @@ export default function BdVideoPlayer({ module }: { module: BdModule }) {
             <Clock size={13} /> Narrated video for this module is in production
           </p>
         </div>
-        <div className="p-4 border-t-[0.5px] border-[rgba(0,59,70,0.1)]">
+        <div className="p-4 border-t-[0.5px] border-[rgb(var(--rule)/0.1)]">
           <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-tertiary mb-1.5">
             {narration ? 'In the meantime — read the narration script' : 'In the meantime — module summary'}
           </p>
@@ -83,7 +83,7 @@ export default function BdVideoPlayer({ module }: { module: BdModule }) {
   }
 
   return (
-    <div className="rounded-[12px] border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream overflow-hidden">
+    <div className="rounded-[12px] border-[0.5px] border-[rgb(var(--rule)/0.14)] bg-cream overflow-hidden">
       <div className="aspect-video bg-black">
         <video
           key={`${module.id}-${active.languageCode}-${subtitlesOn}`}
@@ -103,7 +103,7 @@ export default function BdVideoPlayer({ module }: { module: BdModule }) {
         </video>
       </div>
 
-      <div className="flex items-center justify-between gap-3 px-4 py-3 border-t-[0.5px] border-[rgba(0,59,70,0.1)]">
+      <div className="flex items-center justify-between gap-3 px-4 py-3 border-t-[0.5px] border-[rgb(var(--rule)/0.1)]">
         <div className="flex items-center gap-2">
           <Globe2 size={14} className="text-ink-tertiary" />
           <div className="flex gap-1">
@@ -116,7 +116,7 @@ export default function BdVideoPlayer({ module }: { module: BdModule }) {
                   'rounded-lg px-2.5 py-1 text-[12px] font-medium transition-colors',
                   v.languageCode === languageCode
                     ? 'bg-ink-primary text-parchment'
-                    : 'bg-[rgba(0,59,70,0.05)] text-ink-secondary hover:bg-[rgba(0,59,70,0.09)]',
+                    : 'bg-[rgb(var(--rule)/0.05)] text-ink-secondary hover:bg-[rgb(var(--rule)/0.09)]',
                 )}
               >
                 {v.languageLabel}
@@ -132,7 +132,7 @@ export default function BdVideoPlayer({ module }: { module: BdModule }) {
             className={cn(
               'inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[12px] font-medium transition-colors',
               subtitlesOn
-                ? 'bg-[rgba(0,59,70,0.09)] text-ink-primary'
+                ? 'bg-[rgb(var(--rule)/0.09)] text-ink-primary'
                 : 'text-ink-tertiary hover:text-ink-secondary',
             )}
           >

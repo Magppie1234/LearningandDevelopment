@@ -11,7 +11,7 @@ import { OrgChartTree } from './OrgChartTree'
 import { OrgTable } from './OrgTable'
 
 function ConnectorLine() {
-  return <div className="mx-auto h-8 w-px bg-[rgba(0,59,70,0.15)]" />
+  return <div className="mx-auto h-8 w-px bg-[rgb(var(--rule)/0.15)]" />
 }
 
 function ChartSkeleton() {
@@ -80,7 +80,7 @@ export function OrgChart() {
     <div className="space-y-6">
       {/* view toggle */}
       <div className="flex justify-center">
-        <div className="inline-flex rounded-full border-[0.5px] border-[rgba(0,59,70,0.16)] bg-cream p-1 shadow-card">
+        <div className="inline-flex rounded-full border-[0.5px] border-[rgb(var(--rule)/0.16)] bg-cream p-1 shadow-card">
           {(
             [
               { key: 'flow', label: 'Flow chart', icon: Network },

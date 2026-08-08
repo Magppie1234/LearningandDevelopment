@@ -42,7 +42,7 @@ export function AddPositionButton({
         <button
           type="button"
           className={cn(
-            'rounded-xl border-2 border-dashed border-[rgba(0,59,70,0.15)] text-ink-tertiary hover:border-ink-secondary hover:text-ink-secondary transition-colors flex items-center justify-center gap-1.5 py-3 text-xs font-medium',
+            'rounded-xl border-2 border-dashed border-[rgb(var(--rule)/0.15)] text-ink-tertiary hover:border-ink-secondary hover:text-ink-secondary transition-colors flex items-center justify-center gap-1.5 py-3 text-xs font-medium',
             className ??
               'min-w-[168px] max-w-[220px] flex-1 self-stretch flex-col py-4',
           )}

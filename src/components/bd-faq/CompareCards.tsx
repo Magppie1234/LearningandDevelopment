@@ -38,7 +38,7 @@ export default function CompareCards({ columns }: { columns: CompareColumn[] }) 
               'rounded-[12px] border-[0.5px] overflow-hidden',
               highlighted
                 ? 'border-accent-copper/60 bg-accent-copper/[0.06]'
-                : 'border-[rgba(0,59,70,0.14)] bg-cream',
+                : 'border-[rgb(var(--rule)/0.14)] bg-cream',
             )}
           >
             <p
@@ -46,12 +46,12 @@ export default function CompareCards({ columns }: { columns: CompareColumn[] }) 
                 'px-4 py-2.5 text-[13px] font-semibold border-b-[0.5px]',
                 highlighted
                   ? 'text-ink-primary bg-accent-copper/10 border-accent-copper/30'
-                  : 'text-ink-secondary border-[rgba(0,59,70,0.1)]',
+                  : 'text-ink-secondary border-[rgb(var(--rule)/0.1)]',
               )}
             >
               {col.title}
             </p>
-            <dl className="divide-y divide-[rgba(0,59,70,0.06)]">
+            <dl className="divide-y divide-[rgb(var(--rule)/0.06)]">
               {labels.map((label) => {
                 const row = col.rows.find((r) => r.label === label)
                 return (

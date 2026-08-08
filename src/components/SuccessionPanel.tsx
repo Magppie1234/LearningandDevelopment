@@ -19,8 +19,8 @@ const READINESS_LABEL: Record<SuccessionReadiness, string> = {
 
 export default function SuccessionPanel() {
   return (
-    <div className="bg-cream rounded-[12px] border-[0.5px] border-[rgba(0,59,70,0.14)] dark:border-[rgba(255,255,255,0.1)] overflow-hidden transition-shadow hover:shadow-card">
-      <header className="px-5 py-4 border-b border-[rgba(0,59,70,0.06)] flex flex-wrap items-center justify-between gap-2">
+    <div className="bg-cream rounded-[12px] border-[0.5px] border-[rgb(var(--rule)/0.14)] dark:border-[rgba(255,255,255,0.1)] overflow-hidden transition-shadow hover:shadow-card">
+      <header className="px-5 py-4 border-b border-[rgb(var(--rule)/0.06)] flex flex-wrap items-center justify-between gap-2">
         <p className="text-sm font-semibold text-ink-primary flex items-center gap-2">
           <Users2 size={16} /> Succession Pipeline
         </p>
@@ -30,7 +30,7 @@ export default function SuccessionPanel() {
           {successionSummary.uncovered > 0 && ` · ${successionSummary.uncovered} uncovered`}
         </p>
       </header>
-      <ul className="divide-y divide-[rgba(0,59,70,0.05)]">
+      <ul className="divide-y divide-[rgb(var(--rule)/0.05)]">
         {successionPlan.map((r) => (
           <li key={r.role} className="px-5 py-3.5">
             <div className="flex flex-wrap items-baseline justify-between gap-2">
@@ -41,7 +41,7 @@ export default function SuccessionPanel() {
             </div>
             <div className="mt-2 flex flex-wrap gap-1.5">
               {r.candidates.length === 0 && (
-                <span className="text-[11px] font-medium text-red-600">
+                <span className="text-[11px] font-medium text-danger-fg">
                   No internal candidates — backfill risk
                 </span>
               )}

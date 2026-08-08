@@ -3,6 +3,9 @@
 import { useEffect, type ReactNode } from 'react'
 import { ThemeProvider } from 'next-themes'
 import { AuthProvider } from '@/lib/auth'
+import { RoleProvider } from '@/lib/role-context'
+import { DataSourceProvider } from '@/lib/data-source'
+import { Toaster } from '@/components/ui/sonner'
 
 /**
  * Client-side providers mounted once at the root. AuthProvider owns the
@@ -31,7 +34,16 @@ export function Providers({ children }: { children: ReactNode }) {
 
   return (
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-      <AuthProvider>{children}</AuthProvider>
+      <AuthProvider>
+        <DataSourceProvider>
+          <RoleProvider>
+            {children}
+            {/* Mounted once at the root — action confirmations (reminders,
+                exports, assignments) have nowhere to render without it. */}
+            <Toaster position="bottom-right" richColors closeButton />
+          </RoleProvider>
+        </DataSourceProvider>
+      </AuthProvider>
     </ThemeProvider>
   )
 }

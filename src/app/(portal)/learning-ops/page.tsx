@@ -1,5 +1,10 @@
-import LearningOps from '@/pages/LearningOps'
+import RoleGuard from '@/components/RoleGuard'
+import LearningOps from '@/screens/LearningOps'
 
 export default function Page() {
-  return <LearningOps />
+  return (
+    <RoleGuard requires="ld_admin">
+      <LearningOps />
+    </RoleGuard>
+  )
 }

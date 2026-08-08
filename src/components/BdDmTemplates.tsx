@@ -52,7 +52,7 @@ const DM_TEMPLATES: DmTemplate[] = [
   },
 ]
 
-const CARD = 'rounded-[12px] border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream'
+const CARD = 'rounded-[12px] border-[0.5px] border-[rgb(var(--rule)/0.14)] bg-cream'
 
 function TemplateCard({ t }: { t: DmTemplate }) {
   const [copied, setCopied] = useState(false)
@@ -79,7 +79,7 @@ function TemplateCard({ t }: { t: DmTemplate }) {
             'shrink-0 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11.5px] font-medium transition-colors',
             copied
               ? 'text-parchment bg-accent-copper'
-              : 'border-[0.5px] border-[rgba(0,59,70,0.16)] text-ink-secondary hover:border-accent-copper hover:text-accent-copper',
+              : 'border-[0.5px] border-[rgb(var(--rule)/0.16)] text-ink-secondary hover:border-accent-copper hover:text-accent-copper',
           )}
           aria-label={`Copy ${t.label} template`}
         >

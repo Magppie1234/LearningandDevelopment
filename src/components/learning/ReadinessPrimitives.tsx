@@ -18,7 +18,8 @@ import type { Criticality } from '@/data/competency-policy'
  * proficiency scale never means two different things in two places.
  */
 
-export const CARD = 'rounded-2xl bg-white/70 dark:bg-white/5 border border-[rgba(0,59,70,0.08)]'
+/** Kept as a string constant for the many call sites; matches ds `CARD_BASE`. */
+export const CARD = 'rounded-2xl bg-parchment border border-hairline/10 shadow-card'
 
 /** §7 proficiency scale — the labels the whole portal quotes. */
 export const PROFICIENCY_LABEL = [
@@ -30,29 +31,36 @@ export const PROFICIENCY_LABEL = [
   'Expert / Coach',
 ] as const
 
+/**
+ * Readiness states mapped onto the portal's semantic status ramp, so
+ * "role ready" is the same green here as "completed" is everywhere else.
+ * These previously used muted brand tans (sage / rose / gold), which read as
+ * decorative rather than as status and were nearly indistinguishable from one
+ * another at badge size.
+ */
 const STATUS_STYLE: Record<ReadinessStatus, { chip: string; dot: string; icon: typeof Circle }> = {
   role_ready: {
-    chip: 'bg-surface-sage/25 text-ink-primary border-surface-sage/40',
-    dot: 'bg-surface-sage',
+    chip: 'bg-success-bg text-success-fg border-success/25',
+    dot: 'bg-success',
     icon: CheckCircle2,
   },
   developing: {
-    chip: 'bg-accent-gold/20 text-ink-primary border-accent-gold/40',
-    dot: 'bg-accent-gold',
+    chip: 'bg-warning-bg text-warning-fg border-warning/25',
+    dot: 'bg-warning',
     icon: Clock,
   },
   not_role_ready: {
-    chip: 'bg-surface-rose/30 text-ink-primary border-surface-rose/50 font-semibold',
-    dot: 'bg-surface-rose',
+    chip: 'bg-danger-bg text-danger-fg border-danger/30 font-semibold',
+    dot: 'bg-danger',
     icon: AlertTriangle,
   },
   not_assessed: {
-    chip: 'bg-[rgba(0,59,70,0.06)] text-ink-secondary border-[rgba(0,59,70,0.12)]',
-    dot: 'bg-ink-tertiary',
+    chip: 'bg-sem-neutral-bg text-sem-neutral-fg border-[rgb(var(--rule)/0.12)]',
+    dot: 'bg-sem-neutral',
     icon: HelpCircle,
   },
   no_framework: {
-    chip: 'bg-transparent text-ink-tertiary border-dashed border-[rgba(0,59,70,0.2)]',
+    chip: 'bg-transparent text-ink-tertiary border-dashed border-[rgb(var(--rule)/0.2)]',
     dot: 'bg-transparent border border-ink-tertiary',
     icon: Circle,
   },
@@ -96,18 +104,18 @@ export function ReadinessDot({ status }: { status: ReadinessStatus }) {
 const CRITICALITY_STYLE: Record<Criticality, { label: string; cls: string; title: string }> = {
   approved: {
     label: 'Critical',
-    cls: 'bg-surface-rose/30 text-ink-primary',
+    cls: 'bg-danger-bg text-danger-fg',
     title: 'Approved critical — a gap here blocks role readiness.',
   },
   proposed: {
     label: 'Critical (proposed)',
-    cls: 'bg-accent-gold/20 text-ink-secondary',
+    cls: 'bg-warning-bg text-warning-fg',
     title:
       'Sample – Requires SME Approval. Would block role readiness once the Department Head approves it.',
   },
   unset: {
     label: 'Criticality not set',
-    cls: 'bg-[rgba(0,59,70,0.06)] text-ink-tertiary',
+    cls: 'bg-[rgb(var(--rule)/0.06)] text-ink-tertiary',
     title: 'No approved critical / non-critical status on record yet (§7).',
   },
 }
@@ -146,7 +154,7 @@ export function ProficiencyMeter({
             key={step}
             className={cn(
               'h-2 w-4 rounded-sm',
-              filled ? 'bg-accent-copper' : 'bg-[rgba(0,59,70,0.1)]',
+              filled ? 'bg-accent-copper' : 'bg-[rgb(var(--rule)/0.1)]',
               isTarget && 'ring-2 ring-ink-primary/50 ring-offset-1 ring-offset-transparent',
             )}
             title={
@@ -187,10 +195,10 @@ export function CappingReason({ row }: { row: ValidatedCompetency }) {
 }
 
 const PRACTICAL_STYLE: Record<ValidatedCompetency['practicalStatus'], { label: string; cls: string }> = {
-  competent: { label: 'Practical: competent', cls: 'bg-surface-sage/25 text-ink-primary' },
-  pending: { label: 'Practical: with assessor', cls: 'bg-surface-blue/25 text-ink-primary' },
-  not_yet: { label: 'Practical: not yet competent', cls: 'bg-surface-rose/25 text-ink-primary' },
-  none: { label: 'Practical: not started', cls: 'bg-[rgba(0,59,70,0.06)] text-ink-secondary' },
+  competent: { label: 'Practical: competent', cls: 'bg-success-bg text-success-fg' },
+  pending: { label: 'Practical: with assessor', cls: 'bg-info-bg text-info-fg' },
+  not_yet: { label: 'Practical: not yet competent', cls: 'bg-danger-bg text-danger-fg' },
+  none: { label: 'Practical: not started', cls: 'bg-sem-neutral-bg text-sem-neutral-fg' },
   not_required: { label: 'No practical required', cls: 'bg-transparent text-ink-tertiary' },
 }
 
@@ -235,11 +243,11 @@ export function KpiTile({
   const [open, setOpen] = useState(false)
   const toneCls =
     tone === 'bad'
-      ? 'text-surface-rose'
+      ? 'text-danger-fg'
       : tone === 'warn'
         ? 'text-accent-copper'
         : tone === 'good'
-          ? 'text-surface-sage'
+          ? 'text-success-fg'
           : 'text-ink-primary'
   return (
     <div className={cn(CARD, 'p-4')}>
@@ -255,7 +263,7 @@ export function KpiTile({
         <Info size={11} /> {open ? 'Hide definition' : 'How is this calculated?'}
       </button>
       {open && (
-        <div className="mt-1.5 text-[11px] text-ink-tertiary space-y-0.5 border-t border-[rgba(0,59,70,0.06)] pt-1.5">
+        <div className="mt-1.5 text-[11px] text-ink-tertiary space-y-0.5 border-t border-[rgb(var(--rule)/0.06)] pt-1.5">
           <p>
             <strong className="text-ink-secondary">Formula:</strong> {meta.formula}
           </p>
@@ -293,10 +301,10 @@ export function ReadinessMixBar({
     'no_framework',
   ]
   if (mix.total === 0) {
-    return <div className={cn('h-2 rounded-full bg-[rgba(0,59,70,0.06)]', className)} />
+    return <div className={cn('h-2 rounded-full bg-[rgb(var(--rule)/0.06)]', className)} />
   }
   return (
-    <div className={cn('flex h-2 rounded-full overflow-hidden bg-[rgba(0,59,70,0.06)]', className)}>
+    <div className={cn('flex h-2 rounded-full overflow-hidden bg-[rgb(var(--rule)/0.06)]', className)}>
       {order.map((s) => {
         const n = mix[s]
         if (n === 0) return null
@@ -316,7 +324,7 @@ export function ReadinessMixBar({
 /** Demo-data notice. §24: demo data is never presented as operational data. */
 export function DemoDataNotice({ children }: { children?: React.ReactNode }) {
   return (
-    <div className="flex items-start gap-2 text-xs text-ink-secondary bg-accent-gold/15 border border-accent-gold/40 rounded-xl px-4 py-2.5">
+    <div className="flex items-start gap-2 text-xs text-warning-fg bg-warning-bg border border-warning/25 rounded-xl px-4 py-2.5">
       <AlertTriangle size={15} className="text-accent-copper flex-shrink-0 mt-0.5" />
       <span>
         <strong>Demo workforce data.</strong> Names, roles, assessment results and observations on

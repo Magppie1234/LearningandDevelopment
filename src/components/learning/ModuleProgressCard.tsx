@@ -19,7 +19,7 @@ import {
 const STATUS = {
   completed: { label: 'Completed', color: 'rgb(var(--stone-sage))', icon: CheckCircle2 },
   in_progress: { label: 'In progress', color: 'rgb(var(--m-accent-copper))', icon: ClipboardCheck },
-  not_started: { label: 'Not started', color: 'rgba(245,239,230,0.45)', icon: Circle },
+  not_started: { label: 'Not started', color: 'rgb(var(--stone-ivory)/0.70)', icon: Circle },
 } as const
 
 export default function ModuleProgressCard({
@@ -59,12 +59,12 @@ export default function ModuleProgressCard({
   }
 
   return (
-    <div className="rounded-[12px] border border-white/10 bg-stone-espresso p-4">
+    <div className="rounded-[12px] border border-stone-veil/10 bg-stone-espresso p-4">
       <div className="flex items-center gap-3">
         <s.icon size={18} className="shrink-0" style={{ color: s.color }} />
         <div className="min-w-0 flex-1">
           <p className="text-sm font-medium text-stone-ivory truncate">{moduleLabel}</p>
-          <p className="flex items-center gap-2 text-[12px] text-stone-ivory/50 mt-0.5">
+          <p className="flex items-center gap-2 text-[12px] text-stone-ivory/74 mt-0.5">
             <span style={{ color: s.color }}>{s.label}</span>
             <span className="inline-flex items-center gap-1">
               <Clock size={11} /> {notStarted ? '0m' : formatDuration(progress.total_time_spent_seconds)}
@@ -87,7 +87,7 @@ export default function ModuleProgressCard({
           )}
           {progress.attempt_count > 0 &&
             (confirming ? (
-              <span className="inline-flex items-center gap-1.5 text-xs text-stone-ivory/70">
+              <span className="inline-flex items-center gap-1.5 text-xs text-stone-ivory/80">
                 Clear progress &amp; attempts? Insight trends restart.
                 <button
                   type="button"
@@ -101,7 +101,7 @@ export default function ModuleProgressCard({
                 <button
                   type="button"
                   onClick={() => setConfirming(false)}
-                  className="rounded-full px-2.5 py-1 text-xs font-medium text-stone-ivory/60 hover:text-stone-ivory"
+                  className="rounded-full px-2.5 py-1 text-xs font-medium text-stone-ivory/72 hover:text-stone-ivory"
                 >
                   Cancel
                 </button>
@@ -111,8 +111,8 @@ export default function ModuleProgressCard({
                 type="button"
                 onClick={() => setConfirming(true)}
                 className={cn(
-                  'inline-flex items-center gap-1.5 rounded-full border border-white/15 px-3 py-1.5 text-xs font-medium text-stone-ivory/60',
-                  'hover:border-white/30 hover:text-stone-ivory transition-colors',
+                  'inline-flex items-center gap-1.5 rounded-full border border-stone-veil/15 px-3 py-1.5 text-xs font-medium text-stone-ivory/72',
+                  'hover:border-stone-veil/30 hover:text-stone-ivory transition-colors',
                 )}
               >
                 <RotateCcw size={12} /> Reset

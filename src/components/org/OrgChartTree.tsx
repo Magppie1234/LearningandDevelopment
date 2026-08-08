@@ -63,7 +63,7 @@ export function OrgChartTree({ cSuite }: { cSuite: OrgPosition[] }) {
             transition={{ duration: 0.2, ease: [0, 0, 0.2, 1] }}
             className="overflow-hidden"
           >
-            <div className="mt-6 rounded-2xl border border-[rgba(0,59,70,0.08)] bg-[rgba(0,59,70,0.015)] p-4 space-y-3">
+            <div className="mt-6 rounded-2xl border border-[rgb(var(--rule)/0.08)] bg-[rgb(var(--rule)/0.015)] p-4 space-y-3">
               <p className="text-xs font-semibold text-ink-tertiary uppercase tracking-wide px-1">
                 {expandedPosition.title} — Departments
               </p>

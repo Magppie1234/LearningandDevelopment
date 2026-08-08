@@ -11,9 +11,63 @@ npm run dev
 ```
 
 Runs on port 3020 by default (see `.claude/launch.json` at the repo root,
-config `magppie-ld-next`). The portal runs in **demo mode** without any
+config `ld-portal`). The portal runs in **demo mode** without any
 `.env.local` — click "Explore the portal (demo)" on the login screen. Copy
 `.env.example` to `.env.local` and fill in real Supabase keys to use live auth.
+
+Responsive/console smoke test across every route at three viewports:
+
+```
+node scripts/responsive-check.mjs ld_admin
+```
+
+## Architecture
+
+Page components live in **`src/screens/`**, not `src/pages/`. That is
+deliberate: Next treats a `src/pages` directory as the legacy Pages Router, so
+every component in it was additionally exposed as a broken standalone route
+(`/ManagerHub`, `/Assessments`) prerendered outside the portal shell. Routes are
+`src/app/(portal)/**/page.tsx`, each a thin wrapper — plus `RoleGuard` where the
+screen covers people other than the viewer.
+
+See [`docs/redesign-2026-08.md`](docs/redesign-2026-08.md) for the full
+rationale behind the August 2026 redesign.
+
+### Roles and scope
+
+[`src/lib/roles.ts`](src/lib/roles.ts) is the authorisation model: five roles
+(`employee`, `manager`, `hod`, `ld_admin`, `leadership`), the permissions each
+holds, the grouped information architecture, and `visibleWorkforce()` — the
+single function that decides which people a viewer's dashboards may cover. Nav
+entries, route access (`RoleGuard`) and every cohort roll-up filter through it,
+so a manager cannot reach another line's data by typing a URL.
+
+[`src/lib/role-context.tsx`](src/lib/role-context.tsx) resolves the acting
+identity. Until the HRMS import runs, the header carries a **role switcher** so
+each experience can be reviewed against the same dataset; the shell states on
+screen that the role is simulated.
+
+### The learning plan layer
+
+[`src/lib/learning-plan.ts`](src/lib/learning-plan.ts) joins the two halves of
+the product that used to be disconnected: the readiness engine
+(`lib/role-readiness.ts`), which knows what a person can *prove*, and the
+academy catalogue, which knows what can be *learned*. It derives per-person
+learning items, due dates, statuses, next steps and owners, plus the cohort
+roll-ups (`summarise`, `rosterFor`, `assessmentStats`) that every dashboard
+reads. Nothing in it is invented — due dates come from role start date plus a
+stated criticality window, and where a fact is genuinely unknown it is left
+absent so the UI can say so.
+
+### Design system
+
+[`src/components/ds/`](src/components/ds) is the single source for surfaces,
+controls, states, tables and charts. Tokens live in
+[`src/app/globals.css`](src/app/globals.css): a clean light theme (primary), a
+contrast-checked dark theme, and a five-value **semantic status ramp**
+(success / warning / danger / info / neutral) that means the same thing on
+every screen. `StatusBadge` always pairs a tone with an icon and a word —
+colour is never the only status signal.
 
 ## AI Assistant
 

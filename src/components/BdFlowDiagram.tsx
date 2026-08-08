@@ -70,13 +70,13 @@ export function BdPitchFlowDiagram() {
                 'w-full flex items-center gap-3 rounded-[12px] border-[0.5px] px-4 py-3 text-left transition-colors',
                 isOpen
                   ? 'border-accent-copper bg-accent-copper/10'
-                  : 'border-[rgba(0,59,70,0.14)] bg-cream hover:bg-[rgba(0,59,70,0.02)]',
+                  : 'border-[rgb(var(--rule)/0.14)] bg-cream hover:bg-[rgb(var(--rule)/0.02)]',
               )}
             >
               <span
                 className={cn(
                   'shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-[12px] font-semibold',
-                  isOpen ? 'bg-accent-copper text-parchment' : 'bg-[rgba(0,59,70,0.08)] text-ink-secondary',
+                  isOpen ? 'bg-accent-copper text-parchment' : 'bg-[rgb(var(--rule)/0.08)] text-ink-secondary',
                 )}
               >
                 {i + 1}
@@ -178,23 +178,23 @@ export function BdObjectionTreeDiagram() {
     <div className="max-w-[820px] mx-auto">
       {/* Root */}
       <div className="flex justify-center mb-2">
-        <div className="rounded-[12px] border-[0.5px] border-[rgba(0,59,70,0.14)] bg-ink-primary text-parchment px-5 py-2.5 text-sm font-semibold">
+        <div className="rounded-[12px] border-[0.5px] border-[rgb(var(--rule)/0.14)] bg-ink-primary text-parchment px-5 py-2.5 text-sm font-semibold">
           Customer objects
         </div>
       </div>
       <div className="flex justify-center">
-        <div className="h-6 w-px bg-[rgba(0,59,70,0.2)]" />
+        <div className="h-6 w-px bg-[rgb(var(--rule)/0.2)]" />
       </div>
 
       {/* Branch row */}
       <div className="relative">
-        <div className="hidden sm:block absolute left-0 right-0 top-0 h-px bg-[rgba(0,59,70,0.2)]" />
+        <div className="hidden sm:block absolute left-0 right-0 top-0 h-px bg-[rgb(var(--rule)/0.2)]" />
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-0">
           {OBJECTION_BRANCHES.map((b, i) => {
             const isOpen = openIndex === i
             return (
               <div key={i} className="flex flex-col items-center">
-                <div className="hidden sm:block h-4 w-px bg-[rgba(0,59,70,0.2)]" />
+                <div className="hidden sm:block h-4 w-px bg-[rgb(var(--rule)/0.2)]" />
                 <button
                   type="button"
                   onClick={() => setOpenIndex(isOpen ? null : i)}
@@ -202,16 +202,16 @@ export function BdObjectionTreeDiagram() {
                     'w-full rounded-[12px] border-[0.5px] px-3 py-2.5 text-center transition-colors',
                     isOpen
                       ? 'border-accent-copper bg-accent-copper/10'
-                      : 'border-[rgba(0,59,70,0.14)] bg-cream hover:bg-[rgba(0,59,70,0.02)]',
+                      : 'border-[rgb(var(--rule)/0.14)] bg-cream hover:bg-[rgb(var(--rule)/0.02)]',
                   )}
                 >
                   <p className="text-[13px] font-medium text-ink-primary">{b.label}</p>
                 </button>
-                <div className="h-3 w-px bg-[rgba(0,59,70,0.2)]" />
+                <div className="h-3 w-px bg-[rgb(var(--rule)/0.2)]" />
                 <div
                   className={cn(
                     'w-full rounded-[10px] px-3 py-2 text-center',
-                    isOpen ? 'bg-accent-copper/15' : 'bg-[rgba(0,59,70,0.04)]',
+                    isOpen ? 'bg-accent-copper/15' : 'bg-[rgb(var(--rule)/0.04)]',
                   )}
                   style={isOpen ? { color: 'var(--status-ontrack-fg)', backgroundColor: 'var(--status-ontrack-bg)' } : undefined}
                 >

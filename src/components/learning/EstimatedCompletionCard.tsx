@@ -30,7 +30,7 @@ export default function EstimatedCompletionCard({
   const estHours = avgSecPerCompleted ? (avgSecPerCompleted * remaining) / 3600 : 0
 
   return (
-    <div className="rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream p-5 shadow-card flex items-center gap-4">
+    <div className="rounded-2xl border-[0.5px] border-[rgb(var(--rule)/0.14)] bg-cream p-5 shadow-card flex items-center gap-4">
       <div className="w-11 h-11 rounded-xl bg-accent-copper/15 flex items-center justify-center shrink-0">
         <Hourglass size={22} className="text-accent-copper" />
       </div>

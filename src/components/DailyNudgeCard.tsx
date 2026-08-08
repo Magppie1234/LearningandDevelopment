@@ -60,7 +60,7 @@ export default function DailyNudgeCard() {
   if (!nudge) return null
 
   return (
-    <div className="rounded-[12px] bg-cream border-[0.5px] border-[rgba(0,59,70,0.14)] dark:border-[rgba(255,255,255,0.1)] p-4 flex flex-col sm:flex-row sm:items-center gap-4 transition-shadow hover:shadow-card">
+    <div className="rounded-[12px] bg-cream border-[0.5px] border-[rgb(var(--rule)/0.14)] dark:border-[rgba(255,255,255,0.1)] p-4 flex flex-col sm:flex-row sm:items-center gap-4 transition-shadow hover:shadow-card">
       <div className="w-11 h-11 shrink-0 rounded-full bg-accent-gold/15 flex items-center justify-center">
         <Zap size={20} className="text-accent-gold" />
       </div>
@@ -90,7 +90,7 @@ export default function DailyNudgeCard() {
         <div className="flex gap-2 shrink-0">
           <Link
             href="/academies"
-            className="rounded-full border border-[rgba(0,59,70,0.15)] px-3.5 py-2 text-xs font-medium text-ink-primary hover:bg-black/[0.03] transition"
+            className="rounded-full border border-[rgb(var(--rule)/0.15)] px-3.5 py-2 text-xs font-medium text-ink-primary hover:bg-black/[0.03] transition"
           >
             Open module
           </Link>

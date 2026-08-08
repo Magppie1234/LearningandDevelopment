@@ -1,4 +1,4 @@
-import Knowledge from '@/pages/Knowledge'
+import Knowledge from '@/screens/Knowledge'
 
 export default function Page() {
   return <Knowledge />

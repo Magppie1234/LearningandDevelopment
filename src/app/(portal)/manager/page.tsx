@@ -1,5 +1,10 @@
-import ManagerHub from '@/pages/ManagerHub'
+import RoleGuard from '@/components/RoleGuard'
+import ManagerHub from '@/screens/ManagerHub'
 
 export default function Page() {
-  return <ManagerHub />
+  return (
+    <RoleGuard requires="manager">
+      <ManagerHub />
+    </RoleGuard>
+  )
 }

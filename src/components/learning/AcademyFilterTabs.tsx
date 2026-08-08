@@ -34,10 +34,10 @@ export default function AcademyFilterTabs({
 
   return (
     <div className="flex items-center gap-2 flex-wrap justify-end">
-      <span className="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-stone-ivory/40">
+      <span className="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-stone-ivory/70">
         <Layers size={12} /> Show
       </span>
-      <div className="inline-flex rounded-full border border-white/10 bg-stone-espresso p-0.5">
+      <div className="inline-flex rounded-full border border-stone-veil/10 bg-stone-espresso p-0.5">
         {tabs.map((t) => {
           const active = value === t.id
           return (
@@ -49,7 +49,7 @@ export default function AcademyFilterTabs({
                 'rounded-full px-3.5 py-1.5 text-[12px] font-medium transition-colors',
                 active
                   ? 'bg-accent-copper text-stone-ink'
-                  : 'text-stone-ivory/60 hover:text-stone-ivory',
+                  : 'text-stone-ivory/72 hover:text-stone-ivory',
               )}
             >
               {t.label}

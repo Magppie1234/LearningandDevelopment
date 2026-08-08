@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Maximize2, Minimize2, Search, X } from 'lucide-react'
+import { ChevronDown, Maximize2, Minimize2, Search, X } from 'lucide-react'
 import { FLOWS } from '@/data/flows'
 
 /* Icon library — inner SVG markup keyed by the `ic` field on each step. */
@@ -57,15 +57,28 @@ const ICONS: Record<string, string> = {
 
 export default function KitchenJourney() {
   const [flowId, setFlowId] = useState(FLOWS[0].id)
+  const [phaseName, setPhaseName] = useState<string | null>(null)
+  const [openStep, setOpenStep] = useState<number | null>(null)
+  // Where the viewer currently sits in the sequence. Steps before it render
+  // as completed, the step itself as in-progress (gold), later ones as not
+  // reached. There is NO live per-deal stage feed in the portal, so this is
+  // an illustration of the process driven by selection — see the note
+  // rendered under the pipeline tabs.
+  const [position, setPosition] = useState<number | null>(null)
   const [fullscreen, setFullscreen] = useState(false)
   const [query, setQuery] = useState('')
   const rootRef = useRef<HTMLDivElement>(null)
 
   const flow = FLOWS.find((f) => f.id === flowId) ?? FLOWS[0]
 
-  // Reset the search whenever the flow tab changes — a filter carried over
-  // from a different flow reads as broken rather than helpful.
-  useEffect(() => setQuery(''), [flowId])
+  // Reset the search, the pipeline tab and the open row whenever the flow
+  // changes — every piece of that state is meaningless in another flow.
+  useEffect(() => {
+    setQuery('')
+    setPhaseName(null)
+    setOpenStep(null)
+    setPosition(null)
+  }, [flowId])
 
   /* Group the flat step list under its phase, carrying each step's global number. */
   const groups = useMemo(
@@ -80,9 +93,39 @@ export default function KitchenJourney() {
     [flow],
   )
 
+  // One tab per pipeline. `phaseName` null means the flow's first pipeline.
+  const activePhase = phaseName ?? flow.phases[0]?.name
   const needle = query.trim().toLowerCase()
-  const filteredGroups = useMemo(() => {
-    if (!needle) return groups
+
+  // Opening a pipeline lands on its first step marked in-progress, so the
+  // status pattern (done → current → upcoming) is visible without a click.
+  const firstStepOfPhase = useMemo(() => {
+    const g = groups.find((x) => x.phase.name === activePhase)
+    return g?.steps[0]?.n ?? null
+  }, [groups, activePhase])
+  useEffect(() => {
+    setOpenStep(firstStepOfPhase)
+    setPosition(firstStepOfPhase)
+  }, [firstStepOfPhase])
+
+  const statusOf = (n: number): 'done' | 'current' | 'todo' => {
+    if (position === null) return 'todo'
+    return n < position ? 'done' : n === position ? 'current' : 'todo'
+  }
+  const STATUS_BADGE = {
+    done: { label: 'Completed', cls: 'done' },
+    current: { label: 'In Progress', cls: 'current' },
+    todo: { label: 'Not Started', cls: 'todo' },
+  } as const
+
+  // Search deliberately spans every pipeline in the flow, overriding the
+  // pipeline tab: someone typing a step name usually does not know which
+  // pipeline it lives in, and a search silently scoped to the visible tab
+  // would "lose" steps that exist. Phase headings return during a search so
+  // each hit says where it belongs.
+  const searching = needle.length > 0
+  const visibleGroups = useMemo(() => {
+    if (!searching) return groups.filter((g) => g.phase.name === activePhase)
     return groups
       .map((g) => ({
         ...g,
@@ -94,8 +137,8 @@ export default function KitchenJourney() {
         ),
       }))
       .filter((g) => g.steps.length > 0)
-  }, [groups, needle])
-  const resultCount = filteredGroups.reduce((sum, g) => sum + g.steps.length, 0)
+  }, [groups, needle, searching, activePhase])
+  const resultCount = visibleGroups.reduce((sum, g) => sum + g.steps.length, 0)
 
   useEffect(() => {
     const onChange = () => setFullscreen(document.fullscreenElement === rootRef.current)
@@ -109,6 +152,16 @@ export default function KitchenJourney() {
 
   return (
     <div className={`kjt${fullscreen ? ' kjt-fs' : ''}`} ref={rootRef}>
+      {/* Real installed Magppie kitchen (self-hosted, "Our Wellness Spaces")
+          behind the whole section. The wash is heavy on purpose: 100+ steps of
+          12px text sit on top of this, so the photograph must resolve to
+          near-ground before any row is drawn over it. */}
+      <div aria-hidden className="kjt-backdrop">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/kitchen/space-2.jpg" alt="" draggable={false} />
+        <span />
+      </div>
+
       <div className="kjt-tabs" role="tablist" aria-label="Process flow">
         {FLOWS.map((f) => (
           <button
@@ -134,7 +187,7 @@ export default function KitchenJourney() {
         <div className="kjt-head-right">
           <span className="kjt-count">
             {flow.steps.length} steps · {flow.phases.length}{' '}
-            {flow.phases.length === 1 ? 'phase' : 'phases'}
+            {flow.phases.length === 1 ? 'pipeline' : 'pipelines'}
           </span>
           <button
             type="button"
@@ -148,6 +201,36 @@ export default function KitchenJourney() {
         </div>
       </div>
 
+      {/* One tab per pipeline, so nobody scrolls one pipeline to reach another.
+          A single-pipeline flow needs no second tab row. */}
+      {flow.phases.length > 1 && (
+        <div className="kjt-subtabs" role="tablist" aria-label="Pipeline">
+          {flow.phases.map((p) => (
+            <button
+              key={p.name}
+              type="button"
+              role="tab"
+              aria-selected={!searching && p.name === activePhase}
+              className={`kjt-subtab${!searching && p.name === activePhase ? ' active' : ''}`}
+              style={{ ['--seg' as string]: p.color }}
+              onClick={() => {
+                setPhaseName(p.name)
+                setQuery('')
+              }}
+            >
+              <span className="kjt-subtab-dot" />
+              {p.name}
+              <span className="kjt-subtab-count">{p.count}</span>
+            </button>
+          ))}
+        </div>
+      )}
+
+      <p className="kjt-status-note">
+        Circles show position in the sequence — click any step to move it. This illustrates the
+        process; it is not a live deal&apos;s status, which would need the CRM feed wired in.
+      </p>
+
       <div className="kjt-searchbar">
         <div className="kjt-search">
           <Search size={15} className="kjt-search-icon" aria-hidden />
@@ -155,7 +238,7 @@ export default function KitchenJourney() {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder={`Search ${flow.label.toLowerCase()} steps…`}
+            placeholder={`Search all ${flow.label.toLowerCase()} steps…`}
             aria-label={`Search ${flow.label} steps`}
           />
           {query && (
@@ -169,24 +252,23 @@ export default function KitchenJourney() {
             </button>
           )}
         </div>
-        {needle && (
+        {searching && (
           <span className="kjt-search-count">
-            {resultCount} {resultCount === 1 ? 'result' : 'results'}
+            {resultCount} {resultCount === 1 ? 'result' : 'results'} across all pipelines
           </span>
         )}
       </div>
 
       <div className="kjt-scroll">
-        {needle && filteredGroups.length === 0 && (
+        {searching && visibleGroups.length === 0 && (
           <p className="kjt-empty">No steps match “{query.trim()}”.</p>
         )}
-        {filteredGroups.map(({ phase, steps }) => (
+        {visibleGroups.map(({ phase, steps }) => (
           <section key={phase.name}>
-            {flow.phases.length > 1 && (
-              <div
-                className="kjt-phase-head"
-                style={{ ['--seg' as string]: phase.color }}
-              >
+            {/* The phase heading only earns its place during a search, when
+                results span pipelines; otherwise the tab already says it. */}
+            {searching && flow.phases.length > 1 && (
+              <div className="kjt-phase-head" style={{ ['--seg' as string]: phase.color }}>
                 <span className="kjt-phase-dot" />
                 <span className="kjt-phase-name">{phase.name}</span>
                 <span className="kjt-phase-range">
@@ -195,40 +277,104 @@ export default function KitchenJourney() {
               </div>
             )}
 
-            {steps.map(({ s, n }) => (
-              <div
-                key={n}
-                className="kjt-row"
-                style={{ ['--seg' as string]: phase.color }}
-              >
-                <div className="kjt-rail">
-                  <span className="kjt-node">{n}</span>
-                </div>
-                <div className="kjt-content">
-                  <div className="kjt-row-title">
-                    <svg
-                      viewBox="0 0 24 24"
-                      dangerouslySetInnerHTML={{ __html: ICONS[s.ic] || ICONS.box }}
-                    />
-                    <span>{s.t}</span>
+            {steps.map(({ s, n }) => {
+              // Search matches render expanded — a hit on description text
+              // inside a collapsed row would be invisible, which reads as a
+              // broken search.
+              const open = searching || openStep === n
+              const status = statusOf(n)
+              const badge = STATUS_BADGE[status]
+              return (
+                <div
+                  key={n}
+                  className={`kjt-row${open ? ' open' : ''}`}
+                  style={{ ['--seg' as string]: phase.color }}
+                >
+                  <div className="kjt-rail">
+                    {/* Status-coded circle: completed = pale green check,
+                        current = gold with the step's icon, upcoming = grey
+                        outline number. */}
+                    <span className={`kjt-node ${status}`}>
+                      {status === 'done' ? (
+                        <svg viewBox="0 0 24 24" aria-hidden>
+                          <path d="M5 12.5l4.5 4.5L19 7.5" />
+                        </svg>
+                      ) : status === 'current' ? (
+                        <svg
+                          viewBox="0 0 24 24"
+                          aria-hidden
+                          dangerouslySetInnerHTML={{ __html: ICONS[s.ic] || ICONS.box }}
+                        />
+                      ) : (
+                        n
+                      )}
+                    </span>
                   </div>
-                  <p className="kjt-row-desc">{s.d}</p>
-                  {s.disp && (
-                    <div className="kjt-row-chips">
-                      {s.disp.map((x) => (
-                        <span
-                          className={`kjt-chip${x.terminal ? ' terminal' : ''}`}
-                          key={x.label}
-                          title={x.desc && x.desc !== x.label ? x.desc : undefined}
-                        >
-                          {x.label}
+                  <div className="kjt-content">
+                    <button
+                      type="button"
+                      className="kjt-row-btn"
+                      aria-expanded={open}
+                      aria-controls={`kjt-step-${flow.id}-${n}`}
+                      onClick={() => {
+                        if (open && !searching) {
+                          setOpenStep(null)
+                        } else {
+                          setOpenStep(n)
+                          setPosition(n)
+                        }
+                      }}
+                    >
+                      <span className="kjt-row-title">
+                        <span className="kjt-step-label">Step {n}</span>
+                        <svg
+                          viewBox="0 0 24 24"
+                          dangerouslySetInnerHTML={{ __html: ICONS[s.ic] || ICONS.box }}
+                        />
+                        <span>{s.t}</span>
+                      </span>
+                      {/* Tag labels sit in the row itself, so a collapsed row
+                          still says what the step captures. */}
+                      {!open && s.disp && s.disp.length > 0 && (
+                        <span className="kjt-inline-chips" aria-hidden>
+                          {s.disp.slice(0, 3).map((x) => (
+                            <span className="kjt-chip" key={x.label}>
+                              {x.label}
+                            </span>
+                          ))}
+                          {s.disp.length > 3 && (
+                            <span className="kjt-chip-more">+{s.disp.length - 3}</span>
+                          )}
                         </span>
-                      ))}
-                    </div>
-                  )}
+                      )}
+                      <span className="kjt-details">
+                        {open ? 'Hide' : 'Details'}
+                        <ChevronDown size={13} className={open ? 'flip' : ''} aria-hidden />
+                      </span>
+                    </button>
+                    {open && (
+                      <div id={`kjt-step-${flow.id}-${n}`} className="kjt-row-body">
+                        <span className={`kjt-status-badge ${badge.cls}`}>{badge.label}</span>
+                        <p className="kjt-row-desc">{s.d}</p>
+                        {s.disp && (
+                          <div className="kjt-row-chips">
+                            {s.disp.map((x) => (
+                              <span
+                                className={`kjt-chip${x.terminal ? ' terminal' : ''}`}
+                                key={x.label}
+                                title={x.desc && x.desc !== x.label ? x.desc : undefined}
+                              >
+                                {x.label}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </section>
         ))}
       </div>

@@ -138,7 +138,7 @@ export default function BdFaqAccordion({
               )}
             </div>
 
-            <div className="rounded-[12px] border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream overflow-hidden divide-y divide-[rgba(0,59,70,0.06)]">
+            <div className="rounded-[12px] border-[0.5px] border-[rgb(var(--rule)/0.14)] bg-cream overflow-hidden divide-y divide-[rgb(var(--rule)/0.06)]">
               {catItems.map((item) => {
                 const isOpen = openId === item.id
                 const isEmiFlag = item.qNum === 30
@@ -149,7 +149,7 @@ export default function BdFaqAccordion({
                       onClick={() => setOpenId(isOpen ? null : item.id)}
                       className={cn(
                         'w-full flex items-center gap-3 px-4 py-3 text-left transition-colors',
-                        isOpen ? 'bg-accent-copper/5' : 'hover:bg-[rgba(0,59,70,0.02)]',
+                        isOpen ? 'bg-accent-copper/5' : 'hover:bg-[rgb(var(--rule)/0.02)]',
                       )}
                     >
                       <span className="w-9 shrink-0 text-[11px] text-ink-tertiary tabular-nums">

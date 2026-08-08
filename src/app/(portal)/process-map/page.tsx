@@ -1,4 +1,4 @@
-import ProcessLearningMap from '@/pages/ProcessLearningMap'
+import ProcessLearningMap from '@/screens/ProcessLearningMap'
 
 export default function Page() {
   return <ProcessLearningMap />

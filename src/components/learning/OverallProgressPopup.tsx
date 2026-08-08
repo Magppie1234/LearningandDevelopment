@@ -71,7 +71,7 @@ export default function OverallProgressPopup() {
             exit={{ opacity: 0, scale: 0.96 }}
             transition={{ duration: 0.25 }}
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-[440px] rounded-2xl bg-stone-espresso border border-white/10 shadow-2xl p-6"
+            className="w-full max-w-[440px] rounded-2xl bg-stone-espresso border border-stone-veil/10 shadow-2xl p-6"
           >
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-2 text-accent-copper">
@@ -82,7 +82,7 @@ export default function OverallProgressPopup() {
                 type="button"
                 onClick={dismiss}
                 aria-label="Dismiss"
-                className="w-8 h-8 rounded-full flex items-center justify-center text-stone-ivory/50 hover:text-stone-ivory hover:bg-white/[0.06] transition-colors"
+                className="w-8 h-8 rounded-full flex items-center justify-center text-stone-ivory/74 hover:text-stone-ivory hover:bg-stone-veil/[0.06] transition-colors"
               >
                 <X size={16} />
               </button>
@@ -99,15 +99,15 @@ export default function OverallProgressPopup() {
                   { label: 'In progress', value: String(s.inProgress) },
                   { label: 'Time invested', value: formatDuration(s.totalTimeSeconds) },
                 ].map((k) => (
-                  <div key={k.label} className="rounded-[12px] bg-stone-charcoal border border-white/10 p-3 text-center">
+                  <div key={k.label} className="rounded-[12px] bg-stone-charcoal border border-stone-veil/10 p-3 text-center">
                     <p className="text-lg font-bold text-stone-ivory tabular-nums">{k.value}</p>
-                    <p className="text-[10px] font-medium uppercase tracking-wide text-stone-ivory/45 mt-0.5">{k.label}</p>
+                    <p className="text-[10px] font-medium uppercase tracking-wide text-stone-ivory/72 mt-0.5">{k.label}</p>
                   </div>
                 ))}
               </div>
             )}
 
-            <p className="text-[13px] text-stone-ivory/70 mt-4 leading-relaxed">{takeaway}</p>
+            <p className="text-[13px] text-stone-ivory/80 mt-4 leading-relaxed">{takeaway}</p>
 
             <button
               type="button"

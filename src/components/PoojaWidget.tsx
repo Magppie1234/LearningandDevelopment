@@ -70,7 +70,7 @@ export default function PoojaWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.98 }}
             transition={{ duration: 0.18 }}
-            className="fixed bottom-24 right-5 z-[60] w-[min(380px,calc(100vw-2.5rem))] rounded-2xl bg-cream border border-[rgba(0,59,70,0.1)] shadow-elevated overflow-hidden flex flex-col"
+            className="fixed bottom-24 right-5 z-[60] w-[min(380px,calc(100vw-2.5rem))] rounded-2xl bg-cream border border-[rgb(var(--rule)/0.1)] shadow-elevated overflow-hidden flex flex-col"
           >
             <header className="flex items-center justify-between px-4 py-3 bg-ink-primary">
               <p className="text-sm font-semibold text-parchment flex items-center gap-2">
@@ -107,13 +107,13 @@ export default function PoojaWidget() {
               )}
             </div>
 
-            <div className="p-2.5 border-t border-[rgba(0,59,70,0.08)] flex items-center gap-2">
+            <div className="p-2.5 border-t border-[rgb(var(--rule)/0.08)] flex items-center gap-2">
               <input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && send()}
                 placeholder="Ask mid-course…"
-                className="flex-1 bg-parchment border border-[rgba(0,59,70,0.12)] rounded-full px-3.5 py-2 text-[13px] focus:outline-none focus:border-ink-primary"
+                className="flex-1 bg-parchment border border-[rgb(var(--rule)/0.12)] rounded-full px-3.5 py-2 text-[13px] focus:outline-none focus:border-ink-primary"
               />
               <button
                 type="button"
@@ -132,7 +132,7 @@ export default function PoojaWidget() {
         type="button"
         aria-label="Ask Pooja"
         onClick={() => setOpen((v) => !v)}
-        className="fixed bottom-6 right-5 z-[60] w-13 h-13 p-3.5 rounded-full bg-ink-primary text-accent-gold shadow-elevated hover:scale-105 transition-transform"
+        className="fixed bottom-6 right-5 z-[60] w-12 h-12 grid place-items-center rounded-full bg-ink-primary text-accent-copper shadow-elevated hover:scale-105 transition-transform"
       >
         <Sparkles size={22} />
       </button>

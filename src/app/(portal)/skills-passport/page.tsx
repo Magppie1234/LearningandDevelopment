@@ -1,5 +1,10 @@
-import SkillsPassport from '@/pages/SkillsPassport'
+import ScreenBoundary from '@/components/ScreenBoundary'
+import SkillsPassport from '@/screens/SkillsPassport'
 
 export default function Page() {
-  return <SkillsPassport />
+  return (
+    <ScreenBoundary>
+      <SkillsPassport />
+    </ScreenBoundary>
+  )
 }

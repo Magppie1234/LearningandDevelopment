@@ -39,10 +39,10 @@ function toItem(p: ModuleProgressRow, label: string): Item {
 function Row({ item, tone }: { item: Item; tone: 'strong' | 'weak' }) {
   const color = tone === 'strong' ? 'rgb(var(--stone-sage))' : '#e0a04a'
   return (
-    <div className="flex items-center justify-between gap-3 rounded-lg bg-white/[0.04] px-3 py-2">
+    <div className="flex items-center justify-between gap-3 rounded-lg bg-stone-veil/[0.04] px-3 py-2">
       <span className="min-w-0 flex-1">
         <span className="block text-[13px] font-medium text-stone-ivory truncate">{item.label}</span>
-        <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-stone-ivory/55 mt-0.5">
+        <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-stone-ivory/70 mt-0.5">
           {item.score != null && (
             <span style={{ color }} className="font-semibold">
               Best {item.score}%
@@ -95,7 +95,7 @@ export default function StrongWeakModules({
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
       {/* Strong */}
-      <div className="rounded-2xl border border-white/10 bg-stone-espresso p-5">
+      <div className="rounded-2xl border border-stone-veil/10 bg-stone-espresso p-5">
         <div className="flex items-center gap-2 mb-3">
           <Sparkles size={15} style={{ color: 'rgb(var(--stone-sage))' }} />
           <h3 className="text-sm font-semibold text-stone-ivory">Strong modules</h3>
@@ -107,14 +107,14 @@ export default function StrongWeakModules({
             ))}
           </div>
         ) : (
-          <p className="text-[13px] text-stone-ivory/45">
+          <p className="text-[13px] text-stone-ivory/72">
             No strong modules yet — score {STRONG_MIN}%+ on a quiz to land here.
           </p>
         )}
       </div>
 
       {/* Weak / focus */}
-      <div className="rounded-2xl border border-white/10 bg-stone-espresso p-5">
+      <div className="rounded-2xl border border-stone-veil/10 bg-stone-espresso p-5">
         <div className="flex items-center gap-2 mb-3">
           <Target size={15} style={{ color: '#e0a04a' }} />
           <h3 className="text-sm font-semibold text-stone-ivory">Needs focus</h3>
@@ -126,7 +126,7 @@ export default function StrongWeakModules({
             ))}
           </div>
         ) : (
-          <p className="text-[13px] text-stone-ivory/45">
+          <p className="text-[13px] text-stone-ivory/72">
             Nothing flagged — you&apos;re passing your quizzes cleanly.
           </p>
         )}

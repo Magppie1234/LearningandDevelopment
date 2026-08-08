@@ -56,7 +56,7 @@ export function CSuiteCard({ position }: { position: OrgPosition }) {
   subtitleParts.push(`${teamMemberCount} team member${teamMemberCount === 1 ? '' : 's'}`)
 
   return (
-    <div className="rounded-[12px] bg-cream border-[0.5px] border-[rgba(0,59,70,0.14)] dark:border-[rgba(255,255,255,0.1)] overflow-hidden transition-shadow duration-200 hover:shadow-card">
+    <div className="rounded-[12px] bg-cream border-[0.5px] border-[rgb(var(--rule)/0.14)] dark:border-[rgba(255,255,255,0.1)] overflow-hidden transition-shadow duration-200 hover:shadow-card">
       {/* Colored accent bar + header row */}
       <div className="flex items-stretch">
         <div className="w-1.5 shrink-0" style={{ backgroundColor: color.bar }} />
@@ -110,7 +110,7 @@ export function CSuiteCard({ position }: { position: OrgPosition }) {
         <PositionEditor position={position}>
           <button
             type="button"
-            className="inline-flex items-center gap-1 rounded-full border border-dashed border-[rgba(0,59,70,0.2)] px-2.5 py-1 text-xs font-medium text-ink-tertiary hover:border-ink-secondary hover:text-ink-secondary transition-colors"
+            className="inline-flex items-center gap-1 rounded-full border border-dashed border-[rgb(var(--rule)/0.2)] px-2.5 py-1 text-xs font-medium text-ink-tertiary hover:border-ink-secondary hover:text-ink-secondary transition-colors"
           >
             <Plus size={11} /> Add
           </button>
@@ -125,9 +125,9 @@ export function CSuiteCard({ position }: { position: OrgPosition }) {
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.2, ease: [0, 0, 0.2, 1] }}
-            className="overflow-hidden border-t border-[rgba(0,59,70,0.08)]"
+            className="overflow-hidden border-t border-[rgb(var(--rule)/0.08)]"
           >
-            <div className="p-4 space-y-3 bg-[rgba(0,59,70,0.015)]">
+            <div className="p-4 space-y-3 bg-[rgb(var(--rule)/0.015)]">
               <DepartmentList cSuiteId={position.id} />
               <div className="pt-1">
                 <AddPositionButton

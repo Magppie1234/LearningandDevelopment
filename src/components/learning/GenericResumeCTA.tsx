@@ -32,7 +32,7 @@ export default function GenericResumeCTA({ resume, href }: { resume: DemoResume;
             Continue learning
           </p>
           <p className="text-sm font-semibold text-stone-ivory truncate">{resume.label}</p>
-          <p className="text-[12px] text-stone-ivory/50 mt-0.5">{at}</p>
+          <p className="text-[12px] text-stone-ivory/74 mt-0.5">{at}</p>
         </div>
       </div>
       <ArrowRight size={18} className="shrink-0 text-accent-copper transition-transform group-hover:translate-x-1" />

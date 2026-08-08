@@ -1,4 +1,4 @@
-import SalesDashboard from '@/pages/SalesDashboard'
+import SalesDashboard from '@/screens/SalesDashboard'
 
 export default function Page() {
   return <SalesDashboard />

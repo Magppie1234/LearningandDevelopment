@@ -115,11 +115,11 @@ export default function LearningDashboard({
       )}
 
       {load.status === 'loading' && (
-        <div className="rounded-2xl border border-white/10 bg-stone-espresso p-6 animate-pulse h-28" />
+        <div className="rounded-2xl border border-stone-veil/10 bg-stone-espresso p-6 animate-pulse h-28" />
       )}
 
       {!useDemo && load.status === 'unconfigured' && (
-        <div className="rounded-2xl border border-white/10 bg-stone-espresso p-6 text-sm text-stone-ivory/70">
+        <div className="rounded-2xl border border-stone-veil/10 bg-stone-espresso p-6 text-sm text-stone-ivory/80">
           <p className="font-semibold text-stone-ivory mb-1">Live dashboard pending backend</p>
           The learning dashboard reads from Supabase (sessions, attempts, insights). It activates
           once <code className="text-[12px] text-accent-copper">NEXT_PUBLIC_SUPABASE_URL/ANON_KEY</code>{' '}
@@ -128,7 +128,7 @@ export default function LearningDashboard({
       )}
 
       {!useDemo && load.status === 'unauthenticated' && (
-        <div className="rounded-2xl border border-white/10 bg-stone-espresso p-6 text-sm text-stone-ivory/70 flex flex-wrap items-center justify-between gap-4">
+        <div className="rounded-2xl border border-stone-veil/10 bg-stone-espresso p-6 text-sm text-stone-ivory/80 flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="font-semibold text-stone-ivory mb-1">Sign in to track your learning</p>
             You&apos;re browsing as a guest. Sign in and this dashboard starts recording time,
@@ -141,7 +141,7 @@ export default function LearningDashboard({
       )}
 
       {load.status === 'error' && (
-        <div className="rounded-2xl border border-[rgba(200,130,85,0.4)] bg-accent-copper/10 p-6 text-sm text-stone-ivory/70">
+        <div className="rounded-2xl border border-[rgba(200,130,85,0.4)] bg-accent-copper/10 p-6 text-sm text-stone-ivory/80">
           Couldn&apos;t load progress: {load.message}
         </div>
       )}
@@ -178,10 +178,10 @@ export default function LearningDashboard({
           // Fully empty (not even module rows to list) → a short prompt.
           if (fProgress.length === 0) {
             return (
-              <div className="rounded-2xl border border-white/10 bg-stone-espresso p-8 text-center">
+              <div className="rounded-2xl border border-stone-veil/10 bg-stone-espresso p-8 text-center">
                 <GraduationCap size={26} className="mx-auto text-accent-copper mb-2" />
                 <p className="text-sm font-semibold text-stone-ivory">Let&apos;s get started</p>
-                <p className="text-sm text-stone-ivory/60 mt-1">
+                <p className="text-sm text-stone-ivory/72 mt-1">
                   Open a module to begin — your time, scores, and insights will appear here as you learn.
                 </p>
               </div>
@@ -209,10 +209,10 @@ export default function LearningDashboard({
                   { icon: GraduationCap, label: 'Modules done', value: `${s.completed}/${s.totalModules}` },
                   { icon: Clock, label: 'Time invested', value: formatDuration(s.totalTimeSeconds) },
                 ].map((k) => (
-                  <div key={k.label} className="rounded-[12px] border border-white/10 bg-stone-espresso p-4">
+                  <div key={k.label} className="rounded-[12px] border border-stone-veil/10 bg-stone-espresso p-4">
                     <k.icon size={16} className="text-accent-copper" />
                     <p className="text-2xl font-bold text-stone-ivory tabular-nums mt-2">{k.value}</p>
-                    <p className="text-[11px] font-medium uppercase tracking-wide text-stone-ivory/45 mt-0.5">{k.label}</p>
+                    <p className="text-[11px] font-medium uppercase tracking-wide text-stone-ivory/72 mt-0.5">{k.label}</p>
                   </div>
                 ))}
               </div>
@@ -221,12 +221,12 @@ export default function LearningDashboard({
                 // ── Home "My Progress Report" ─────────────────────────────
                 nothingStarted ? (
                   // Not studied anything yet → just show "start to know".
-                  <div className="rounded-2xl border border-white/10 bg-stone-espresso p-8 text-center">
+                  <div className="rounded-2xl border border-stone-veil/10 bg-stone-espresso p-8 text-center">
                     <GraduationCap size={26} className="mx-auto text-accent-copper mb-2" />
                     <p className="text-sm font-semibold text-stone-ivory">
                       You haven&apos;t started studying yet
                     </p>
-                    <p className="text-sm text-stone-ivory/60 mt-1 max-w-[480px] mx-auto">
+                    <p className="text-sm text-stone-ivory/72 mt-1 max-w-[480px] mx-auto">
                       Open a module and take its quiz — this report will then show which quizzes you
                       retook or failed, which modules you rewatched, your time invested, and your
                       strong vs weak areas, live.
@@ -285,10 +285,10 @@ export default function LearningDashboard({
                 <>
                   {nothingStarted ? (
                     // Nothing studied here yet → say what the report will show.
-                    <div className="rounded-2xl border border-white/10 bg-stone-espresso p-6 text-center">
+                    <div className="rounded-2xl border border-stone-veil/10 bg-stone-espresso p-6 text-center">
                       <GraduationCap size={24} className="mx-auto text-accent-copper mb-2" />
                       <p className="text-sm font-semibold text-stone-ivory">Start to know</p>
-                      <p className="text-sm text-stone-ivory/60 mt-1 max-w-[520px] mx-auto">
+                      <p className="text-sm text-stone-ivory/72 mt-1 max-w-[520px] mx-auto">
                         You haven&apos;t studied anything here yet. Open a module below and take its
                         quiz — this report will then show which quizzes you retook or failed, which
                         modules you rewatched, your time invested, and your strong vs weak areas, live.

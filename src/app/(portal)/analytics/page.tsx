@@ -1,5 +1,10 @@
-import Analytics from '@/pages/Analytics'
+import RoleGuard from '@/components/RoleGuard'
+import Analytics from '@/screens/Analytics'
 
 export default function Page() {
-  return <Analytics />
+  return (
+    <RoleGuard requires="hod">
+      <Analytics />
+    </RoleGuard>
+  )
 }

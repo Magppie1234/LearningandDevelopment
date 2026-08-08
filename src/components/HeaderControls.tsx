@@ -27,11 +27,11 @@ export function NotificationBell() {
         <button
           type="button"
           aria-label={`Notifications${unread ? ` (${unread} unread)` : ''}`}
-          className="w-9 h-9 rounded-full flex items-center justify-center text-ink-secondary hover:text-ink-primary hover:bg-[rgba(0,59,70,0.06)] transition-all relative"
+          className="w-9 h-9 rounded-full flex items-center justify-center text-ink-secondary hover:text-ink-primary hover:bg-[rgb(var(--rule)/0.06)] transition-all relative"
         >
           <Bell size={20} />
           {unread > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-1 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">
+            <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-1 bg-danger text-white text-[9px] font-bold rounded-full flex items-center justify-center">
               {unread}
             </span>
           )}
@@ -102,7 +102,7 @@ export function ThemeToggle() {
       type="button"
       aria-label={isDark ? 'Switch to light mode' : 'Switch to Obsidian dark mode'}
       onClick={() => setTheme(isDark ? 'light' : 'dark')}
-      className="w-9 h-9 rounded-full flex items-center justify-center text-ink-secondary hover:text-ink-primary hover:bg-[rgba(0,59,70,0.06)] transition-all"
+      className="w-9 h-9 rounded-full flex items-center justify-center text-ink-secondary hover:text-ink-primary hover:bg-[rgb(var(--rule)/0.06)] transition-all"
     >
       {isDark ? <Sun size={19} /> : <Moon size={19} />}
     </button>

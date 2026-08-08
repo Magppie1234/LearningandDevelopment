@@ -23,7 +23,7 @@ function LeadershipCard({ positionId, title }: { positionId: string; title: stri
 
   return (
     <div className="min-w-[220px] flex-1 max-w-[280px] rounded-[12px] bg-stone-espresso text-stone-ivory px-5 py-4 transition-all duration-200 hover:shadow-elevated hover:-translate-y-0.5">
-      <p className="text-[11px] font-semibold uppercase tracking-wide text-stone-ivory/60">
+      <p className="text-[11px] font-semibold uppercase tracking-wide text-stone-ivory/72">
         {title}
       </p>
       <div className="mt-2 flex flex-wrap gap-1.5">
@@ -31,7 +31,7 @@ function LeadershipCard({ positionId, title }: { positionId: string; title: stri
           <PositionEditor position={position} align="center">
             <button
               type="button"
-              className="rounded-full border border-dashed border-parchment/30 px-3 py-1.5 text-xs font-medium text-stone-ivory/70 hover:border-parchment/60 hover:text-stone-ivory transition-colors"
+              className="rounded-full border border-dashed border-parchment/30 px-3 py-1.5 text-xs font-medium text-stone-ivory/80 hover:border-parchment/60 hover:text-stone-ivory transition-colors"
             >
               + Add Person
             </button>
@@ -40,14 +40,14 @@ function LeadershipCard({ positionId, title }: { positionId: string; title: stri
         {assignments.map((a) => (
           <span
             key={a.id}
-            className="inline-flex items-center gap-1 rounded-full bg-white/10 pl-2.5 pr-1 py-1 text-sm font-medium"
+            className="inline-flex items-center gap-1 rounded-full bg-stone-veil/10 pl-2.5 pr-1 py-1 text-sm font-medium"
           >
             {nameFor(a)}
             <button
               type="button"
               aria-label={`Remove ${nameFor(a)}`}
               onClick={() => removeAssignment(a.id)}
-              className="rounded-full p-0.5 hover:bg-white/20 transition-colors"
+              className="rounded-full p-0.5 hover:bg-stone-veil/20 transition-colors"
             >
               <X size={12} />
             </button>
@@ -58,7 +58,7 @@ function LeadershipCard({ positionId, title }: { positionId: string; title: stri
             <button
               type="button"
               aria-label="Add another person"
-              className="rounded-full border border-dashed border-parchment/30 px-2 py-1 text-xs text-stone-ivory/70 hover:border-parchment/60 hover:text-stone-ivory transition-colors"
+              className="rounded-full border border-dashed border-parchment/30 px-2 py-1 text-xs text-stone-ivory/80 hover:border-parchment/60 hover:text-stone-ivory transition-colors"
             >
               +
             </button>

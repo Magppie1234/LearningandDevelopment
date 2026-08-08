@@ -85,13 +85,13 @@ export default function WeekMonthProgress({
   return (
     <div className="grid grid-cols-1 sm:grid-cols-[1.4fr_1fr] gap-3">
       {/* Trend graph with the Day / Week / Month toggle */}
-      <div className="rounded-2xl border border-white/10 bg-stone-espresso p-5">
+      <div className="rounded-2xl border border-stone-veil/10 bg-stone-espresso p-5">
         <div className="flex items-center justify-between gap-3 mb-4">
           <div className="flex items-center gap-2 min-w-0">
-            <CalendarDays size={15} className="text-stone-ivory/50 shrink-0" />
+            <CalendarDays size={15} className="text-stone-ivory/74 shrink-0" />
             <h3 className="text-sm font-semibold text-stone-ivory truncate">{headerTitle}</h3>
             {range !== 'month' && (
-              <span className="text-[11px] text-stone-ivory/40 shrink-0">· {currentMonthLabel}</span>
+              <span className="text-[11px] text-stone-ivory/70 shrink-0">· {currentMonthLabel}</span>
             )}
           </div>
 
@@ -103,7 +103,7 @@ export default function WeekMonthProgress({
                   value={monthOff}
                   onChange={(e) => setMonthOff(Number(e.target.value))}
                   aria-label="Choose month"
-                  className="appearance-none rounded-full border border-white/10 bg-stone-charcoal pl-3 pr-7 py-1 text-[11px] font-medium text-stone-ivory/80 focus:outline-none focus:border-accent-copper cursor-pointer"
+                  className="appearance-none rounded-full border border-stone-veil/10 bg-stone-charcoal pl-3 pr-7 py-1 text-[11px] font-medium text-stone-ivory/80 focus:outline-none focus:border-accent-copper cursor-pointer"
                 >
                   {months.map((m) => (
                     <option key={m.off} value={m.off} className="bg-stone-charcoal text-stone-ivory">
@@ -113,13 +113,13 @@ export default function WeekMonthProgress({
                 </select>
                 <ChevronDown
                   size={12}
-                  className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-stone-ivory/40"
+                  className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-stone-ivory/70"
                 />
               </div>
             )}
 
             {/* Day / Week / Month segmented toggle */}
-            <div className="inline-flex rounded-full border border-white/10 bg-stone-charcoal p-0.5">
+            <div className="inline-flex rounded-full border border-stone-veil/10 bg-stone-charcoal p-0.5">
               {(['day', 'week', 'month'] as const).map((r) => (
                 <button
                   key={r}
@@ -132,7 +132,7 @@ export default function WeekMonthProgress({
                     'rounded-full px-2.5 py-1 text-[11px] font-semibold capitalize transition-colors',
                     range === r
                       ? 'bg-accent-copper text-stone-ink'
-                      : 'text-stone-ivory/55 hover:text-stone-ivory',
+                      : 'text-stone-ivory/70 hover:text-stone-ivory',
                   )}
                 >
                   {r}
@@ -164,14 +164,14 @@ export default function WeekMonthProgress({
                   style={{
                     height: `${(m / max) * 100}%`,
                     minHeight: m > 0 ? 4 : 2,
-                    backgroundColor: active ? 'rgb(var(--m-accent-copper))' : 'rgba(245,239,230,0.12)',
+                    backgroundColor: active ? 'rgb(var(--m-accent-copper))' : 'rgb(var(--stone-ivory)/0.12)',
                     opacity: hover !== null && hover !== i ? 0.5 : 1,
                   }}
                 />
                 <span
                   className={cn(
                     'text-[10px]',
-                    range === 'day' && i === tIdx ? 'text-accent-copper font-semibold' : 'text-stone-ivory/40',
+                    range === 'day' && i === tIdx ? 'text-accent-copper font-semibold' : 'text-stone-ivory/70',
                   )}
                 >
                   {labels[i]}
@@ -183,15 +183,15 @@ export default function WeekMonthProgress({
 
         {/* Which modules the time went to this period */}
         {activeModules && activeModules.length > 0 && (
-          <div className="mt-3 pt-3 border-t border-white/5">
-            <p className="text-[10px] uppercase tracking-wide text-stone-ivory/40 mb-1.5">
+          <div className="mt-3 pt-3 border-t border-stone-veil/5">
+            <p className="text-[10px] uppercase tracking-wide text-stone-ivory/70 mb-1.5">
               Studying {range === 'day' ? 'today' : range === 'week' ? 'this week' : 'this month'}
             </p>
             <div className="flex flex-wrap gap-1.5">
               {activeModules.map((m) => (
                 <span
                   key={m}
-                  className="rounded-md bg-white/[0.06] px-2 py-0.5 text-[11px] text-stone-ivory/70 truncate max-w-[180px]"
+                  className="rounded-md bg-stone-veil/[0.06] px-2 py-0.5 text-[11px] text-stone-ivory/80 truncate max-w-[180px]"
                   title={m}
                 >
                   {m}
@@ -203,14 +203,14 @@ export default function WeekMonthProgress({
       </div>
 
       {/* Cumulative headline for the selected range */}
-      <div className="rounded-2xl border border-white/10 bg-stone-espresso p-5 flex flex-col justify-center">
-        <p className="text-[11px] font-medium uppercase tracking-wide text-stone-ivory/50">
+      <div className="rounded-2xl border border-stone-veil/10 bg-stone-espresso p-5 flex flex-col justify-center">
+        <p className="text-[11px] font-medium uppercase tracking-wide text-stone-ivory/74">
           {headlineTitle}
         </p>
         <p className="mt-1 text-3xl font-bold text-stone-ivory tabular-nums">
           {formatDuration(rangeTotalSeconds)}
         </p>
-        <p className="text-[12px] text-stone-ivory/45 mt-1">Total time invested</p>
+        <p className="text-[12px] text-stone-ivory/72 mt-1">Total time invested</p>
       </div>
     </div>
   )

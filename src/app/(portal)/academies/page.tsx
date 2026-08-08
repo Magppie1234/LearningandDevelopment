@@ -1,4 +1,4 @@
-import Academies from '@/pages/Academies'
+import Academies from '@/screens/Academies'
 
 export default function Page() {
   return <Academies />

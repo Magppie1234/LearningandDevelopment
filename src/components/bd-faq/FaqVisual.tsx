@@ -53,7 +53,7 @@ export default function FaqVisual({ item, className }: { item: FaqItem; classNam
   return (
     <div
       className={cn(
-        'rounded-[12px] border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream overflow-hidden',
+        'rounded-[12px] border-[0.5px] border-[rgb(var(--rule)/0.14)] bg-cream overflow-hidden',
         className,
       )}
     >
@@ -63,7 +63,7 @@ export default function FaqVisual({ item, className }: { item: FaqItem; classNam
         aria-expanded={open}
         className={cn(
           'w-full flex items-center gap-3 px-4 py-3 sm:px-5 text-left transition-colors',
-          open ? 'bg-accent-copper/5' : 'hover:bg-[rgba(0,59,70,0.02)]',
+          open ? 'bg-accent-copper/5' : 'hover:bg-[rgb(var(--rule)/0.02)]',
         )}
       >
         {item.qNum ? (
@@ -123,7 +123,7 @@ export default function FaqVisual({ item, className }: { item: FaqItem; classNam
 
               {item.type === 'cards' && item.cards && <CategoryCards cards={item.cards} />}
 
-              <p className="mt-4 border-t-[0.5px] border-[rgba(0,59,70,0.08)] pt-3 text-[12.5px] leading-relaxed text-ink-secondary">
+              <p className="mt-4 border-t-[0.5px] border-[rgb(var(--rule)/0.08)] pt-3 text-[12.5px] leading-relaxed text-ink-secondary">
                 {item.answer}
               </p>
             </div>

@@ -51,20 +51,24 @@ export const VISION_TIMELINE: VisionMilestone[] = [
   },
 ]
 
-/** Leadership team — names and roles only, verified from magppie.com (§7).
- *  No bios, no invented detail. */
-export const VISION_LEADERSHIP: { name: string; role: string }[] = [
-  { name: 'Vinod Jain', role: 'Founder' },
-  { name: 'Kishor Rico', role: 'Director, US Operations' },
-  { name: 'Fernando Rico', role: 'Director, Market Development' },
-  { name: 'Riccardo Remedi', role: 'Director, Magppie Europe' },
-  { name: 'Ishat Jain', role: 'Director, Marketing' },
-  { name: 'Vikas Jain', role: 'Director, Innovations' },
-  { name: 'Sanjay Khandelwal', role: 'Director' },
-  { name: 'Stacy McCarthy', role: 'Design Consultant' },
-  { name: 'Chaitanya Chavda', role: 'Technical Director, USA' },
-  { name: 'Christoph Hoeynck', role: 'Director, Germany' },
-  { name: 'Susan Sadolin', role: 'Sales Director, USA and Denmark' },
+/** Leadership team — names, roles and portraits, verified from magppie.com's
+ *  team page (§7). No bios, no invented detail. */
+export const VISION_LEADERSHIP: { name: string; role: string; photo: string }[] = [
+  // Mirrors magppie.com's own team page — names, titles and portraits are
+  // theirs verbatim (photos downscaled and self-hosted under /public/team).
+  // If the site's team page changes, re-pull it rather than editing here ad hoc.
+  { name: 'Vinod Jain', role: 'Founder | Chief Mentor', photo: '/team/vinod-jain.png' },
+  { name: 'Megha Jain', role: 'Co-Founder | Director', photo: '/team/megha-jain.jpg' },
+  { name: 'Vikas Jain', role: 'Co-Founder | Innovations', photo: '/team/vikas-jain.jpg' },
+  { name: 'Ishat Jain', role: 'Co-Founder | Director', photo: '/team/ishat-jain.jpg' },
+  { name: 'Kishor Rico', role: 'Director | US Operations', photo: '/team/kishor-rico.png' },
+  { name: 'Fernando Rico', role: 'Director | USA', photo: '/team/fernando-rico.jpg' },
+  { name: 'Riccardo Remedi', role: 'Director | Magppie Europe', photo: '/team/riccardo-remedi.jpg' },
+  { name: 'Stacy McCarthy', role: 'Design Consultant | USA', photo: '/team/stacy-mccarthy.jpg' },
+  { name: 'Chaitanya Chavda', role: 'Director | Dallas', photo: '/team/chaitanya-chavda.jpg' },
+  { name: 'Christoph Hoeynck', role: 'Director | Germany', photo: '/team/christoph-hoeynck.webp' },
+  { name: 'Susan Sadolin', role: 'Sales Director | USA & Denmark', photo: '/team/susan-sadolin.webp' },
+  { name: 'Sanjay Khandelwal', role: 'Director | Projects', photo: '/team/sanjay-khandelwal.jpg' },
 ]
 
 /** Global presence — verified from magppie.com (§7). Retail stores are

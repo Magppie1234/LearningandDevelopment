@@ -45,7 +45,7 @@ function AssigneeChips({ position, color }: { position: OrgPosition; color: stri
     return a.customName ?? 'Unknown'
   }
 
-  const soft = color ? `${color}1e` : 'rgba(0,59,70,0.07)'
+  const soft = color ? `${color}1e` : 'rgb(var(--rule)/0.07)'
   const text = color ?? 'inherit'
 
   return (
@@ -75,7 +75,7 @@ function AssigneeChips({ position, color }: { position: OrgPosition; color: stri
           type="button"
           aria-label={`Add person to ${position.title}`}
           onClick={(e) => e.stopPropagation()}
-          className="inline-flex items-center gap-0.5 rounded-full border border-dashed border-[rgba(0,59,70,0.22)] px-2 py-0.5 text-[11px] font-medium text-ink-tertiary hover:border-ink-secondary hover:text-ink-secondary transition-colors"
+          className="inline-flex items-center gap-0.5 rounded-full border border-dashed border-[rgb(var(--rule)/0.22)] px-2 py-0.5 text-[11px] font-medium text-ink-tertiary hover:border-ink-secondary hover:text-ink-secondary transition-colors"
         >
           <Plus size={10} />
           {assignments.length === 0 && 'Add'}
@@ -180,9 +180,9 @@ export function OrgTable() {
   const allOpen = allExpandableIds.every((id) => expanded.has(id))
 
   return (
-    <div className="rounded-2xl border-[0.5px] border-[rgba(0,59,70,0.14)] bg-cream shadow-card overflow-hidden">
+    <div className="rounded-2xl border-[0.5px] border-[rgb(var(--rule)/0.14)] bg-cream shadow-card overflow-hidden">
       {/* toolbar */}
-      <div className="flex flex-wrap items-center gap-3 px-4 py-3 border-b border-[rgba(0,59,70,0.08)]">
+      <div className="flex flex-wrap items-center gap-3 px-4 py-3 border-b border-[rgb(var(--rule)/0.08)]">
         <div className="relative w-[260px] max-w-full">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-tertiary" size={14} />
           <input
@@ -190,7 +190,7 @@ export function OrgTable() {
             placeholder="Search positions, departments, people…"
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            className="w-full bg-parchment border border-[rgba(0,59,70,0.12)] rounded-lg pl-8 pr-3 py-1.5 text-[13px] text-ink-primary placeholder:text-ink-tertiary focus:outline-none focus:border-ink-primary transition-all"
+            className="w-full bg-parchment border border-[rgb(var(--rule)/0.12)] rounded-lg pl-8 pr-3 py-1.5 text-[13px] text-ink-primary placeholder:text-ink-tertiary focus:outline-none focus:border-ink-primary transition-all"
           />
         </div>
         <button
@@ -205,7 +205,7 @@ export function OrgTable() {
       </div>
 
       {/* header */}
-      <div className="hidden md:grid grid-cols-[minmax(220px,1.4fr)_110px_minmax(120px,0.9fr)_minmax(180px,1.2fr)_minmax(140px,0.9fr)] gap-3 px-4 py-2 text-[11px] font-semibold uppercase tracking-wide text-ink-tertiary border-b border-[rgba(0,59,70,0.08)] bg-[rgba(0,59,70,0.02)]">
+      <div className="hidden md:grid grid-cols-[minmax(220px,1.4fr)_110px_minmax(120px,0.9fr)_minmax(180px,1.2fr)_minmax(140px,0.9fr)] gap-3 px-4 py-2 text-[11px] font-semibold uppercase tracking-wide text-ink-tertiary border-b border-[rgb(var(--rule)/0.08)] bg-[rgb(var(--rule)/0.02)]">
         <span>Position</span>
         <span>Level</span>
         <span>Department</span>
@@ -219,10 +219,10 @@ export function OrgTable() {
           const isOpen = expanded.has(p.id)
           const tierChipStyle =
             p.tier === 'board'
-              ? { backgroundColor: 'rgba(0,59,70,0.08)', color: 'inherit' }
+              ? { backgroundColor: 'rgb(var(--rule)/0.08)', color: 'inherit' }
               : branchColor
                 ? { backgroundColor: `${branchColor}1e`, color: branchColor }
-                : { backgroundColor: 'rgba(0,59,70,0.06)', color: 'inherit' }
+                : { backgroundColor: 'rgb(var(--rule)/0.06)', color: 'inherit' }
           return (
             <motion.div
               key={p.id}
@@ -232,8 +232,8 @@ export function OrgTable() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.15 }}
               className={cn(
-                'grid grid-cols-1 md:grid-cols-[minmax(220px,1.4fr)_110px_minmax(120px,0.9fr)_minmax(180px,1.2fr)_minmax(140px,0.9fr)] gap-1.5 md:gap-3 items-center px-4 py-2.5 border-b border-[rgba(0,59,70,0.06)] last:border-b-0 transition-colors',
-                hasChildren && 'cursor-pointer hover:bg-[rgba(0,59,70,0.025)]',
+                'grid grid-cols-1 md:grid-cols-[minmax(220px,1.4fr)_110px_minmax(120px,0.9fr)_minmax(180px,1.2fr)_minmax(140px,0.9fr)] gap-1.5 md:gap-3 items-center px-4 py-2.5 border-b border-[rgb(var(--rule)/0.06)] last:border-b-0 transition-colors',
+                hasChildren && 'cursor-pointer hover:bg-[rgb(var(--rule)/0.025)]',
               )}
               onClick={
                 hasChildren
