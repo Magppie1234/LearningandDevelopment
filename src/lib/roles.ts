@@ -24,6 +24,7 @@ import {
   Compass,
   FileCog,
   GraduationCap,
+  Headphones,
   Home,
   Landmark,
   Library,
@@ -155,6 +156,16 @@ export const NAV: NavGroup[] = [
         requires: 'employee',
         hint: 'Your next action, deadlines and progress',
       },
+      // Deliberately top-level rather than inside Knowledge: vision and brand
+      // story is meant to be the second thing anyone sees, straight after the
+      // dashboard and before any section heading.
+      {
+        label: 'Vision Corner',
+        path: '/vision',
+        icon: Landmark,
+        requires: 'employee',
+        hint: 'Magppie’s brand, product and standards',
+      },
     ],
   },
   {
@@ -174,13 +185,6 @@ export const NAV: NavGroup[] = [
         requires: 'employee',
         hint: 'Order to handover, end to end',
         matches: ['/process-map'],
-      },
-      {
-        label: 'Our Story',
-        path: '/vision',
-        icon: Landmark,
-        requires: 'employee',
-        hint: 'Magppie’s brand, product and standards',
       },
       {
         label: 'Onboarding',
@@ -282,6 +286,20 @@ export const NAV: NavGroup[] = [
         icon: LineChart,
         requires: 'leadership',
         hint: 'Company-wide capability risk and the action queue',
+      },
+      {
+        // One entry, ten in-page tabs. The sidebar already carries 22 items;
+        // another ten would break its scannability — see
+        // docs/call-intelligence/01-information-architecture.md.
+        label: 'Call Intelligence',
+        path: '/call-intelligence',
+        icon: Headphones,
+        // Deliberately open at employee level: Call Intelligence runs its own
+        // six-role policy (rbac.ts), under which an agent sees their own calls
+        // and own scores and nothing else. Gating the whole section at manager
+        // here would contradict that and hide a role the feature is built for.
+        requires: 'employee',
+        hint: 'What customers asked, felt and were promised on calls',
       },
       {
         label: 'Organisation',
