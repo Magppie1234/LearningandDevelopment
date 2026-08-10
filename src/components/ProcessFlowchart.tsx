@@ -42,6 +42,48 @@ const STATUS_LABEL: Record<Status, string> = {
   todo: 'Not Started',
 }
 
+/**
+ * One hue per step, cycled by position in the pipeline.
+ *
+ * This replaces an earlier green/gold/grey scheme where colour carried the
+ * step's STATUS. Colour now carries identity instead — it makes a nineteen-step
+ * pipeline scannable, which three repeated colours did not. Status has to be
+ * shown some other way, so it moved onto shape and weight (see globals.css):
+ *   done    → checkmark drawn into the hexagon
+ *   current → ring/glow around the hexagon, plus the slow pulse
+ *   todo    → reduced opacity
+ * Drop a colour and you lose which step you are looking at; drop the treatment
+ * above and you lose where you are. Both have to stay.
+ *
+ * Hues are held at a similar saturation and lightness so the row reads as one
+ * family rather than a clown car, and each is dark enough for a white icon
+ * disc to sit on it.
+ */
+const STEP_HUES = [
+  '#7B4B8A', // violet
+  '#C2456A', // rose
+  '#5C6B7A', // slate
+  '#D4863A', // amber
+  '#C05340', // terracotta
+  '#1F8A75', // teal
+  '#3E6FA8', // blue
+  '#8A7B34', // olive
+] as const
+
+const hueFor = (n: number) => STEP_HUES[n % STEP_HUES.length]
+
+/**
+ * Every pipeline renders as a zigzag: steps alternate above and below a
+ * central spine as the flow runs left to right, each anchored by a hexagon
+ * carrying that step's own action icon, with the title and instruction in a
+ * plain card alongside. The hexagon is the visual anchor — the card is a
+ * rounded rectangle because a hexagonal one would wreck the instruction's
+ * line length.
+ *
+ * This applies to BD, Sales and Production alike; there is no per-flow opt-in,
+ * so the three tabs cannot drift into different formats.
+ */
+
 export default function ProcessFlowchart() {
   const [flowId, setFlowId] = useState(FLOWS[0].id)
   const [phaseName, setPhaseName] = useState<string | null>(null)
@@ -151,12 +193,15 @@ export default function ProcessFlowchart() {
           </p>
         </div>
 
-        <div className="pf-canvas">
+        <div className="pf-canvas zigzag">
           {nodes.map((node, i) => {
             const status = statusOf(node.n)
             const isLast = i === nodes.length - 1
             return (
-              <div key={node.n} className="pf-unit">
+              <div
+                key={node.n}
+                className={`pf-unit ${i % 2 === 0 ? 'up' : 'down'} ${status}${node.forks.length > 0 ? ' has-fork' : ''}`}
+              >
                 <FlowBox
                   node={node}
                   status={status}
@@ -214,33 +259,32 @@ function FlowBox({
       aria-expanded={selected}
       className={`pf-box ${status}${selected ? ' selected' : ''}`}
     >
-      <span className="pf-box-head">
-        <span className={`pf-mark ${status}`} aria-hidden>
+      {/* The hexagon is the step's anchor: its own action icon at full size,
+          or the checkmark once complete. Its hue identifies the step; the
+          status treatment lives in CSS off the status class. */}
+      <span
+        className={`pf-hex ${status}`}
+        aria-hidden
+        style={{ ['--pf-hue' as string]: hueFor(node.n) }}
+      >
+        <span className="pf-hex-inner">
           {status === 'done' ? (
             // Drawn in rather than switched on — see `pf-draw` in globals.css.
             <svg viewBox="0 0 24 24" className="pf-check">
               <path d="M5 12.5l4.5 4.5L19 7.5" />
             </svg>
-          ) : status === 'current' ? (
-            <svg viewBox="0 0 24 24" dangerouslySetInnerHTML={{ __html: ICONS[node.icon] || ICONS.box }} />
           ) : (
-            node.n
+            <svg viewBox="0 0 24 24" dangerouslySetInnerHTML={{ __html: ICONS[node.icon] || ICONS.box }} />
           )}
         </span>
-        <span className="pf-step-label">Step {node.n}</span>
+        <span className="pf-hex-n">{node.n}</span>
       </span>
-      <span className="pf-box-title">{node.title}</span>
-      <span className="pf-box-action">{node.action}</span>
-      {node.captures.length > 0 && (
-        <span className="pf-box-tags" aria-hidden>
-          {node.captures.slice(0, 2).map((c) => (
-            <span key={c} className="pf-tag">
-              {c}
-            </span>
-          ))}
-          {node.captures.length > 2 && <span className="pf-tag more">+{node.captures.length - 2}</span>}
-        </span>
-      )}
+
+      <span className="pf-card">
+        <span className="pf-step-label">Step {node.n}</span>
+        <span className="pf-box-title">{node.title}</span>
+        <span className="pf-box-action">{node.action}</span>
+      </span>
     </button>
   )
 }
