@@ -151,3 +151,66 @@ export const VISION_PROMISE = {
     'That is the same long-term thinking your training here is meant to build: do the work so well, and stand behind it so completely, that a promise can stretch across decades.',
   ],
 }
+
+/* ───────────────────────── Vision Corner ─────────────────────────
+ * One self-hosted founder video, not an Instagram embed. The embed widget was
+ * tried and rejected: it drags Instagram's own chrome (logo, like and comment
+ * counts, "view on Instagram") into the page, which reads as bolted on.
+ */
+
+/**
+ * Where the hero video is served from. Drop the downloaded .mp4 at
+ * public/vision/founder-hero.mp4 and it plays; until then the page shows a
+ * labelled placeholder rather than a broken player.
+ *
+ * NOT DOWNLOADED YET, and not for want of trying: instagram.com serves a
+ * login-walled page to an unauthenticated fetch, so the media URL cannot be
+ * extracted from this machine. Someone signed in has to save the file.
+ */
+export const VISION_HERO_VIDEO = {
+  src: '/vision/founder-hero.mp4',
+  poster: '/kitchen/space-3.jpg',
+}
+
+/**
+ * The nine candidate reels. Kept ONLY so whoever downloads the video knows
+ * which nine to watch — the page renders exactly one video and no list, by
+ * instruction. Which reel is strongest depends on what is actually said in
+ * them, so it is a human call, not one to fake here.
+ */
+export const VISION_HERO_CANDIDATES = [
+  'https://www.instagram.com/reel/DWWQU4LkhUt/',
+  'https://www.instagram.com/reel/DYpGgI9Sz6K/',
+  'https://www.instagram.com/reel/DRkE70hEkGq/',
+  'https://www.instagram.com/reel/C_nbHWjybor/',
+  'https://www.instagram.com/reel/C_S9pVYSm6L/',
+  'https://www.instagram.com/reel/DA_J9sRyv0r/',
+  'https://www.instagram.com/reel/DYr5XGhyz_W/',
+  'https://www.instagram.com/reel/C-u0_xXSwOk/',
+  'https://www.instagram.com/reel/DV_KNXsEvtk/',
+]
+
+/**
+ * The written anchor. Deliberately short — the video carries the emotional
+ * weight; this exists so a cold reader still leaves knowing what the company
+ * does, what makes it different, and what it is trying to achieve.
+ */
+export const VISION_CORNER = {
+  eyebrow: 'Vision Corner',
+  heading: 'Straight from the founders',
+  lede: 'Why a kitchen should make you healthier, in their own words.',
+  summary: [
+    {
+      label: 'What we do',
+      text: 'We build wellness kitchens and wardrobes out of engineered stone — no wood anywhere in the structure.',
+    },
+    {
+      label: 'What makes it different',
+      text: 'SilverStone is stone infused with silver and copper at nano scale. Wood swells, harbours termites and off-gasses; stone does not. That is a health claim about the material, not a finish.',
+    },
+    {
+      label: 'What we are trying to achieve',
+      text: 'To turn ordinary homes into wellness homes — and to stand behind that for 25 years, with a service visit every single one of them.',
+    },
+  ],
+}

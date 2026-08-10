@@ -62,8 +62,8 @@ const ZONES: Zone[] = [
   },
   {
     href: '/vision',
-    label: 'Our Story',
-    ariaLabel: 'Go to Our Story',
+    label: 'Vision Corner',
+    ariaLabel: 'Go to Vision Corner',
     icon: Compass,
     box: { left: '9%', top: '9%', width: '17%', height: '26%' },
     align: 'center',

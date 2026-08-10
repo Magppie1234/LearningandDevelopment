@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import {
@@ -13,8 +13,10 @@ import {
   VISION_LEADERSHIP,
   VISION_GLOBAL_PRESENCE,
   VISION_AWARD_CITATION,
+  VISION_CORNER,
+  VISION_HERO_VIDEO,
 } from '@/data/vision'
-import { ExternalLink, MapPin } from 'lucide-react'
+import { ExternalLink, MapPin, Sparkles } from 'lucide-react'
 
 /**
  * Vision Corner — scroll-driven story section. Beats reveal progressively on
@@ -861,6 +863,189 @@ function LeadershipBeat() {
   )
 }
 
+/* ───────────── Beat 2.6 — Vision Corner (founder reels) ─────────────
+ *
+ * The one beat that is deliberately LOUDER than the rest of Our Story. The
+ * page elsewhere is white + pale green + gold; this section takes a deeper sea
+ * green and a real photographed kitchen behind it, because a flat pale panel
+ * was the actual complaint. Everything here is a step up in saturation and
+ * visual density, on purpose — it is meant to be the part you remember.
+ */
+
+/** Sea green — markedly more saturated than the page's pale SAGE. */
+const SEA = '#1F5F52'
+const SEA_DEEP = '#123B33'
+/**
+ * The page's GOLD (#7E6318) is darkened for 11px text on white and disappears
+ * against sea green. This is the same accent re-tuned for a dark ground —
+ * ~7:1 on SEA_DEEP.
+ */
+const GOLD_ON_SEA = '#E3C275'
+
+/**
+ * The hero video, self-hosted and played in a normal <video>.
+ *
+ * Deliberately NOT an Instagram embed: the widget drags Instagram's logo, like
+ * and comment counts and "view on Instagram" branding into the page, which
+ * reads as bolted on rather than part of the portal.
+ *
+ * The file is not in the repo yet. instagram.com serves a login-walled page to
+ * an unauthenticated request, so the media URL cannot be pulled from a build
+ * machine — someone signed in has to save the chosen reel to
+ * public/vision/founder-hero.mp4. Until then `onError` swaps in a labelled
+ * placeholder, so the page degrades to an honest empty state rather than a
+ * dead player.
+ */
+function HeroVideo() {
+  const [failed, setFailed] = useState(false)
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  /**
+   * React's onError on <video> is not reliable for media errors: the error
+   * event fires on the element but does not bubble like a DOM error, so the
+   * fallback below silently never rendered and the section showed a blank
+   * rectangle. Two belts here — a native listener, and an explicit HEAD so a
+   * 404 is caught even if no error event arrives at all.
+   */
+  useEffect(() => {
+    let alive = true
+    const el = videoRef.current
+    const onErr = () => alive && setFailed(true)
+    el?.addEventListener('error', onErr)
+    // A missing file is the common case and is knowable without waiting.
+    fetch(VISION_HERO_VIDEO.src, { method: 'HEAD' })
+      .then((r) => {
+        if (alive && !r.ok) setFailed(true)
+      })
+      .catch(() => alive && setFailed(true))
+    // Catch an error that landed before the listener attached.
+    if (el?.error) setFailed(true)
+    return () => {
+      alive = false
+      el?.removeEventListener('error', onErr)
+    }
+  }, [])
+
+  return (
+    <div
+      className="relative w-full overflow-hidden rounded-3xl"
+      style={{
+        aspectRatio: '9 / 16',
+        maxHeight: 560,
+        background: SEA_DEEP,
+        border: `1px solid ${GOLD_ON_SEA}55`,
+      }}
+    >
+      {!failed ? (
+        <video
+          ref={videoRef}
+          className="h-full w-full object-cover"
+          src={VISION_HERO_VIDEO.src}
+          poster={VISION_HERO_VIDEO.poster}
+          controls
+          playsInline
+          preload="metadata"
+          onError={() => setFailed(true)}
+        />
+      ) : (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-7 text-center">
+          <Sparkles size={26} style={{ color: GOLD_ON_SEA }} />
+          <p className="text-sm font-medium text-white">Founder video not added yet</p>
+          <p className="text-[12px] leading-relaxed" style={{ color: '#CFE2DA' }}>
+            Save the chosen reel as{' '}
+            <code className="rounded px-1" style={{ background: 'rgba(255,255,255,0.12)' }}>
+              public/vision/founder-hero.mp4
+            </code>{' '}
+            and it plays here. It could not be downloaded automatically —
+            Instagram requires a signed-in session.
+          </p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function VisionCornerBeat() {
+  return (
+    <section className="relative overflow-hidden" style={{ background: SEA_DEEP }}>
+      {/* Real kitchen photography, kept genuinely visible — flatness was the
+          complaint, so this sits high and the gradient does only enough work
+          to hold text contrast. */}
+      <div aria-hidden className="absolute inset-0">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/kitchen/space-1.jpg"
+          alt=""
+          className="h-full w-full object-cover"
+          style={{ opacity: 0.42 }}
+          draggable={false}
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background: `linear-gradient(180deg, ${SEA_DEEP}F2 0%, ${SEA}CC 42%, ${SEA_DEEP}F2 100%)`,
+          }}
+        />
+      </div>
+
+      <div className="relative mx-auto max-w-6xl px-6 py-20 md:py-24">
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.6 }}
+        >
+          <p className="text-xs uppercase tracking-[0.28em]" style={{ color: GOLD_ON_SEA }}>
+            {VISION_CORNER.eyebrow}
+          </p>
+          <h2 className="mt-3 font-serif text-3xl md:text-4xl text-white">
+            {VISION_CORNER.heading}
+          </h2>
+          <p className="mt-2 text-base md:text-lg" style={{ color: '#DCEAE4' }}>
+            {VISION_CORNER.lede}
+          </p>
+        </motion.div>
+
+        {/* Video leads; the written anchor sits beside it so the section still
+            lands for someone who will not press play. */}
+        <div className="mt-10 grid gap-8 md:grid-cols-[minmax(0,320px)_1fr] md:items-start">
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.6 }}
+          >
+            <HeroVideo />
+          </motion.div>
+
+          <div className="grid gap-4">
+            {VISION_CORNER.summary.map((s, i) => (
+              <motion.div
+                key={s.label}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.4 }}
+                transition={{ duration: 0.5, delay: i * 0.08 }}
+                className="rounded-2xl p-5"
+                style={{
+                  background: 'rgba(255,255,255,0.09)',
+                  border: `1px solid ${GOLD_ON_SEA}44`,
+                }}
+              >
+                <p className="text-[11px] uppercase tracking-[0.16em]" style={{ color: GOLD_ON_SEA }}>
+                  {s.label}
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-white/90">{s.text}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+
 /* ───────────── Beat 7 — Global presence (§7) ───────────── */
 function GlobalPresenceBeat() {
   return (
@@ -913,7 +1098,9 @@ export default function Vision() {
       <FounderBeat />
       <SectionBreak />
       <VideoBeat />
-      <SectionBreak />
+      {/* No SectionBreak either side: Vision Corner brings its own dark ground,
+          and a pale seam against it would read as a gap rather than a join. */}
+      <VisionCornerBeat />
       <TimelineBeat />
       <SectionBreak />
       <LeadershipBeat />
