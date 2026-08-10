@@ -883,18 +883,17 @@ const SEA_DEEP = '#123B33'
 const GOLD_ON_SEA = '#E3C275'
 
 /**
- * The hero video, self-hosted and played in a normal <video>.
+ * The hero film, self-hosted and played in a normal <video> with subtitles.
  *
- * Deliberately NOT an Instagram embed: the widget drags Instagram's logo, like
- * and comment counts and "view on Instagram" branding into the page, which
- * reads as bolted on rather than part of the portal.
+ * Currently the AI-narrated vision film (see VISION_HERO_VIDEO in
+ * data/vision.ts for the sourcing and likeness rules). Deliberately NOT an
+ * Instagram embed: the widget drags Instagram's own branding into the page,
+ * which reads as bolted on rather than part of the portal.
  *
- * The file is not in the repo yet. instagram.com serves a login-walled page to
- * an unauthenticated request, so the media URL cannot be pulled from a build
- * machine — someone signed in has to save the chosen reel to
- * public/vision/founder-hero.mp4. Until then `onError` swaps in a labelled
- * placeholder, so the page degrades to an honest empty state rather than a
- * dead player.
+ * If the file is missing (fresh clone — the render is reproducible, not
+ * vendored), `onError` plus a HEAD probe swap in a labelled placeholder with
+ * the regeneration command, so the page degrades to an honest empty state
+ * rather than a dead player.
  */
 function HeroVideo() {
   const [failed, setFailed] = useState(false)
@@ -930,8 +929,7 @@ function HeroVideo() {
     <div
       className="relative w-full overflow-hidden rounded-3xl"
       style={{
-        aspectRatio: '9 / 16',
-        maxHeight: 560,
+        aspectRatio: VISION_HERO_VIDEO.aspect,
         background: SEA_DEEP,
         border: `1px solid ${GOLD_ON_SEA}55`,
       }}
@@ -945,19 +943,33 @@ function HeroVideo() {
           controls
           playsInline
           preload="metadata"
+          crossOrigin="anonymous"
           onError={() => setFailed(true)}
-        />
+        >
+          {VISION_HERO_VIDEO.subtitles && (
+            <track
+              kind="subtitles"
+              srcLang="en"
+              label="English"
+              src={VISION_HERO_VIDEO.subtitles}
+            />
+          )}
+        </video>
       ) : (
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-7 text-center">
           <Sparkles size={26} style={{ color: GOLD_ON_SEA }} />
-          <p className="text-sm font-medium text-white">Founder video not added yet</p>
+          <p className="text-sm font-medium text-white">Vision film not rendered yet</p>
           <p className="text-[12px] leading-relaxed" style={{ color: '#CFE2DA' }}>
-            Save the chosen reel as{' '}
+            Run{' '}
             <code className="rounded px-1" style={{ background: 'rgba(255,255,255,0.12)' }}>
-              public/vision/founder-hero.mp4
+              node scripts/gen-vision-video.mjs
             </code>{' '}
-            and it plays here. It could not be downloaded automatically —
-            Instagram requires a signed-in session.
+            to render it — free neural narration, no API key needed. The output
+            lands at{' '}
+            <code className="rounded px-1" style={{ background: 'rgba(255,255,255,0.12)' }}>
+              public{VISION_HERO_VIDEO.src}
+            </code>
+            .
           </p>
         </div>
       )}
@@ -1007,8 +1019,10 @@ function VisionCornerBeat() {
         </motion.div>
 
         {/* Video leads; the written anchor sits beside it so the section still
-            lands for someone who will not press play. */}
-        <div className="mt-10 grid gap-8 md:grid-cols-[minmax(0,320px)_1fr] md:items-start">
+            lands for someone who will not press play. The film is 16/9, so it
+            takes the wide column — the narrow reel column it replaced would
+            letterbox a landscape render down to a strip. */}
+        <div className="mt-10 grid gap-8 md:grid-cols-[1fr_minmax(0,340px)] md:items-start">
           <motion.div
             initial={{ opacity: 0, y: 18 }}
             whileInView={{ opacity: 1, y: 0 }}

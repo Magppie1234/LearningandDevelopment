@@ -159,17 +159,23 @@ export const VISION_PROMISE = {
  */
 
 /**
- * Where the hero video is served from. Drop the downloaded .mp4 at
- * public/vision/founder-hero.mp4 and it plays; until then the page shows a
- * labelled placeholder rather than a broken player.
+ * The hero film: the AI-narrated vision video rendered by
+ * scripts/gen-vision-video.mjs (script: remotion/vision-spec.mjs). Stock
+ * neural narrator over the team's real published photographs — deliberately
+ * NOT a synthetic likeness of the founder or a clone of his voice; the
+ * spec file carries the full sourcing and likeness rules.
  *
- * NOT DOWNLOADED YET, and not for want of trying: instagram.com serves a
- * login-walled page to an unauthenticated fetch, so the media URL cannot be
- * extracted from this machine. Someone signed in has to save the file.
+ * The originally intended real founder reel was never obtainable from a
+ * build machine (instagram.com login-walls unauthenticated fetches — see
+ * VISION_HERO_CANDIDATES below). If someone signed-in ever saves one, it can
+ * take this slot back; that swap is a data change here, not a layout change.
  */
 export const VISION_HERO_VIDEO = {
-  src: '/vision/founder-hero.mp4',
+  src: '/assets/vision/vision.mp4',
+  subtitles: '/assets/vision/vision.vtt',
   poster: '/kitchen/space-3.jpg',
+  /** 16/9 landscape (the Remotion film) — the reel slot was 9/16 portrait. */
+  aspect: '16 / 9',
 }
 
 /**
@@ -197,8 +203,12 @@ export const VISION_HERO_CANDIDATES = [
  */
 export const VISION_CORNER = {
   eyebrow: 'Vision Corner',
-  heading: 'Straight from the founders',
-  lede: 'Why a kitchen should make you healthier, in their own words.',
+  // Copy is honest about what plays below: an AI-narrated brand film over the
+  // team's real photographs — not the founders speaking. "Straight from the
+  // founders / in their own words" belonged to the (unobtainable) real reel
+  // and would misattribute a synthetic narration.
+  heading: 'The vision, in about a minute',
+  lede: 'What Magppie builds and why — an AI-narrated film from approved sources, over the team’s real photographs.',
   summary: [
     {
       label: 'What we do',

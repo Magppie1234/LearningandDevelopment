@@ -1,9 +1,11 @@
 import React from 'react'
 import {
   AbsoluteFill,
+  Audio,
   Sequence,
   interpolate,
   spring,
+  staticFile,
   useCurrentFrame,
   useVideoConfig,
 } from 'remotion'
@@ -47,11 +49,22 @@ export interface SceneSpec {
   type: string
   dur: number // narration seconds (scene lasts dur + PAD_S)
   props: Record<string, any>
+  /**
+   * Optional public-relative path to this scene's narration, e.g.
+   * "assets/vision/vo/scene-1.mp3". When set, Remotion mixes the audio into
+   * the render itself and no external mux step is needed — which is what the
+   * Vision Corner generator relies on, since Remotion's bundled ffmpeg is a
+   * minimal build with no mp4/m4a audio muxer. The Sales Academy generator
+   * omits it and muxes with system ffmpeg as before, so both paths work.
+   */
+  audio?: string
 }
 export interface ModuleProps {
   number: number
   title: string
   scenes: SceneSpec[]
+  /** Top-left brand line. Defaults to the Sales Academy wording. */
+  kicker?: string
 }
 
 /* ── helpers ──────────────────────────────────────────────────────────── */
@@ -188,10 +201,12 @@ const Chrome: React.FC<{ mod: ModuleProps; idx: number; total: number }> = ({ mo
   <>
     <div style={{ position: 'absolute', top: 46, left: 64 }}>
       <div style={{ fontFamily: SANS, fontSize: 15, letterSpacing: 5, color: COPPER, fontWeight: 700 }}>
-        MAGPPIE · SALES ACADEMY
+        {mod.kicker ?? 'MAGPPIE · SALES ACADEMY'}
       </div>
       <div style={{ fontFamily: SANS, fontSize: 14, color: DIM, marginTop: 6, letterSpacing: 1 }}>
-        Module {mod.number} — {mod.title}
+        {/* Module numbering only where there is a module — a standalone film
+            labelled "Module 0" reads like a mistake. */}
+        {mod.number > 0 ? `Module ${mod.number} — ${mod.title}` : mod.title}
       </div>
     </div>
     <div style={{ position: 'absolute', bottom: 40, left: 64, fontFamily: SANS, fontSize: 13, letterSpacing: 3, color: 'rgba(200,130,85,0.7)' }}>
@@ -1070,7 +1085,90 @@ const NotesScene: React.FC<any> = ({ heading = 'Key notes', items }) => {
   )
 }
 
+/**
+ * Portrait montage — real, self-hosted photographs of real people, revealed
+ * one after another.
+ *
+ * Deliberately a montage of existing photographs rather than a synthesized
+ * presenter: these are identifiable individuals, and a generated likeness of
+ * them (or a clone of a real voice) could be mistaken for genuine footage.
+ * Photographs they have already published, under a clearly synthetic
+ * narrator, carries none of that risk.
+ */
+const PortraitsScene: React.FC<any> = ({ heading, people }) => {
+  const f = useCurrentFrame()
+  return (
+    <Body>
+      <H text={heading} small />
+      <div
+        style={{
+          display: 'flex',
+          gap: 18,
+          marginTop: 30,
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+        }}
+      >
+        {(people ?? []).map((p: any, i: number) => (
+          <Pop key={i} delay={6 + i * 7} style={{ width: 150 }}>
+            <div
+              style={{
+                /* One shared phase, not per-card: staggering it left the name
+                   baselines at different heights, which read as a mistake
+                   rather than as motion. */
+                transform: `translateY(${Math.sin(f / 26) * 3}px)`,
+              }}
+            >
+              <div
+                style={{
+                  width: 150,
+                  height: 176,
+                  borderRadius: 14,
+                  overflow: 'hidden',
+                  border: '1px solid rgba(245,239,230,0.16)',
+                  background: 'rgba(255,255,255,0.05)',
+                  boxShadow: '0 10px 26px rgba(0,0,0,0.3)',
+                }}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  /* Paths arrive portal-style ("/team/x.png"); Remotion serves
+                     public/ from its own root, so strip the leading slash. */
+                  src={staticFile(String(p.photo).replace(/^\//, ''))}
+                  alt=""
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    /* Same black-and-white treatment as the page's team grid. */
+                    filter: 'grayscale(1) contrast(1.05)',
+                  }}
+                />
+              </div>
+              <div
+                style={{
+                  fontFamily: SERIF,
+                  fontSize: 18,
+                  color: INK,
+                  marginTop: 10,
+                  lineHeight: 1.25,
+                }}
+              >
+                {p.name}
+              </div>
+              <div style={{ fontFamily: SANS, fontSize: 13.5, color: DIM, lineHeight: 1.35 }}>
+                {p.role}
+              </div>
+            </div>
+          </Pop>
+        ))}
+      </div>
+    </Body>
+  )
+}
+
 const SCENE_MAP: Record<string, React.FC<any>> = {
+  portraits: PortraitsScene,
   notes: NotesScene,
   title: TitleScene,
   quote: QuoteScene,
@@ -1105,6 +1203,7 @@ export const SalesModuleVideo: React.FC<ModuleProps> = (mod) => {
             </SceneTransition>
             {/* discreet equalizer pulsing with the narration */}
             <VoiceWave talkEnd={sc.dur} />
+            {sc.audio && <Audio src={staticFile(sc.audio)} />}
           </Sequence>
         )
         from += frames
