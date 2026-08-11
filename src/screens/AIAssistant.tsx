@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { format } from 'date-fns'
 import { cn } from '@/lib/utils'
-import { useWhisperDictation } from '@/lib/useWhisperDictation'
+import { useVoiceDictation } from '@/lib/useVoiceDictation'
 import {
   Search,
   BookOpen,
@@ -350,15 +350,18 @@ export default function AIAssistant() {
   const scrollRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  // Voice dictation ("whisper flow"): transcript is appended to the input so
-  // the user can review/edit before sending. Focus the field afterwards.
+  // Voice dictation: the finished transcript is appended to the input so the
+  // user can review/edit before sending, while `micInterim` shows the words
+  // live as they are spoken. Nothing is ever sent without a deliberate press.
   const {
     status: micStatus,
     error: micError,
     supported: micSupported,
+    engine: micEngine,
+    interim: micInterim,
     toggle: toggleMic,
     clearError: clearMicError,
-  } = useWhisperDictation((text) => {
+  } = useVoiceDictation((text) => {
     setInputValue((prev) => (prev ? `${prev} ${text}` : text))
     inputRef.current?.focus()
   })
@@ -524,7 +527,7 @@ export default function AIAssistant() {
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder={
-                micStatus === 'recording'
+                micStatus === 'listening'
                   ? 'Listening… tap the mic to stop'
                   : micStatus === 'transcribing'
                     ? 'Transcribing…'
@@ -559,23 +562,27 @@ export default function AIAssistant() {
                 }}
                 disabled={micStatus === 'transcribing'}
                 aria-label={
-                  micStatus === 'recording'
-                    ? 'Stop recording'
+                  micStatus === 'listening'
+                    ? 'Stop voice input'
                     : micStatus === 'transcribing'
                       ? 'Transcribing'
                       : 'Start voice input'
                 }
-                title="Voice input (Whisper)"
+                title={
+                  micEngine === 'speech'
+                    ? 'Voice input — live transcription in your browser'
+                    : 'Voice input (Whisper — needs OPENAI_API_KEY)'
+                }
                 className={cn(
                   'w-10 h-10 rounded-full flex items-center justify-center transition-all flex-shrink-0',
-                  micStatus === 'recording'
+                  micStatus === 'listening'
                     ? 'bg-surface-rose/90 text-parchment animate-pulse'
                     : micStatus === 'transcribing'
                       ? 'bg-parchment text-ink-tertiary'
                       : 'bg-parchment text-ink-tertiary hover:text-surface-rose',
                 )}
               >
-                {micStatus === 'recording' ? (
+                {micStatus === 'listening' ? (
                   <Square size={16} />
                 ) : micStatus === 'transcribing' ? (
                   <Loader2 size={18} className="animate-spin" />
@@ -586,8 +593,36 @@ export default function AIAssistant() {
             )}
           </div>
 
-          {/* Voice status / error line */}
-          {(micStatus !== 'idle' || micError) && (
+          {/* Live preview — the words as they are heard, before they are
+              committed to the input. Interim text is shown lighter and in
+              italics so it reads as "not final yet" rather than as something
+              already typed. */}
+          {micStatus === 'listening' && micEngine === 'speech' && (
+            <div
+              className="mt-2 rounded-xl border border-surface-rose/30 bg-surface-rose/5 px-3.5 py-2.5"
+              aria-live="polite"
+            >
+              <p className="flex items-center gap-1.5 text-[11px] uppercase tracking-wide text-surface-rose">
+                <span className="inline-block h-1.5 w-1.5 flex-shrink-0 animate-pulse rounded-full bg-surface-rose" />
+                Listening
+              </p>
+              <p className="mt-1 text-sm leading-relaxed text-ink-primary">
+                {inputValue && <span className="text-ink-tertiary">{inputValue} </span>}
+                {micInterim ? (
+                  <span className="italic text-ink-secondary">{micInterim}</span>
+                ) : (
+                  !inputValue && <span className="text-ink-tertiary">Say something…</span>
+                )}
+              </p>
+              <p className="mt-1.5 text-[11px] text-ink-tertiary">
+                Tap the mic again to stop. Nothing is sent until you press send.
+              </p>
+            </div>
+          )}
+
+          {/* Status / error line */}
+          {((micStatus !== 'idle' && !(micStatus === 'listening' && micEngine === 'speech')) ||
+            micError) && (
             <p
               className={cn(
                 'mt-2 pl-1 text-[12px]',
@@ -596,8 +631,8 @@ export default function AIAssistant() {
             >
               {micError
                 ? micError
-                : micStatus === 'recording'
-                  ? '● Listening — speak your question, then tap the mic to stop.'
+                : micStatus === 'listening'
+                  ? '● Recording — tap the mic to stop and transcribe.'
                   : 'Transcribing your voice…'}
             </p>
           )}
