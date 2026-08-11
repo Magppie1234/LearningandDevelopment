@@ -24,6 +24,7 @@ import {
   type ContentBlock,
 } from '@/data/bd-academy'
 import { useBdProgress } from '@/lib/bd-progress-store'
+import { activityAfterPass } from '@/lib/module-certification'
 import { useBdTitles, bdEffectiveTitle } from '@/lib/bd-title-store'
 import { apiRecordAttempt } from '@/lib/learning-dashboard-client'
 import { TimeTrackingProvider } from '@/components/learning/TimeTrackingProvider'
@@ -530,7 +531,15 @@ export default function BdAcademy() {
                 </span>
                 {r?.passed && (
                   <span className="mt-1.5 block text-[11px] text-surface-sage font-medium">
-                    Passed · best {r.bestScore}/{r.total}
+                    {/* The certified score — the first passing attempt — not the
+                        best ever. A later, higher retake must not restate it. */}
+                    Certified · {r.certifiedScore ?? r.bestScore}/{r.certifiedTotal ?? r.total}
+                    {activityAfterPass(r) > 0 && (
+                      <span className="text-ink-tertiary font-normal">
+                        {' '}
+                        · {activityAfterPass(r)} revisit{activityAfterPass(r) === 1 ? '' : 's'} since
+                      </span>
+                    )}
                   </span>
                 )}
               </span>

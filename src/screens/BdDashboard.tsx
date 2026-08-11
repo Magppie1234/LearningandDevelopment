@@ -20,6 +20,7 @@ import { cn } from '@/lib/utils'
 import { BD_MODULES, BD_PASS_THRESHOLD, type BdCompetency } from '@/data/bd-academy'
 import { getMonthId, getMonthIndex, getMonthLabel } from '@/data/bde-quiz'
 import { useBdProgress } from '@/lib/bd-progress-store'
+import { activityAfterPass, certifiedPct } from '@/lib/module-certification'
 import { useBdDiagnostic } from '@/lib/bd-diagnostic-store'
 import { useBdTitles, bdEffectiveTitle } from '@/lib/bd-title-store'
 import { useQuizStore, bestFullAttempt, completionStreak, lifetimeStats } from '@/lib/quiz-store'
@@ -69,7 +70,10 @@ export default function BdDashboard() {
         const r = results[m.id]
         const status: StatusKey = r?.passed ? 'passed' : r?.viewed ? 'inProgress' : 'notStarted'
         const title = bdEffectiveTitle(overrides, m.id, m.title)
-        const scorePct = r && r.total > 0 ? Math.round((r.bestScore / r.total) * 100) : null
+        // Certified % once passed (the first passing attempt, locked); before
+        // that there is no certificate, so the latest raw score stands in.
+        const scorePct =
+          certifiedPct(r) ?? (r && r.total > 0 ? Math.round((r.bestScore / r.total) * 100) : null)
         return { id: m.id, number: m.number, title, pct: scorePct, status }
       }),
     [results, overrides],
@@ -385,11 +389,26 @@ export default function BdDashboard() {
                 >
                   {m.competency}
                 </span>
-                <span className="hidden md:block w-24 text-right text-[12px] text-ink-tertiary tabular-nums shrink-0">
-                  {r && r.total > 0 ? `Best ${r.bestScore}/${r.total}` : '—'}
+                <span
+                  className="hidden md:block w-24 text-right text-[12px] text-ink-tertiary tabular-nums shrink-0"
+                  title={
+                    r?.passed
+                      ? 'Certified score — the first attempt that passed. Retakes do not change it.'
+                      : undefined
+                  }
+                >
+                  {r?.passed
+                    ? `Certified ${r.certifiedScore ?? r.bestScore}/${r.certifiedTotal ?? r.total}`
+                    : r && r.total > 0
+                      ? `${r.bestScore}/${r.total}`
+                      : '—'}
                 </span>
-                <span className="hidden md:block w-20 text-right text-[12px] text-ink-tertiary tabular-nums shrink-0">
+                <span
+                  className="hidden md:block w-20 text-right text-[12px] text-ink-tertiary tabular-nums shrink-0"
+                  title="Activity only — attempts and revisits never affect the certified score."
+                >
                   {r?.attempts ? `${r.attempts} att.` : ''}
+                  {activityAfterPass(r) > 0 ? ` · ${activityAfterPass(r)} after` : ''}
                 </span>
                 <ArrowRight size={15} className="shrink-0 text-ink-tertiary/50 group-hover:text-ink-primary transition-colors" />
               </Link>

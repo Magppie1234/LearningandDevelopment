@@ -3,21 +3,23 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { SALES_MODULES } from '@/data/sales-academy'
+import {
+  applyAttempt,
+  applyView,
+  type CertifiedModuleResult,
+} from '@/lib/module-certification'
 
 /**
  * Sales Academy progress (demo mode) — mirrors bd-progress-store. A module is
- * only "complete" once its quiz is passed at >= 80%; viewing content alone
- * doesn't complete it. Persists locally; live mode writes module_attempts /
- * module_progress in Supabase through the same quiz submit path.
+ * only "complete" once its quiz is passed at SALES_PASS_THRESHOLD (80%);
+ * viewing content alone doesn't complete it. Persists locally; live mode
+ * writes module_attempts / module_progress in Supabase through the same quiz
+ * submit path.
+ *
+ * Certificate rule is shared with BD via lib/module-certification.ts.
  */
 
-export interface SalesModuleResult {
-  viewed: boolean
-  bestScore: number // correct answers, best attempt
-  total: number
-  passed: boolean
-  attempts: number
-}
+export type SalesModuleResult = CertifiedModuleResult
 
 interface SalesProgressState {
   results: Record<string, SalesModuleResult>
@@ -33,33 +35,15 @@ export const useSalesProgress = create<SalesProgressState>()(
       results: {},
       markViewed: (moduleId) =>
         set((s) => ({
-          results: {
-            ...s.results,
-            [moduleId]: {
-              viewed: true,
-              bestScore: s.results[moduleId]?.bestScore ?? 0,
-              total: s.results[moduleId]?.total ?? 0,
-              passed: s.results[moduleId]?.passed ?? false,
-              attempts: s.results[moduleId]?.attempts ?? 0,
-            },
-          },
+          results: { ...s.results, [moduleId]: applyView(s.results[moduleId]) },
         })),
       recordAttempt: (moduleId, correct, total, passed) =>
-        set((s) => {
-          const prev = s.results[moduleId]
-          return {
-            results: {
-              ...s.results,
-              [moduleId]: {
-                viewed: true,
-                bestScore: Math.max(prev?.bestScore ?? 0, correct),
-                total,
-                passed: (prev?.passed ?? false) || passed,
-                attempts: (prev?.attempts ?? 0) + 1,
-              },
-            },
-          }
-        }),
+        set((s) => ({
+          results: {
+            ...s.results,
+            [moduleId]: applyAttempt(s.results[moduleId], { correct, total, passed }),
+          },
+        })),
       completedCount: () =>
         SALES_MODULES.filter((m) => get().results[m.id]?.passed).length,
       overallPct: () =>
