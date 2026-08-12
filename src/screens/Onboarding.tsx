@@ -4,6 +4,13 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, ArrowRight, Check, FileText, User2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import KitchenBackdrop from '@/components/KitchenBackdrop'
+import {
+  hasAcknowledgedPolicies,
+  onOnboardingChange,
+  readOnboarding,
+  setDone as persistDone,
+} from '@/lib/onboarding-progress'
 import {
   ALL_CHECKLIST_TASKS,
   CHECKLIST_HEADER_FIELDS,
@@ -31,36 +38,38 @@ import {
  * padding the short phases with invented content.
  */
 
-/** v2: the task set changed wholesale, so v1's ids would never match. */
-const STORAGE_KEY = 'magppie-onboarding-progress-v2'
-
 export default function Onboarding() {
   const [done, setDone] = useState<Set<string>>(new Set())
   const [hydrated, setHydrated] = useState(false)
   const [active, setActive] = useState(0)
 
+  const [acknowledged, setAcknowledged] = useState(false)
+
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY)
-      if (raw) setDone(new Set(JSON.parse(raw) as string[]))
-    } catch {
-      /* fresh start */
+    const sync = () => {
+      setDone(new Set(readOnboarding().done))
+      setAcknowledged(hasAcknowledgedPolicies())
     }
+    sync()
     setHydrated(true)
+    // Acknowledging happens on /policies, so this page has to pick the change
+    // up on return — including from another tab.
+    return onOnboardingChange(sync)
   }, [])
 
   function toggle(id: string) {
-    setDone((prev) => {
-      const next = new Set(prev)
-      if (next.has(id)) next.delete(id)
-      else next.add(id)
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify([...next]))
-      } catch {
-        /* storage unavailable — the tick still works for this session */
-      }
-      return next
-    })
+    // The gate is enforced here, not only in the UI: a disabled button can be
+    // re-enabled from devtools, this cannot.
+    if (!hasAcknowledgedPolicies()) return
+    // Persist OUTSIDE the state updater. Doing it inside meant persistDone's
+    // change event fired mid-render, so the listener's setDone landed during
+    // the render phase and React discarded it — the tick silently did nothing.
+    // Updaters have to stay pure; the side effect belongs out here.
+    const next = new Set(done)
+    if (next.has(id)) next.delete(id)
+    else next.add(id)
+    setDone(next)
+    persistDone([...next])
   }
 
   const doneCount = useMemo(
@@ -77,41 +86,74 @@ export default function Onboarding() {
   const isLast = active === ONBOARDING_CHECKLIST.length - 1
 
   return (
-    <div className="mx-auto max-w-[900px] space-y-7">
+    <div className="relative">
+      {/* Atmospheric layer only — the phase cards above stay flat, as
+          confirmed. Fixed so the scene drifts behind the page rather than
+          scrolling with it, and heavily veiled in blue so the vivid cards
+          keep their contrast. */}
+      <div aria-hidden className="pointer-events-none fixed inset-0 -z-10">
+        <KitchenBackdrop veil="blue" parallax />
+      </div>
+
+      <div className="mx-auto max-w-[900px] space-y-7">
       <header>
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
-            <p className="text-xs uppercase tracking-[0.22em] text-accent-copper">Onboarding</p>
-            <h1 className="mt-2 font-serif text-4xl font-normal text-ink-primary">
+            <p className="text-xs uppercase tracking-[0.22em] text-accent-gold">Onboarding</p>
+            <h1 className="mt-2 font-serif text-4xl font-normal text-white">
               Your first month at Magppie
             </h1>
           </div>
           {/* The full Code of Conduct is a reference document, not a step —
               hence a link out rather than another phase in the checklist. */}
+          {/* Primary action, not a text link: solid fill and full contrast so
+              it reads as somewhere you are meant to go, since the checklist is
+              gated behind acknowledging it. */}
           <Link
             href="/policies"
-            className="inline-flex flex-shrink-0 items-center gap-1.5 rounded-full border border-[rgb(var(--rule)/0.2)] px-3.5 py-2 text-[13px] font-semibold text-ink-secondary transition-colors hover:border-accent-copper/50 hover:text-accent-copper"
+            className="inline-flex flex-shrink-0 items-center gap-2 rounded-full bg-accent-copper px-5 py-3 text-[14px] font-bold text-white transition-opacity hover:opacity-90"
           >
-            <FileText size={14} /> Policies
+            <FileText size={17} /> Policies
+            {!acknowledged && (
+              <span className="rounded-full bg-white/25 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide">
+                Action needed
+              </span>
+            )}
           </Link>
         </div>
-        <p className="mt-2 max-w-[640px] text-sm text-ink-secondary">
+        <p className="mt-2 max-w-[640px] text-sm text-white/75">
           The New Hire Onboarding Checklist — {TOTAL_CHECKLIST_TASKS} tasks across five phases,
           from the day before you join to your first month review. Step through them one at a time.
         </p>
 
         <div className="mt-5 flex items-center gap-3">
-          <div className="h-2.5 flex-1 overflow-hidden rounded-full bg-cream">
+          <div className="h-2.5 flex-1 overflow-hidden rounded-full bg-white/20">
             <div
               className="h-full rounded-full transition-all duration-500"
               style={{ width: `${pct}%`, backgroundColor: phase.color }}
             />
           </div>
-          <span className="tabular-nums text-sm font-semibold text-ink-primary">
+          <span className="tabular-nums text-sm font-semibold text-white">
             {doneCount}/{TOTAL_CHECKLIST_TASKS}
           </span>
         </div>
       </header>
+
+      {!acknowledged && (
+        <div className="rounded-2xl border-2 border-accent-copper bg-parchment px-5 py-4">
+          <p className="text-sm font-bold text-ink-primary">Checklist locked</p>
+          <p className="mt-1 text-[13px] text-ink-secondary">
+            Read and acknowledge the Policies &amp; Code of Conduct before starting your
+            checklist. You can still look through the phases below.
+          </p>
+          <Link
+            href="/policies"
+            className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-accent-copper px-4 py-2 text-[13px] font-bold text-white transition-opacity hover:opacity-90"
+          >
+            <FileText size={14} /> Read the policies <ArrowRight size={14} />
+          </Link>
+        </div>
+      )}
 
       {/* ── Stepper: progress indicator and navigation in one ────────── */}
       <nav aria-label="Onboarding phases">
@@ -131,15 +173,15 @@ export default function Onboarding() {
                     {/* connector left */}
                     <span
                       className={cn('h-0.5 flex-1 rounded', i === 0 && 'opacity-0')}
-                      style={{ backgroundColor: i <= active ? phase.color : 'rgb(0 0 0 / 0.10)' }}
+                      style={{ backgroundColor: i <= active ? phase.color : 'rgb(255 255 255 / 0.22)' }}
                     />
                     <span
                       className={cn(
                         'flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-[13px] font-bold transition-colors',
-                        isActive || complete ? 'text-white' : 'text-ink-tertiary',
+                        isActive || complete ? 'text-white' : 'text-white/70',
                       )}
                       style={{
-                        backgroundColor: isActive || complete ? p.color : 'rgb(0 0 0 / 0.06)',
+                        backgroundColor: isActive || complete ? p.color : 'rgb(255 255 255 / 0.16)',
                         outline: isActive ? `3px solid ${p.color}33` : undefined,
                       }}
                     >
@@ -147,15 +189,15 @@ export default function Onboarding() {
                     </span>
                     <span
                       className={cn('h-0.5 flex-1 rounded', isLastIndex(i) && 'opacity-0')}
-                      style={{ backgroundColor: i < active ? phase.color : 'rgb(0 0 0 / 0.10)' }}
+                      style={{ backgroundColor: i < active ? phase.color : 'rgb(255 255 255 / 0.22)' }}
                     />
                   </span>
                   <span
                     className={cn(
                       'truncate text-center text-[11px] font-medium leading-tight',
-                      isActive ? 'text-ink-primary' : 'text-ink-tertiary',
+                      isActive ? 'font-semibold' : 'text-white/65',
                     )}
-                    style={isActive ? { color: p.color } : undefined}
+                    style={isActive ? { color: '#fff' } : undefined}
                   >
                     {p.title}
                   </span>
@@ -193,7 +235,12 @@ export default function Onboarding() {
                   type="button"
                   onClick={() => toggle(t.id)}
                   aria-pressed={isDone}
-                  className="flex w-full items-start gap-3 px-5 py-3 text-left transition-colors hover:bg-cream/60"
+                  disabled={!acknowledged}
+                  title={acknowledged ? undefined : 'Acknowledge the policies to start ticking tasks'}
+                  className={cn(
+                    'flex w-full items-start gap-3 px-5 py-3 text-left transition-colors',
+                    acknowledged ? 'hover:bg-cream/60' : 'cursor-not-allowed opacity-55',
+                  )}
                 >
                   <span
                     aria-hidden
@@ -256,7 +303,7 @@ export default function Onboarding() {
 
       <OnboardingFilm />
 
-      <section className="rounded-2xl border border-[rgb(var(--rule)/0.12)] p-5">
+      <section className="rounded-2xl border border-[rgb(var(--rule)/0.12)] bg-parchment p-5">
         <h2 className="text-sm font-semibold text-ink-primary">New hire record</h2>
         <p className="mt-0.5 text-[12px] text-ink-tertiary">
           Captured at the top of the checklist. Not wired to the HRMS import yet, so these stay
@@ -275,10 +322,11 @@ export default function Onboarding() {
         </dl>
       </section>
 
-      <p className="text-[11px] text-ink-tertiary">
+      <p className="text-[11px] text-white/70">
         Ticks are saved in this browser only. Per-employee tracking needs the onboarding_progress
         table wiring up — nothing writes to it yet.
       </p>
+      </div>
     </div>
   )
 }
@@ -316,7 +364,7 @@ function OnboardingFilm() {
   }, [])
 
   return (
-    <section className="rounded-2xl border border-[rgb(var(--rule)/0.12)] p-5">
+    <section className="rounded-2xl border border-[rgb(var(--rule)/0.12)] bg-parchment p-5">
       <h2 className="text-sm font-semibold text-ink-primary">{ONBOARDING_VIDEO.title}</h2>
       <p className="mt-0.5 max-w-[560px] text-[12px] text-ink-tertiary">{ONBOARDING_VIDEO.blurb}</p>
       <div className="mt-3 overflow-hidden rounded-xl bg-black" style={{ aspectRatio: '16 / 9' }}>
