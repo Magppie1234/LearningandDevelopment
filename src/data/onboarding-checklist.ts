@@ -7,10 +7,10 @@
  * rather than editing tasks ad hoc.
  *
  * The shape of this process is the point: it is heavily front-loaded. Ten of
- * the sixteen tasks land on Day 1, and three phases carry one or two each. Any
- * view of this data should let Day 1 read as visibly heavier rather than
- * flattening all five phases into equal blocks — that evenness would be a lie
- * about the process.
+ * the sixteen tasks land on Day 1, and the other four phases carry one or two
+ * each. The page steps through one phase at a time, so that imbalance shows up
+ * as Day 1 simply having a longer list — the short phases are NOT padded with
+ * invented tasks to match it.
  *
  * NOTE ON COUNTS: the build brief described Pre-Joining and Day 30 as one task
  * each, which would total 14. The spreadsheet has two in each, which is what
@@ -31,9 +31,9 @@ export interface ChecklistPhase {
   id: string
   /** Phase heading as written in the file. */
   title: string
-  /** When it happens, for the roadmap spine. */
+  /** When it happens. */
   when: string
-  /** Distinct hue per phase. */
+  /** Distinct, fully saturated hue per phase — vivid by instruction. */
   color: string
   tasks: ChecklistTask[]
 }
@@ -43,7 +43,7 @@ export const ONBOARDING_CHECKLIST: ChecklistPhase[] = [
     id: 'pre-joining',
     title: 'Pre-Joining',
     when: 'Day −1',
-    color: '#7B5EA7',
+    color: '#7C3AED',
     tasks: [
       {
         n: 1,
@@ -65,7 +65,7 @@ export const ONBOARDING_CHECKLIST: ChecklistPhase[] = [
     id: 'day-1',
     title: 'Day 1',
     when: 'First day',
-    color: '#C2603F',
+    color: '#EA580C',
     tasks: [
       { n: 3, id: 'ob-t3', title: 'Welcome kit', owner: 'HR' },
       { n: 4, id: 'ob-t4', title: 'Hand over company-allotted assets & Stationery', owner: 'HR' },
@@ -111,7 +111,7 @@ export const ONBOARDING_CHECKLIST: ChecklistPhase[] = [
     id: 'week-1',
     title: 'Week 1',
     when: 'First week',
-    color: '#1F8A75',
+    color: '#059669',
     tasks: [
       {
         n: 13,
@@ -125,7 +125,7 @@ export const ONBOARDING_CHECKLIST: ChecklistPhase[] = [
     id: 'day-7',
     title: 'Day 7',
     when: 'One week in',
-    color: '#3E6FA8',
+    color: '#2563EB',
     tasks: [
       {
         n: 14,
@@ -140,7 +140,7 @@ export const ONBOARDING_CHECKLIST: ChecklistPhase[] = [
     id: 'day-30',
     title: 'Day 30',
     when: 'One month in',
-    color: '#B08428',
+    color: '#D97706',
     tasks: [
       { n: 15, id: 'ob-t15', title: 'Conduct formal HR review meeting with new hire', owner: 'HR' },
       {
