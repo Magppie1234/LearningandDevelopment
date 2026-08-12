@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { ArrowLeft, ArrowRight, Check, User2 } from 'lucide-react'
+import Link from 'next/link'
+import { ArrowLeft, ArrowRight, Check, FileText, User2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import {
   ALL_CHECKLIST_TASKS,
@@ -78,10 +79,22 @@ export default function Onboarding() {
   return (
     <div className="mx-auto max-w-[900px] space-y-7">
       <header>
-        <p className="text-xs uppercase tracking-[0.22em] text-accent-copper">Onboarding</p>
-        <h1 className="mt-2 font-serif text-4xl font-normal text-ink-primary">
-          Your first month at Magppie
-        </h1>
+        <div className="flex items-start justify-between gap-4">
+          <div className="min-w-0">
+            <p className="text-xs uppercase tracking-[0.22em] text-accent-copper">Onboarding</p>
+            <h1 className="mt-2 font-serif text-4xl font-normal text-ink-primary">
+              Your first month at Magppie
+            </h1>
+          </div>
+          {/* The full Code of Conduct is a reference document, not a step —
+              hence a link out rather than another phase in the checklist. */}
+          <Link
+            href="/policies"
+            className="inline-flex flex-shrink-0 items-center gap-1.5 rounded-full border border-[rgb(var(--rule)/0.2)] px-3.5 py-2 text-[13px] font-semibold text-ink-secondary transition-colors hover:border-accent-copper/50 hover:text-accent-copper"
+          >
+            <FileText size={14} /> Policies
+          </Link>
+        </div>
         <p className="mt-2 max-w-[640px] text-sm text-ink-secondary">
           The New Hire Onboarding Checklist — {TOTAL_CHECKLIST_TASKS} tasks across five phases,
           from the day before you join to your first month review. Step through them one at a time.
