@@ -34,11 +34,19 @@ export interface ChecklistPhase {
   /** When it happens. */
   when: string
   /**
-   * Bright, high-contrast hue per phase. Deliberately on the light end:
-   * these cards sit over a visible blue kitchen backdrop, and dark tones
-   * sank into it. Bright also means dark text on the header band, not white.
+   * Soft Greens palette — dusty blue-grey, pale/medium/deeper sage, plus a
+   * warm sage and a soft slate-blue mixed from inside the same family for the
+   * two heavier phases. All low-saturation and clearly related; that
+   * relatedness is what reads as coordinated rather than as a rainbow. Cream
+   * is the neutral base (card surfaces) and is deliberately NOT an accent.
    */
   color: string
+  /**
+   * Whether text on this colour should be light or dark. The palette spans
+   * pale sage to deeper sage, so a single choice would fail at one end —
+   * stated per phase rather than guessed from the hex at render time.
+   */
+  ink: 'light' | 'dark'
   tasks: ChecklistTask[]
   /**
    * Set only where the checklist genuinely has no tasks. Used for the gap
@@ -53,7 +61,8 @@ export const ONBOARDING_CHECKLIST: ChecklistPhase[] = [
     id: 'pre-joining',
     title: 'Pre-Joining',
     when: 'Day −1',
-    color: '#A78BFA',
+    color: '#8CA3B2',
+    ink: 'light',
     tasks: [
       {
         n: 1,
@@ -75,7 +84,8 @@ export const ONBOARDING_CHECKLIST: ChecklistPhase[] = [
     id: 'day-1',
     title: 'Day 1',
     when: 'First day',
-    color: '#FB923C',
+    color: '#A9B183',
+    ink: 'dark',
     tasks: [
       { n: 3, id: 'ob-t3', title: 'Welcome kit', owner: 'HR' },
       { n: 4, id: 'ob-t4', title: 'Hand over company-allotted assets & Stationery', owner: 'HR' },
@@ -121,7 +131,8 @@ export const ONBOARDING_CHECKLIST: ChecklistPhase[] = [
     id: 'week-1',
     title: 'Week 1',
     when: 'First week',
-    color: '#34D399',
+    color: '#B7C7AE',
+    ink: 'dark',
     tasks: [
       {
         n: 13,
@@ -135,7 +146,8 @@ export const ONBOARDING_CHECKLIST: ChecklistPhase[] = [
     id: 'day-7',
     title: 'Day 7',
     when: 'One week in',
-    color: '#22D3EE',
+    color: '#8CA687',
+    ink: 'light',
     tasks: [
       {
         n: 14,
@@ -152,7 +164,8 @@ export const ONBOARDING_CHECKLIST: ChecklistPhase[] = [
     id: 'weeks-2-4',
     title: 'Weeks 2–4',
     when: 'Settling in',
-    color: '#F472B6',
+    color: '#6E8A6B',
+    ink: 'light',
     tasks: [],
     note: 'No formal HR checkpoints during this window — that’s normal. Focus on your role, and reach out to your buddy or manager anytime.',
   },
@@ -160,7 +173,8 @@ export const ONBOARDING_CHECKLIST: ChecklistPhase[] = [
     id: 'day-30',
     title: 'Day 30',
     when: 'One month in',
-    color: '#FBBF24',
+    color: '#6F8899',
+    ink: 'light',
     tasks: [
       { n: 15, id: 'ob-t15', title: 'Conduct formal HR review meeting with new hire', owner: 'HR' },
       {

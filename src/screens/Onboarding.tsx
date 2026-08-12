@@ -18,15 +18,16 @@ import {
  * Onboarding — the real MAGPPIE New Hire Onboarding Checklist, stepped through
  * one phase at a time.
  *
- * Numbered steps 1–5 across the top are both the progress indicator and the
+ * Numbered steps 1–6 across the top are both the progress indicator and the
  * navigation: click one, or use next/back. Only the active phase's checklist
  * renders, so the page stays a single readable list instead of a wall of
  * sixteen tasks.
  *
- * Colour is deliberately vivid — a fully saturated hue per phase, carried
- * through the step indicator, the header band and the checklist. The earlier
- * muted set read as flat. Still FLAT though: no shadows, no gradients standing
- * in for depth. Colour does the work, not dimension.
+ * Colour follows the Soft Greens palette: dusty blue-grey, pale/medium/deeper
+ * sage, plus a warm sage and a soft slate-blue for the two heavier phases —
+ * all low-saturation and from one family, with cream as the neutral surface.
+ * Coordinated rather than loud. Still FLAT: no shadows, no gradients standing
+ * in for depth.
  *
  * Day 1 is not made bigger artificially. It simply has ten tasks where the
  * others have one or two, and stepping through makes that obvious without
@@ -70,6 +71,9 @@ export default function Onboarding() {
 
   const phase = ONBOARDING_CHECKLIST[active]
   const phaseDone = phase.tasks.filter((t) => done.has(t.id)).length
+  // Palette spans pale sage to deeper sage, so band text follows the phase's
+  // own declared ink rather than a single global choice.
+  const bandInk = phase.ink === 'light' ? '#FFFFFF' : '#2B2420'
   const isFirst = active === 0
   const isLast = active === ONBOARDING_CHECKLIST.length - 1
 
@@ -145,10 +149,11 @@ export default function Onboarding() {
                     <span
                       className={cn(
                         'flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-[13px] font-bold transition-colors',
-                        isActive || complete ? 'text-ink-primary' : 'text-white/70',
+                        !isActive && !complete && 'text-white/70',
                       )}
                       style={{
                         backgroundColor: isActive || complete ? p.color : 'rgb(255 255 255 / 0.16)',
+                        color: isActive || complete ? (p.ink === 'light' ? '#fff' : '#2B2420') : undefined,
                         outline: isActive ? `3px solid ${p.color}33` : undefined,
                       }}
                     >
@@ -186,19 +191,27 @@ export default function Onboarding() {
           className="flex flex-wrap items-baseline gap-x-3 gap-y-1 px-5 py-4"
           style={{ backgroundColor: phase.color }}
         >
-          <h2 className="font-serif text-2xl text-ink-primary">{phase.title}</h2>
-          <span className="text-[12px] uppercase tracking-wide text-ink-primary/70">
+          <h2 className="font-serif text-2xl" style={{ color: bandInk }}>
+            {phase.title}
+          </h2>
+          <span
+            className="text-[12px] uppercase tracking-wide"
+            style={{ color: bandInk, opacity: 0.75 }}
+          >
             {phase.when}
           </span>
           {phase.tasks.length > 0 && (
-            <span className="ml-auto tabular-nums text-[12px] font-semibold text-ink-primary/80">
+            <span
+              className="ml-auto tabular-nums text-[12px] font-semibold"
+              style={{ color: bandInk, opacity: 0.85 }}
+            >
               {phaseDone}/{phase.tasks.length} done
             </span>
           )}
         </div>
 
         {phase.note && (
-          <div className="bg-white px-5 py-6">
+          <div className="bg-cream px-5 py-6">
             <p className="text-[14px] leading-relaxed text-ink-secondary">{phase.note}</p>
             <p className="mt-3 text-[11.5px] text-ink-tertiary">
               Nothing to tick here — this step exists so the jump from Day 7 to Day 30 reads as
@@ -207,7 +220,7 @@ export default function Onboarding() {
           </div>
         )}
 
-        <ul className="divide-y divide-[rgb(var(--rule)/0.08)] bg-white">
+        <ul className="divide-y divide-[rgb(var(--rule)/0.08)] bg-cream">
           {phase.tasks.map((t) => {
             const isDone = done.has(t.id)
             return (
@@ -253,7 +266,7 @@ export default function Onboarding() {
           })}
         </ul>
 
-        <div className="flex items-center justify-between gap-3 border-t border-[rgb(var(--rule)/0.08)] bg-white px-5 py-3">
+        <div className="flex items-center justify-between gap-3 border-t border-[rgb(var(--rule)/0.08)] bg-cream px-5 py-3">
           <button
             type="button"
             onClick={() => setActive((i) => Math.max(0, i - 1))}
