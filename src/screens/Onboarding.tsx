@@ -5,12 +5,7 @@ import Link from 'next/link'
 import { ArrowLeft, ArrowRight, Check, FileText, User2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import KitchenBackdrop from '@/components/KitchenBackdrop'
-import {
-  hasAcknowledgedPolicies,
-  onOnboardingChange,
-  readOnboarding,
-  setDone as persistDone,
-} from '@/lib/onboarding-progress'
+import { onOnboardingChange, readOnboarding, setDone as persistDone } from '@/lib/onboarding-progress'
 import {
   ALL_CHECKLIST_TASKS,
   CHECKLIST_HEADER_FIELDS,
@@ -43,24 +38,17 @@ export default function Onboarding() {
   const [hydrated, setHydrated] = useState(false)
   const [active, setActive] = useState(0)
 
-  const [acknowledged, setAcknowledged] = useState(false)
-
   useEffect(() => {
     const sync = () => {
       setDone(new Set(readOnboarding().done))
-      setAcknowledged(hasAcknowledgedPolicies())
     }
     sync()
     setHydrated(true)
-    // Acknowledging happens on /policies, so this page has to pick the change
-    // up on return — including from another tab.
+    // Keeps ticks in step across tabs.
     return onOnboardingChange(sync)
   }, [])
 
   function toggle(id: string) {
-    // The gate is enforced here, not only in the UI: a disabled button can be
-    // re-enabled from devtools, this cannot.
-    if (!hasAcknowledgedPolicies()) return
     // Persist OUTSIDE the state updater. Doing it inside meant persistDone's
     // change event fired mid-render, so the listener's setDone landed during
     // the render phase and React discarded it — the tick silently did nothing.
@@ -104,26 +92,20 @@ export default function Onboarding() {
               Your first month at Magppie
             </h1>
           </div>
-          {/* The full Code of Conduct is a reference document, not a step —
-              hence a link out rather than another phase in the checklist. */}
-          {/* Primary action, not a text link: solid fill and full contrast so
-              it reads as somewhere you are meant to go, since the checklist is
-              gated behind acknowledging it. */}
+          {/* Reference document, not a step — a prominent link out rather than
+              another phase. Solid fill so it reads as a primary action; it does
+              not gate anything. */}
           <Link
             href="/policies"
             className="inline-flex flex-shrink-0 items-center gap-2 rounded-full bg-accent-copper px-5 py-3 text-[14px] font-bold text-white transition-opacity hover:opacity-90"
           >
             <FileText size={17} /> Policies
-            {!acknowledged && (
-              <span className="rounded-full bg-white/25 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide">
-                Action needed
-              </span>
-            )}
           </Link>
         </div>
         <p className="mt-2 max-w-[640px] text-sm text-white/75">
-          The New Hire Onboarding Checklist — {TOTAL_CHECKLIST_TASKS} tasks across five phases,
-          from the day before you join to your first month review. Step through them one at a time.
+          The New Hire Onboarding Checklist — {TOTAL_CHECKLIST_TASKS} tasks across{' '}
+          {ONBOARDING_CHECKLIST.length} steps, from the day before you join to your first month
+          review. Step through them one at a time.
         </p>
 
         <div className="mt-5 flex items-center gap-3">
@@ -139,27 +121,12 @@ export default function Onboarding() {
         </div>
       </header>
 
-      {!acknowledged && (
-        <div className="rounded-2xl border-2 border-accent-copper bg-parchment px-5 py-4">
-          <p className="text-sm font-bold text-ink-primary">Checklist locked</p>
-          <p className="mt-1 text-[13px] text-ink-secondary">
-            Read and acknowledge the Policies &amp; Code of Conduct before starting your
-            checklist. You can still look through the phases below.
-          </p>
-          <Link
-            href="/policies"
-            className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-accent-copper px-4 py-2 text-[13px] font-bold text-white transition-opacity hover:opacity-90"
-          >
-            <FileText size={14} /> Read the policies <ArrowRight size={14} />
-          </Link>
-        </div>
-      )}
 
       {/* ── Stepper: progress indicator and navigation in one ────────── */}
       <nav aria-label="Onboarding phases">
         <ol className="flex items-start gap-1.5">
           {ONBOARDING_CHECKLIST.map((p, i) => {
-            const complete = p.tasks.every((t) => done.has(t.id))
+            const complete = p.tasks.length > 0 && p.tasks.every((t) => done.has(t.id))
             const isActive = i === active
             return (
               <li key={p.id} className="flex min-w-0 flex-1 flex-col items-center">
@@ -178,7 +145,7 @@ export default function Onboarding() {
                     <span
                       className={cn(
                         'flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-[13px] font-bold transition-colors',
-                        isActive || complete ? 'text-white' : 'text-white/70',
+                        isActive || complete ? 'text-ink-primary' : 'text-white/70',
                       )}
                       style={{
                         backgroundColor: isActive || complete ? p.color : 'rgb(255 255 255 / 0.16)',
@@ -219,12 +186,26 @@ export default function Onboarding() {
           className="flex flex-wrap items-baseline gap-x-3 gap-y-1 px-5 py-4"
           style={{ backgroundColor: phase.color }}
         >
-          <h2 className="font-serif text-2xl text-white">{phase.title}</h2>
-          <span className="text-[12px] uppercase tracking-wide text-white/80">{phase.when}</span>
-          <span className="ml-auto tabular-nums text-[12px] font-semibold text-white/90">
-            {phaseDone}/{phase.tasks.length} done
+          <h2 className="font-serif text-2xl text-ink-primary">{phase.title}</h2>
+          <span className="text-[12px] uppercase tracking-wide text-ink-primary/70">
+            {phase.when}
           </span>
+          {phase.tasks.length > 0 && (
+            <span className="ml-auto tabular-nums text-[12px] font-semibold text-ink-primary/80">
+              {phaseDone}/{phase.tasks.length} done
+            </span>
+          )}
         </div>
+
+        {phase.note && (
+          <div className="bg-white px-5 py-6">
+            <p className="text-[14px] leading-relaxed text-ink-secondary">{phase.note}</p>
+            <p className="mt-3 text-[11.5px] text-ink-tertiary">
+              Nothing to tick here — this step exists so the jump from Day 7 to Day 30 reads as
+              intended rather than as a missing phase.
+            </p>
+          </div>
+        )}
 
         <ul className="divide-y divide-[rgb(var(--rule)/0.08)] bg-white">
           {phase.tasks.map((t) => {
@@ -235,12 +216,7 @@ export default function Onboarding() {
                   type="button"
                   onClick={() => toggle(t.id)}
                   aria-pressed={isDone}
-                  disabled={!acknowledged}
-                  title={acknowledged ? undefined : 'Acknowledge the policies to start ticking tasks'}
-                  className={cn(
-                    'flex w-full items-start gap-3 px-5 py-3 text-left transition-colors',
-                    acknowledged ? 'hover:bg-cream/60' : 'cursor-not-allowed opacity-55',
-                  )}
+                  className="flex w-full items-start gap-3 px-5 py-3 text-left transition-colors hover:bg-cream/60"
                 >
                   <span
                     aria-hidden

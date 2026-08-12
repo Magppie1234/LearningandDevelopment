@@ -33,9 +33,19 @@ export interface ChecklistPhase {
   title: string
   /** When it happens. */
   when: string
-  /** Distinct, fully saturated hue per phase — vivid by instruction. */
+  /**
+   * Bright, high-contrast hue per phase. Deliberately on the light end:
+   * these cards sit over a visible blue kitchen backdrop, and dark tones
+   * sank into it. Bright also means dark text on the header band, not white.
+   */
   color: string
   tasks: ChecklistTask[]
+  /**
+   * Set only where the checklist genuinely has no tasks. Used for the gap
+   * between Day 7 and Day 30 so the jump reads as expected rather than
+   * broken — no invented checklist items to fill it.
+   */
+  note?: string
 }
 
 export const ONBOARDING_CHECKLIST: ChecklistPhase[] = [
@@ -43,7 +53,7 @@ export const ONBOARDING_CHECKLIST: ChecklistPhase[] = [
     id: 'pre-joining',
     title: 'Pre-Joining',
     when: 'Day −1',
-    color: '#7C3AED',
+    color: '#A78BFA',
     tasks: [
       {
         n: 1,
@@ -65,7 +75,7 @@ export const ONBOARDING_CHECKLIST: ChecklistPhase[] = [
     id: 'day-1',
     title: 'Day 1',
     when: 'First day',
-    color: '#EA580C',
+    color: '#FB923C',
     tasks: [
       { n: 3, id: 'ob-t3', title: 'Welcome kit', owner: 'HR' },
       { n: 4, id: 'ob-t4', title: 'Hand over company-allotted assets & Stationery', owner: 'HR' },
@@ -111,7 +121,7 @@ export const ONBOARDING_CHECKLIST: ChecklistPhase[] = [
     id: 'week-1',
     title: 'Week 1',
     when: 'First week',
-    color: '#059669',
+    color: '#34D399',
     tasks: [
       {
         n: 13,
@@ -125,7 +135,7 @@ export const ONBOARDING_CHECKLIST: ChecklistPhase[] = [
     id: 'day-7',
     title: 'Day 7',
     when: 'One week in',
-    color: '#2563EB',
+    color: '#22D3EE',
     tasks: [
       {
         n: 14,
@@ -137,10 +147,20 @@ export const ONBOARDING_CHECKLIST: ChecklistPhase[] = [
     ],
   },
   {
+    // The real checklist has no HR checkpoint for ~23 days here. Rather than
+    // invent tasks or leave an unexplained jump, the gap is named.
+    id: 'weeks-2-4',
+    title: 'Weeks 2–4',
+    when: 'Settling in',
+    color: '#F472B6',
+    tasks: [],
+    note: 'No formal HR checkpoints during this window — that’s normal. Focus on your role, and reach out to your buddy or manager anytime.',
+  },
+  {
     id: 'day-30',
     title: 'Day 30',
     when: 'One month in',
-    color: '#D97706',
+    color: '#FBBF24',
     tasks: [
       { n: 15, id: 'ob-t15', title: 'Conduct formal HR review meeting with new hire', owner: 'HR' },
       {

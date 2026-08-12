@@ -28,12 +28,12 @@ const VEILS = {
     'linear-gradient(180deg, rgba(252,249,246,0.78) 0%, rgba(252,249,246,0.62) 45%, rgba(250,245,239,0.74) 100%)',
   dark: 'linear-gradient(180deg, rgba(6,42,51,0.93) 0%, rgba(6,42,51,0.88) 45%, rgba(4,26,32,0.95) 100%)',
   /**
-   * Blue wash, tuned to sit behind fully saturated cards. Kept heavy on
-   * purpose: the Onboarding phase cards are vivid violet/orange/emerald/blue/
-   * amber, and a lighter veil left the photography competing with them. This
-   * is atmospheric depth, not a second focal point.
+   * Blue wash, deliberately light enough that the kitchen and its motion are
+   * actually visible rather than a vague texture. It works at this strength
+   * because the cards on top are bright and opaque — a darker card palette
+   * would need a heavier veil and would bury the scene again.
    */
-  blue: 'linear-gradient(180deg, rgba(18,42,74,0.90) 0%, rgba(24,54,92,0.84) 40%, rgba(14,32,58,0.93) 100%)',
+  blue: 'linear-gradient(180deg, rgba(16,38,70,0.62) 0%, rgba(20,48,86,0.52) 40%, rgba(12,28,54,0.68) 100%)',
 } as const
 
 export default function KitchenBackdrop({

@@ -2,9 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, ArrowRight, CalendarDays, Check, X } from 'lucide-react'
+import { ArrowLeft, CalendarDays, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { acknowledgePolicies, readOnboarding } from '@/lib/onboarding-progress'
 import {
   FESTIVAL_LIST,
   POLICY_DOC_SOURCE,
@@ -111,8 +110,6 @@ export default function Policies() {
 
       </article>
 
-      <AcknowledgeGate />
-
       {showHolidays && <HolidayModal onClose={() => setShowHolidays(false)} />}
     </div>
   )
@@ -201,78 +198,3 @@ function HolidayModal({ onClose }: { onClose: () => void }) {
   )
 }
 
-/**
- * The acknowledgment gate.
- *
- * Real, not decorative: until this is confirmed the Onboarding checklist stays
- * locked (see Onboarding.tsx). It writes into the same onboarding record that
- * tracks task completion rather than into a separate flag, so "have they
- * acknowledged" is answered from the same place as "how far along are they".
- *
- * Once given it is never overwritten — re-reading the document later does not
- * reset or re-date the acknowledgment.
- */
-function AcknowledgeGate() {
-  const [checked, setChecked] = useState(false)
-  const [ackAt, setAckAt] = useState<string | null>(null)
-  const [hydrated, setHydrated] = useState(false)
-
-  useEffect(() => {
-    setAckAt(readOnboarding().policiesAcknowledgedAt)
-    setHydrated(true)
-  }, [])
-
-  if (!hydrated) return null
-
-  if (ackAt) {
-    return (
-      <section className="rounded-2xl border-2 border-surface-sage/50 bg-surface-sage/10 p-5">
-        <p className="flex items-center gap-2 text-sm font-semibold text-ink-primary">
-          <Check size={17} className="text-surface-sage" />
-          You have acknowledged these policies
-        </p>
-        <p className="mt-1 text-[12px] text-ink-tertiary">
-          Recorded {new Date(ackAt).toLocaleString()}. Your onboarding checklist is unlocked.
-        </p>
-        <Link
-          href="/onboarding"
-          className="mt-3 inline-flex items-center gap-1.5 text-[13px] font-semibold text-accent-copper hover:underline"
-        >
-          Continue onboarding <ArrowRight size={14} />
-        </Link>
-      </section>
-    )
-  }
-
-  return (
-    <section className="rounded-2xl border-2 border-accent-copper/45 bg-accent-copper/5 p-5">
-      <h2 className="text-sm font-semibold text-ink-primary">Acknowledgment required</h2>
-      <p className="mt-1 max-w-[560px] text-[12.5px] text-ink-secondary">
-        Your onboarding checklist stays locked until you confirm you have read these policies.
-      </p>
-      <label className="mt-3 flex cursor-pointer items-start gap-2.5">
-        <input
-          type="checkbox"
-          checked={checked}
-          onChange={(e) => setChecked(e.target.checked)}
-          className="mt-0.5 h-4 w-4 flex-shrink-0 accent-[color:var(--tw-color-accent-copper,#B8703F)]"
-        />
-        <span className="text-[13.5px] text-ink-primary">
-          I have read and understood these policies
-        </span>
-      </label>
-      <button
-        type="button"
-        disabled={!checked}
-        onClick={() => setAckAt(acknowledgePolicies())}
-        className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-accent-copper px-5 py-2.5 text-[13.5px] font-semibold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
-      >
-        Confirm <ArrowRight size={15} />
-      </button>
-      <p className="mt-2.5 text-[11px] text-ink-tertiary">
-        Saved in this browser. It is not sent to a server — per-employee records need the
-        onboarding_progress table wiring up, so this is not yet an auditable record of acceptance.
-      </p>
-    </section>
-  )
-}
