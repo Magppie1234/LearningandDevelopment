@@ -1167,7 +1167,161 @@ const PortraitsScene: React.FC<any> = ({ heading, people }) => {
   )
 }
 
+/**
+ * Onboarding roadmap — the video spine.
+ *
+ * Deliberately the same shape as the /onboarding page: five phases alternating
+ * above and below a central path, each in its own colour, flat. `focus` picks
+ * one phase to enlarge and list its tasks while the rest dim back, so the film
+ * walks the viewer along the roadmap they will actually see in the portal
+ * rather than showing them unrelated graphics. focus = -1 is the overview.
+ *
+ * No presenter and no character on screen, by instruction — the roadmap is the
+ * only thing being shown.
+ */
+const RoadmapScene: React.FC<any> = ({ phases = [], focus = -1, heading }) => {
+  const f = useCurrentFrame()
+  const { fps } = useVideoConfig()
+  const enter = spring({ frame: f, fps, config: { damping: 18 } })
+
+  return (
+    <Body>
+      {heading && <H text={heading} small />}
+      <div style={{ position: 'relative', marginTop: 34, height: 300 }}>
+        {/* the path */}
+        <div
+          style={{
+            position: 'absolute',
+            top: 150,
+            left: 0,
+            width: `${interpolate(enter, [0, 1], [0, 100])}%`,
+            height: 2,
+            background: 'rgba(245,239,230,0.22)',
+          }}
+        />
+        <div style={{ display: 'flex', gap: 16, height: '100%' }}>
+          {phases.map((p: any, i: number) => {
+            const above = i % 2 === 0
+            const isFocus = focus === i
+            const dim = focus >= 0 && !isFocus
+            const pop = spring({ frame: f - 6 - i * 3, fps, config: { damping: 16 } })
+            return (
+              <div
+                key={i}
+                style={{
+                  flex: isFocus ? 2.1 : 1,
+                  position: 'relative',
+                  opacity: dim ? 0.28 : pop,
+                  transition: 'flex 0.3s',
+                }}
+              >
+                {/* node on the path */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 150 - 7,
+                    left: '50%',
+                    marginLeft: -7,
+                    width: 14,
+                    height: 14,
+                    borderRadius: '50%',
+                    border: `2px solid ${p.color}`,
+                    background: isFocus ? p.color : '#241F1B',
+                  }}
+                />
+                {/* stem */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: above ? 118 : 150,
+                    left: '50%',
+                    width: 2,
+                    height: 32,
+                    marginLeft: -1,
+                    background: p.color,
+                  }}
+                />
+                {/* card */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    left: 0,
+                    right: 0,
+                    ...(above ? { bottom: 300 - 118 } : { top: 182 }),
+                    border: `2px solid ${p.color}`,
+                    borderRadius: 14,
+                    background: 'rgba(255,255,255,0.04)',
+                    padding: isFocus ? '12px 14px' : '10px 12px',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 7 }}>
+                    <span
+                      style={{
+                        background: p.color,
+                        color: '#fff',
+                        borderRadius: 5,
+                        padding: '1px 7px',
+                        fontSize: 12,
+                        fontWeight: 700,
+                        fontFamily: SANS,
+                      }}
+                    >
+                      {i + 1}
+                    </span>
+                    <span style={{ fontFamily: SERIF, fontSize: isFocus ? 23 : 19, color: INK }}>
+                      {p.title}
+                    </span>
+                    <span style={{ marginLeft: 'auto', fontFamily: SANS, fontSize: 12, color: DIM }}>
+                      {p.count}
+                    </span>
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: SANS,
+                      fontSize: 11,
+                      letterSpacing: 1,
+                      textTransform: 'uppercase',
+                      color: p.color,
+                      marginTop: 2,
+                    }}
+                  >
+                    {p.when}
+                  </div>
+                  {isFocus && (p.tasks ?? []).length > 0 && (
+                    <ul style={{ margin: '9px 0 0', padding: 0, listStyle: 'none' }}>
+                      {(p.tasks ?? []).map((t: string, j: number) => {
+                        const line = spring({ frame: f - 14 - j * 3, fps, config: { damping: 18 } })
+                        return (
+                          <li
+                            key={j}
+                            style={{
+                              fontFamily: SANS,
+                              fontSize: 13.5,
+                              lineHeight: 1.45,
+                              color: 'rgba(245,239,230,0.8)',
+                              opacity: line,
+                              marginBottom: 3,
+                            }}
+                          >
+                            <span style={{ color: p.color }}>▸ </span>
+                            {t}
+                          </li>
+                        )
+                      })}
+                    </ul>
+                  )}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </Body>
+  )
+}
+
 const SCENE_MAP: Record<string, React.FC<any>> = {
+  roadmap: RoadmapScene,
   portraits: PortraitsScene,
   notes: NotesScene,
   title: TitleScene,
