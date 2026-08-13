@@ -17,7 +17,7 @@ import {
   VISION_HERO_VIDEO,
 } from '@/data/vision'
 import { ExternalLink, MapPin, Sparkles } from 'lucide-react'
-import KitchenBackdrop from '@/components/KitchenBackdrop'
+import KitchenScene3D from '@/components/KitchenScene3D'
 
 /**
  * Vision Corner — scroll-driven story section. Beats reveal progressively on
@@ -46,13 +46,15 @@ import KitchenBackdrop from '@/components/KitchenBackdrop'
  * palette-only change should not touch a single line of layout.
  */
 const NAVY = '#FFFFFF'
-const NAVY_SOFT = '#E7F1F0'
+const NAVY_SOFT = '#D9EAE7'
 // Dark enough for 11px text on white — lighter golds fall under 4.5:1.
 const GOLD = '#7E6318'
 /** The warm gold for dark teal grounds, where GOLD disappears. */
 const GOLD_LIGHT = '#E3C275'
 /** Mid teal — fills and seams only, never small text. */
 const TEAL = '#8FC7C0'
+/** Teal dark enough for small text on white (5.9:1) — the accent ink. */
+const TEAL_INK = '#155E56'
 const INK = '#2A2320'
 
 /**
@@ -85,39 +87,21 @@ const reveal = {
 function MissionBeat() {
   return (
     <section className="relative min-h-[82vh] flex items-center justify-center px-6 sm:px-12 overflow-hidden">
-      {/* Slow push-in kitchen photograph, softened to match the page's blurred
-          backdrop — a sharp hero here would contradict the treatment that runs
-          behind every other beat. */}
-      <motion.div
-        aria-hidden
-        className="absolute inset-0"
-        style={{ filter: 'blur(10px)', transform: 'scale(1.06)' }}
-      >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <motion.img
-          src="/hero-magppie-kitchen.jpg"
-          alt=""
-          initial={{ scale: 1 }}
-          animate={{ scale: 1.12 }}
-          transition={{ duration: 28, ease: 'linear', repeat: Infinity, repeatType: 'reverse' }}
-          className="absolute inset-0 w-full h-full object-cover"
-          draggable={false}
-        />
-      </motion.div>
-      {/* veil for legibility */}
+      {/* No photograph of its own. This beat used to paint a full-bleed kitchen
+          here, which sat directly on top of the page's moving 3D scene and hid
+          it at exactly the point where someone first looks. The hero is now
+          transparent so the scene reads through it; only a light veil remains,
+          for the type. */}
       <div
         className="absolute inset-0"
         style={{
-          // Lighter than it was: the photograph behind it is now blurred, so it
-          // no longer needs a heavy veil to stay out of the type's way, and a
-          // heavy one on top of the page veil flattened the hero to grey.
-          background: `linear-gradient(165deg, ${NAVY}bf 0%, ${NAVY_SOFT}a6 55%, ${NAVY}cc 100%)`,
+          background: `linear-gradient(165deg, ${NAVY}99 0%, ${NAVY_SOFT}80 55%, ${NAVY}a6 100%)`,
         }}
       />
       <motion.div {...reveal} className="relative max-w-[880px] text-center py-24">
         <p
           className="text-[11px] font-medium tracking-[0.35em] mb-8"
-          style={{ color: GOLD }}
+          style={{ color: TEAL_INK }}
         >
           VISION CORNER
         </p>
@@ -260,7 +244,7 @@ function VideoBeat() {
     >
       <StoneVeil />
       <motion.div {...reveal} className="max-w-[880px] mx-auto">
-        <p className="text-[11px] font-medium tracking-[0.35em] mb-3 text-center" style={{ color: GOLD }}>
+        <p className="text-[11px] font-medium tracking-[0.35em] mb-3 text-center" style={{ color: TEAL_INK }}>
           THE MAGPPIE FILM
         </p>
         <h2 className="font-serif text-2xl sm:text-4xl text-center text-[#2A2320] mb-10">
@@ -675,7 +659,7 @@ function KitchenDepthBeat() {
           style={{ backgroundColor: 'rgba(42,35,32,0.035)', border: `1px solid ${GOLD}40` }}
         >
           <div className="flex-1">
-            <p className="text-[11px] tracking-[0.3em] uppercase" style={{ color: GOLD }}>
+            <p className="text-[11px] tracking-[0.3em] uppercase" style={{ color: TEAL_INK }}>
               Stop {step + 1} of {WALKTHROUGH_STOPS.length}
             </p>
             <p className="mt-2 font-serif text-xl text-[#2A2320]">{active.title}</p>
@@ -791,7 +775,7 @@ function LeaderModal({ person, onClose }: { person: TeamMember; onClose: () => v
         />
         <div className="px-8 py-8 text-center">
           <p className="font-serif text-3xl text-[#2A2320]">{person.name}</p>
-          <p className="mt-2 text-[13px] tracking-[0.18em] uppercase" style={{ color: GOLD }}>
+          <p className="mt-2 text-[13px] tracking-[0.18em] uppercase" style={{ color: TEAL_INK }}>
             {person.role}
           </p>
           <button
@@ -868,7 +852,7 @@ function LeadershipBeat() {
         <motion.p
           {...reveal}
           className="text-center text-[11px] font-semibold tracking-[0.3em] uppercase"
-          style={{ color: GOLD }}
+          style={{ color: TEAL_INK }}
         >
           Our Team
         </motion.p>
@@ -1144,8 +1128,14 @@ export default function Vision() {
         felt — blur plus a near-white veil keeps it as atmosphere behind dark
         ink on white rather than something competing with the story.
       */}
-      <div aria-hidden className="pointer-events-none fixed inset-0 -z-10">
-        <KitchenBackdrop veil="teal" parallax blur={14} />
+      {/*
+        z-0, NOT -z-10. The body paints an opaque cream ground, and a negative
+        z-index puts this behind that — the scene rendered and animated into a
+        layer nothing could ever see. At z-0 it sits above the body ground and
+        below the beats, which are all positioned and come later in the tree.
+      */}
+      <div aria-hidden className="pointer-events-none fixed inset-0 z-0">
+        <KitchenScene3D />
       </div>
       <MissionBeat />
       <SectionBreak />

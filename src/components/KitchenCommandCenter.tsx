@@ -236,7 +236,7 @@ export default function KitchenCommandCenter() {
  * palette can be re-skinned via CSS vars without touching geometry. Fills use
  * the Warm Stone tokens; gradients handle the warm window light + stone sheen.
  * ──────────────────────────────────────────────────────────────────────── */
-function KitchenSVG() {
+export function KitchenSVG() {
   return (
     <svg
       viewBox="0 0 1200 620"
@@ -252,7 +252,7 @@ function KitchenSVG() {
         </linearGradient>
         <linearGradient id="kccFloor" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor="rgb(var(--stone-charcoal))" />
-          <stop offset="1" stopColor="rgb(28 23 18)" />
+          <stop offset="1" stopColor="rgb(var(--kcc-floor-deep, 28 23 18))" />
         </linearGradient>
         <linearGradient id="kccLight" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0" stopColor="rgb(var(--stone-ivory))" />
@@ -264,12 +264,12 @@ function KitchenSVG() {
           <stop offset="1" stopColor="rgb(var(--stone-brass) / 0)" />
         </radialGradient>
         <linearGradient id="kccIslandTop" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="rgb(84 70 58)" />
-          <stop offset="1" stopColor="rgb(61 49 40)" />
+          <stop offset="0" stopColor="rgb(var(--kcc-island-hi, 84 70 58))" />
+          <stop offset="1" stopColor="rgb(var(--kcc-island-lo, 61 49 40))" />
         </linearGradient>
         <linearGradient id="kccCounter" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="rgb(72 60 50)" />
-          <stop offset="1" stopColor="rgb(52 42 34)" />
+          <stop offset="0" stopColor="rgb(var(--kcc-counter-hi, 72 60 50))" />
+          <stop offset="1" stopColor="rgb(var(--kcc-counter-lo, 52 42 34))" />
         </linearGradient>
       </defs>
 
@@ -282,7 +282,7 @@ function KitchenSVG() {
 
       {/* Window — warm dawn light + muntin cross → Our Story */}
       <g id="window">
-        <rect x="108" y="54" width="216" height="172" rx="10" fill="rgb(28 23 18)" />
+        <rect x="108" y="54" width="216" height="172" rx="10" fill="rgb(var(--kcc-floor-deep, 28 23 18))" />
         <rect x="120" y="66" width="192" height="148" rx="6" fill="url(#kccLight)" />
         <rect x="210" y="66" width="12" height="148" fill="rgb(var(--stone-espresso))" />
         <rect x="120" y="134" width="192" height="12" fill="rgb(var(--stone-espresso))" />
