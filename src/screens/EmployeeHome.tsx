@@ -31,6 +31,10 @@ import {
 } from '@/components/ds'
 import { useRole } from '@/lib/role-context'
 import { useDataSource } from '@/lib/data-source'
+import ReadinessRing from '@/components/learning/ReadinessRing'
+import DataFreshness from '@/components/learning/DataFreshness'
+import ValidationTrend from '@/components/learning/ValidationTrend'
+import { buildValidationTrend, isFlat } from '@/lib/readiness-trend'
 import {
   DUE_POLICY_NOTE,
   STATUS_LABEL,
@@ -170,6 +174,15 @@ export default function EmployeeHome() {
 
   const plan = useMemo(() => (member ? planFor(member, DEMO_AS_OF) : null), [member])
 
+  /**
+   * Trend reconstructed from evidence dates — see lib/readiness-trend.ts for
+   * why this is not the same thing as stored history, and what that costs.
+   */
+  const trend = useMemo(
+    () => (plan ? buildValidationTrend(plan.verdict.rows, plan.asOf, 6) : []),
+    [plan],
+  )
+
   // Hold the frame until the stored source preference has been read, so a
   // viewer who chose sample data does not see the live-mode empty state flash
   // past first.
@@ -253,6 +266,20 @@ export default function EmployeeHome() {
             </Button>
           </>
         }
+      />
+
+      {/*
+        Freshness stated once, at the top, instead of a fixed date repeated on
+        every card. The old "As of 30 Jul 2026" was the reporting date — real,
+        but read as "last refreshed", which promised a currency the page did
+        not have. Live mode gets a wall-clock time and a working Refresh;
+        sample mode gets neither, because the fixture cannot go stale and a
+        Refresh button over it would be theatre.
+      */}
+      <DataFreshness
+        source={source}
+        asOfLabel={formatDate(plan.asOf)}
+        onRefresh={source === 'live' ? () => window.location.reload() : undefined}
       />
 
       {/* 1 — What requires attention. Only rendered when something does. */}
@@ -355,12 +382,29 @@ export default function EmployeeHome() {
           <p className="text-[11px] font-medium uppercase tracking-wide text-ink-tertiary">
             Role readiness
           </p>
-          <p className="font-serif text-[32px] leading-none font-semibold text-ink-primary mt-2 tnum">
-            {verdict.coveragePct}%
-          </p>
-          <p className="text-[11px] text-ink-tertiary mt-1">
-            {counts.completed} of {counts.total} required competencies validated
-          </p>
+          {/*
+            The ring supplements the figure and the badge — it never replaces
+            them. Coverage alone cannot say whether someone is role ready: one
+            approved-critical gap holds the verdict regardless of how high the
+            percentage runs. So the arc is tinted by the VERDICT, not by the
+            number, and 90% with a critical gap draws red rather than
+            near-complete green.
+          */}
+          <div className="mt-3 flex justify-center">
+            <ReadinessRing
+              pct={verdict.coveragePct}
+              tone={
+                verdict.status === 'role_ready'
+                  ? 'success'
+                  : verdict.status === 'not_role_ready'
+                    ? 'danger'
+                    : verdict.status === 'developing'
+                      ? 'warning'
+                      : 'neutral'
+              }
+              label={`${counts.completed} of ${counts.total} validated`}
+            />
+          </div>
           <div className="mt-3">
             <StatusBadge
               tone={
@@ -381,6 +425,34 @@ export default function EmployeeHome() {
               <span className="text-ink-tertiary"> ({verdict.nextAction.owner})</span>
             </p>
           )}
+          {/*
+            The one thing on this dashboard that shows change rather than a
+            single number. Reconstructed from the evidence dates already on
+            record — real dates, but NOT a stored history, and the caption says
+            so. When every month is identical there is no trend to draw, and a
+            flat line would imply a measurement that was never taken, so the
+            honest note replaces the chart.
+          */}
+          {trend.length >= 2 && (
+            <div className="mt-4 pt-4 border-t border-hairline/8">
+              <p className="text-[11px] font-medium uppercase tracking-wide text-ink-tertiary">
+                Validated over time
+              </p>
+              {isFlat(trend) ? (
+                <p className="mt-2 text-[11px] leading-relaxed text-ink-tertiary">
+                  No change across the last {trend.length} months — nothing new has been
+                  validated in this window, so there is no trend to plot.
+                </p>
+              ) : (
+                <ValidationTrend points={trend} height={96} />
+              )}
+              <p className="mt-2 text-[10px] leading-relaxed text-ink-tertiary">
+                Rebuilt from recorded evidence dates, read against today&rsquo;s requirements —
+                no point-in-time snapshots are stored yet.
+              </p>
+            </div>
+          )}
+
           <div className="mt-auto pt-4">
             <Button href="/skills-passport" size="sm" className="w-full">
               Open Skills Passport
@@ -490,7 +562,7 @@ export default function EmployeeHome() {
         <Section
           title="Skills to improve"
           description="Where your validated level is below what the role requires."
-          meta={`As of ${formatDate(plan.asOf)} · proficiency scale 0–5`}
+          meta={`Proficiency scale 0–5 · reporting date ${formatDate(plan.asOf)}`}
           action={
             <Link
               href="/skills-passport"
@@ -607,7 +679,7 @@ export default function EmployeeHome() {
       <Section
         title="Certifications"
         description="Competencies validated with a recorded validation date."
-        meta={`As of ${formatDate(plan.asOf)}`}
+        meta={`Reporting date ${formatDate(plan.asOf)}`}
         action={
           <Link href="/certifications" className="text-[11px] font-medium text-accent-copper hover:underline">
             View all
