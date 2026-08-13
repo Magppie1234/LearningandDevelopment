@@ -43,13 +43,13 @@ const TEAL_PALETTE: React.CSSProperties = {
 export default function KitchenScene3D({
   palette = 'teal',
   /** Softens the scene so it stays behind the content rather than competing. */
-  blur = 3,
+  blur = 1.5,
   /**
    * Veil painted over the scene, so text above it stays readable. Tuned by
    * looking: heavier than this and the scene reads as a coloured wash with no
    * kitchen in it, which defeats the point of using a scene at all.
    */
-  veil = 'linear-gradient(180deg, rgba(255,255,255,0.70) 0%, rgba(231,241,240,0.58) 45%, rgba(255,255,255,0.74) 100%)',
+  veil = 'linear-gradient(180deg, rgba(255,255,255,0.46) 0%, rgba(214,232,229,0.34) 45%, rgba(255,255,255,0.50) 100%)',
   opacity = 1,
 }: {
   palette?: 'teal' | 'stone'

@@ -46,15 +46,21 @@ import KitchenScene3D from '@/components/KitchenScene3D'
  * palette-only change should not touch a single line of layout.
  */
 const NAVY = '#FFFFFF'
-const NAVY_SOFT = '#D9EAE7'
+const NAVY_SOFT = '#BCD8D3'
 // Dark enough for 11px text on white — lighter golds fall under 4.5:1.
 const GOLD = '#7E6318'
 /** The warm gold for dark teal grounds, where GOLD disappears. */
 const GOLD_LIGHT = '#E3C275'
 /** Mid teal — fills and seams only, never small text. */
 const TEAL = '#8FC7C0'
-/** Teal dark enough for small text on white (5.9:1) — the accent ink. */
-const TEAL_INK = '#155E56'
+/**
+ * Teal dark enough for 11px text over the *scene*, not just over white.
+ * #155E56 cleared white easily but fell to 4.16:1 on the lighter teal bands
+ * once the backdrop was turned up — measured, not assumed. This clears 4.5
+ * across the whole range the scrimmed ground actually spans (5.13:1 at its
+ * darkest, 9.37:1 on white).
+ */
+const TEAL_INK = '#124F49'
 const INK = '#2A2320'
 
 /**
@@ -95,9 +101,30 @@ function MissionBeat() {
       <div
         className="absolute inset-0"
         style={{
-          background: `linear-gradient(165deg, ${NAVY}99 0%, ${NAVY_SOFT}80 55%, ${NAVY}a6 100%)`,
+          background: `linear-gradient(165deg, ${NAVY}73 0%, ${NAVY_SOFT}59 55%, ${NAVY}80 100%)`,
         }}
       />
+      {/*
+        A scrim behind the copy, not over the whole page.
+        The scene is deliberately vivid now, which means the ground under the
+        type varies as it drifts — measured, the eyebrow fell to 1.97:1 over the
+        darker bands. A page-wide veil would fix that by washing the kitchen
+        back out, which is the thing being asked for. So the readability lives
+        exactly where the words are: a soft radial pool that fades to nothing
+        well before the section edges, leaving the scene untouched around it.
+      */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 flex items-center justify-center"
+      >
+        <div
+          className="h-[78%] w-[min(1000px,94%)]"
+          style={{
+            background:
+              'radial-gradient(ellipse at center, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.80) 42%, rgba(255,255,255,0.42) 68%, rgba(255,255,255,0) 85%)',
+          }}
+        />
+      </div>
       <motion.div {...reveal} className="relative max-w-[880px] text-center py-24">
         <p
           className="text-[11px] font-medium tracking-[0.35em] mb-8"
@@ -154,7 +181,7 @@ function FounderBeat() {
   return (
     <section
       className="px-6 sm:px-12 py-20 sm:py-28"
-      style={{ background: `linear-gradient(180deg, ${NAVY}ee 0%, ${NAVY_SOFT}e8 100%)` }}
+      style={{ background: `linear-gradient(180deg, ${NAVY}e0 0%, ${NAVY_SOFT}f2 100%)` }}
     >
       <div className="max-w-[980px] mx-auto grid grid-cols-1 md:grid-cols-[minmax(260px,380px)_1fr] gap-10 items-center">
         <motion.div {...reveal}>
@@ -240,7 +267,7 @@ function VideoBeat() {
   return (
     <section
       className="relative overflow-hidden px-6 sm:px-12 py-20 sm:py-28"
-      style={{ background: `linear-gradient(165deg, ${NAVY_SOFT}e8 0%, ${NAVY}ee 100%)` }}
+      style={{ background: `linear-gradient(165deg, ${NAVY_SOFT}f2 0%, ${NAVY}e0 100%)` }}
     >
       <StoneVeil />
       <motion.div {...reveal} className="max-w-[880px] mx-auto">
@@ -335,7 +362,7 @@ function TimelineBeat() {
   return (
     <section
       className="relative overflow-hidden px-6 sm:px-12 py-20 sm:py-28"
-      style={{ background: `linear-gradient(180deg, ${NAVY_SOFT}e8 0%, ${NAVY}ee 100%)` }}
+      style={{ background: `linear-gradient(180deg, ${NAVY_SOFT}f2 0%, ${NAVY}e0 100%)` }}
     >
       <StoneVeil />
       <motion.h2 {...reveal} className="text-center font-serif text-3xl sm:text-4xl text-[#2A2320]">
@@ -463,7 +490,7 @@ function MarbleSection({
         className="absolute inset-0"
         style={{
           background:
-            'linear-gradient(180deg, rgba(255,255,255,0.90) 0%, rgba(231,241,240,0.84) 50%, rgba(255,255,255,0.92) 100%)',
+            'linear-gradient(180deg, rgba(255,255,255,0.72) 0%, rgba(188,216,211,0.66) 50%, rgba(255,255,255,0.76) 100%)',
         }}
       />
       <div className="relative">{children}</div>
@@ -694,7 +721,7 @@ function PromiseBeat() {
   return (
     <section
       className="relative overflow-hidden min-h-[70vh] flex items-center px-6 sm:px-12"
-      style={{ background: `linear-gradient(200deg, ${NAVY_SOFT}e8 0%, ${NAVY}ee 70%)` }}
+      style={{ background: `linear-gradient(200deg, ${NAVY_SOFT}f2 0%, ${NAVY}e0 70%)` }}
     >
       <StoneVeil />
       <div className="relative max-w-[780px] mx-auto text-center py-24">
@@ -1080,7 +1107,7 @@ function GlobalPresenceBeat() {
   return (
     <section
       className="px-6 sm:px-12 py-20 sm:py-28"
-      style={{ background: `linear-gradient(180deg, ${NAVY}ee 0%, ${NAVY_SOFT}e8 100%)` }}
+      style={{ background: `linear-gradient(180deg, ${NAVY}e0 0%, ${NAVY_SOFT}f2 100%)` }}
     >
       <div className="max-w-[820px] mx-auto">
         <motion.h2 {...reveal} className="text-center font-serif text-3xl sm:text-4xl text-[#2A2320]">
