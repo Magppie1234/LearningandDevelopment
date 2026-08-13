@@ -8,6 +8,21 @@
  * the leadership names/roles/photos from magppie.com's own team page. Nothing
  * here is invented. Connective narration is plain phrasing, not new claims.
  *
+ * REEL SOURCING. The nine brief reels were read (captions, via a rendering
+ * browser — plain HTTP returns an empty JS shell, which is what made them look
+ * unreachable at first). Their recurring ideas now shape this script: the
+ * India-rooted origin ("after years of studying the Indian kitchen and Indian
+ * cooking culture"), silver infusion as the antibacterial mechanism, and
+ * wellness ordered ahead of looks. Captions describe the reels; the spoken
+ * audio was not transcribable, so tone is drawn from how the brand writes.
+ *
+ * HEALTH-CLAIM LIMIT — a deliberate call. The reels' own phrasing runs to
+ * "100% cancer safe" and "your kitchen might be poisoning you". This is
+ * internal L&D: what it says becomes what staff repeat to customers, so the
+ * absolutist and alarm-led formulations are NOT carried over. The underlying
+ * material facts are — MDF and plywood emit formaldehyde, stone does not —
+ * stated as material properties rather than as medical guarantees.
+ *
  * DELIBERATELY EXCLUDED: VISION_FOUNDER.note. It is flagged in vision.ts as
  * placeholder copy pending review by Vinod Sir / Megha Ma'am — putting draft
  * words in a founder's mouth, in a voiced video, is exactly the thing that
@@ -29,7 +44,7 @@ export const VISION_SPEC = {
   scenes: [
     {
       type: 'title',
-      vo: 'Magppie is not, in the end, a kitchen company. It is a wellness company that happens to build kitchens.',
+      vo: 'Magppie is not, in the end, a kitchen company. It is a wellness company that happens to build kitchens. It began with years spent studying how India actually cooks — the climate, the culture, the daily use — and then building for that, rather than importing a kitchen designed for somewhere else.',
       props: {
         kicker: 'Vision Corner',
         title: 'What we build, and why',
@@ -58,7 +73,7 @@ export const VISION_SPEC = {
     },
     {
       type: 'swap',
-      vo: 'The difference is the material. A Magppie kitchen is built from engineered stone rather than wood. There is nothing for termites to eat, nothing that swells when it gets wet, and no formaldehyde released into the room where you cook.',
+      vo: 'The difference is the material. A Magppie kitchen is built from engineered stone rather than wood, inside and out. There is nothing for termites to eat, nothing that swells when it gets wet, and no formaldehyde released into the room where you cook. The stone is infused with silver and copper at nano scale, which is what makes the surface itself resist bacteria — not a coating that wears off, but a property of the material.',
       props: {
         heading: 'Why stone, not wood',
         rows: [
@@ -83,7 +98,7 @@ export const VISION_SPEC = {
     },
     {
       type: 'notes',
-      vo: 'The objective is simple to say, and hard to do. Make an ordinary home a place that actively looks after the people living in it. That is the work.',
+      vo: 'The objective is simple to say, and hard to do. Make an ordinary home a place that actively looks after the people living in it. The kitchens are beautiful, and that matters — but the beauty is the bonus. Health is the point. Rooted in how India has always cooked, built for how it will.',
       props: {
         heading: 'The objective',
         items: [

@@ -207,7 +207,10 @@ export const VISION_CORNER = {
   // team's real photographs — not the founders speaking. "Straight from the
   // founders / in their own words" belonged to the (unobtainable) real reel
   // and would misattribute a synthetic narration.
-  heading: 'The vision, in about a minute',
+  // Two minutes, not one: the narration grew when the reels' own recurring
+  // ideas went into the script. Kept honest against the actual runtime (2:00)
+  // rather than left at the older figure.
+  heading: 'The vision, in two minutes',
   lede: 'What Magppie builds and why — an AI-narrated film from approved sources, over the team’s real photographs.',
   summary: [
     {
