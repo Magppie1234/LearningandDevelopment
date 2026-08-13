@@ -17,6 +17,7 @@ import {
   VISION_HERO_VIDEO,
 } from '@/data/vision'
 import { ExternalLink, MapPin, Sparkles } from 'lucide-react'
+import KitchenBackdrop from '@/components/KitchenBackdrop'
 
 /**
  * Vision Corner — scroll-driven story section. Beats reveal progressively on
@@ -26,34 +27,42 @@ import { ExternalLink, MapPin, Sparkles } from 'lucide-react'
  */
 
 /**
- * Our Story's palette — white base, light green + gold accents.
+ * Vision Corner's palette — white base, a teal range, two warm golds.
  *
  * Deliberately its own thing, separate from the warm-stone theme everywhere
- * else in the portal, and shared with Process Flow's status colours so the
- * two pages read as related rather than coincidental. Green is kept PALE —
- * wellness, not emerald; gold carries the premium accent.
+ * else in the portal. Teal replaces the earlier pale green: it carries the
+ * same wellness reading while sitting further from the sage used on
+ * Onboarding, so the two pages no longer look like near-misses of each other.
  *
- * The constant NAMES are unchanged from the original navy treatment on
- * purpose: they are referenced ~40 times across nine beats, and a palette-only
- * change should not touch a single line of layout. NAVY is the page ground
- * (white), NAVY_SOFT the pale green it gradients into, GOLD the gold accent,
- * SAGE the soft green used for fills and seams (never for small text).
+ * The range runs deep (TEAL_DEEP, dark grounds) → mid (TEAL, fills and seams)
+ * → pale (NAVY_SOFT, the tint white gradients into). Two golds, because one
+ * cannot serve both ends: GOLD is darkened for small text on white (lighter
+ * golds fall under 4.5:1), GOLD_LIGHT is the warm gold that reads on a dark
+ * teal ground (~7:1 on TEAL_DEEP). Both are used page-wide, not scoped to one
+ * beat.
+ *
+ * The constant NAMES NAVY / NAVY_SOFT are unchanged from the original navy
+ * treatment on purpose: they are referenced ~40 times across nine beats, and a
+ * palette-only change should not touch a single line of layout.
  */
 const NAVY = '#FFFFFF'
-const NAVY_SOFT = '#EDF4EE'
+const NAVY_SOFT = '#E7F1F0'
 // Dark enough for 11px text on white — lighter golds fall under 4.5:1.
 const GOLD = '#7E6318'
-const SAGE = '#BFDCC6'
+/** The warm gold for dark teal grounds, where GOLD disappears. */
+const GOLD_LIGHT = '#E3C275'
+/** Mid teal — fills and seams only, never small text. */
+const TEAL = '#8FC7C0'
 const INK = '#2A2320'
 
 /**
- * A seam between beats, in the page's green and gold. A nine-beat scroll
+ * A seam between beats, in the page's teal and both golds. A nine-beat scroll
  * needs an obvious edge where one section ends.
  */
 function SectionBreak() {
   return (
     <div aria-hidden className="flex h-2 w-full">
-      {[GOLD, SAGE, GOLD, NAVY_SOFT].map((c, i) => (
+      {[GOLD, TEAL, GOLD_LIGHT, NAVY_SOFT].map((c, i) => (
         <span key={i} className="flex-1" style={{ backgroundColor: c }} />
       ))}
     </div>
@@ -76,21 +85,33 @@ const reveal = {
 function MissionBeat() {
   return (
     <section className="relative min-h-[82vh] flex items-center justify-center px-6 sm:px-12 overflow-hidden">
-      {/* slow push-in kitchen photograph */}
-      <motion.img
-        src="/hero-magppie-kitchen.jpg"
-        alt="Magppie Wellness Kitchen"
-        initial={{ scale: 1 }}
-        animate={{ scale: 1.12 }}
-        transition={{ duration: 28, ease: 'linear', repeat: Infinity, repeatType: 'reverse' }}
-        className="absolute inset-0 w-full h-full object-cover"
-        draggable={false}
-      />
-      {/* navy veil for legibility */}
+      {/* Slow push-in kitchen photograph, softened to match the page's blurred
+          backdrop — a sharp hero here would contradict the treatment that runs
+          behind every other beat. */}
+      <motion.div
+        aria-hidden
+        className="absolute inset-0"
+        style={{ filter: 'blur(10px)', transform: 'scale(1.06)' }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <motion.img
+          src="/hero-magppie-kitchen.jpg"
+          alt=""
+          initial={{ scale: 1 }}
+          animate={{ scale: 1.12 }}
+          transition={{ duration: 28, ease: 'linear', repeat: Infinity, repeatType: 'reverse' }}
+          className="absolute inset-0 w-full h-full object-cover"
+          draggable={false}
+        />
+      </motion.div>
+      {/* veil for legibility */}
       <div
         className="absolute inset-0"
         style={{
-          background: `linear-gradient(165deg, ${NAVY}e8 0%, ${NAVY_SOFT}cc 55%, ${NAVY}f2 100%)`,
+          // Lighter than it was: the photograph behind it is now blurred, so it
+          // no longer needs a heavy veil to stay out of the type's way, and a
+          // heavy one on top of the page veil flattened the hero to grey.
+          background: `linear-gradient(165deg, ${NAVY}bf 0%, ${NAVY_SOFT}a6 55%, ${NAVY}cc 100%)`,
         }}
       />
       <motion.div {...reveal} className="relative max-w-[880px] text-center py-24">
@@ -147,7 +168,10 @@ function FounderBeat() {
   }
 
   return (
-    <section className="bg-cream px-6 sm:px-12 py-20 sm:py-28">
+    <section
+      className="px-6 sm:px-12 py-20 sm:py-28"
+      style={{ background: `linear-gradient(180deg, ${NAVY}ee 0%, ${NAVY_SOFT}e8 100%)` }}
+    >
       <div className="max-w-[980px] mx-auto grid grid-cols-1 md:grid-cols-[minmax(260px,380px)_1fr] gap-10 items-center">
         <motion.div {...reveal}>
           {photoOk ? (
@@ -232,7 +256,7 @@ function VideoBeat() {
   return (
     <section
       className="relative overflow-hidden px-6 sm:px-12 py-20 sm:py-28"
-      style={{ background: `linear-gradient(165deg, ${NAVY_SOFT} 0%, ${NAVY} 100%)` }}
+      style={{ background: `linear-gradient(165deg, ${NAVY_SOFT}e8 0%, ${NAVY}ee 100%)` }}
     >
       <StoneVeil />
       <motion.div {...reveal} className="max-w-[880px] mx-auto">
@@ -327,7 +351,7 @@ function TimelineBeat() {
   return (
     <section
       className="relative overflow-hidden px-6 sm:px-12 py-20 sm:py-28"
-      style={{ background: `linear-gradient(180deg, ${NAVY_SOFT} 0%, ${NAVY} 100%)` }}
+      style={{ background: `linear-gradient(180deg, ${NAVY_SOFT}e8 0%, ${NAVY}ee 100%)` }}
     >
       <StoneVeil />
       <motion.h2 {...reveal} className="text-center font-serif text-3xl sm:text-4xl text-[#2A2320]">
@@ -428,8 +452,12 @@ function StoneVeil() {
   )
 }
 
-/** Light section ground — SilverStone rose-marble sheet under a parchment
- *  veil, so the light beats read as stone rather than a plain white frame. */
+/** Light section ground — SilverStone rose-marble sheet under a white/pale-teal
+ *  veil, so the light beats read as stone rather than a plain white frame. The
+ *  veil was parchment when this page was warm-stone; it is cooled here so the
+ *  teal/gold/white palette holds across every beat rather than breaking on the
+ *  marble ones. The stone photograph itself stays — it is the brand's material
+ *  story, not decoration. */
 function MarbleSection({
   children,
   className,
@@ -451,7 +479,7 @@ function MarbleSection({
         className="absolute inset-0"
         style={{
           background:
-            'linear-gradient(180deg, rgba(247,242,234,0.88) 0%, rgba(247,242,234,0.8) 50%, rgba(247,242,234,0.92) 100%)',
+            'linear-gradient(180deg, rgba(255,255,255,0.90) 0%, rgba(231,241,240,0.84) 50%, rgba(255,255,255,0.92) 100%)',
         }}
       />
       <div className="relative">{children}</div>
@@ -682,7 +710,7 @@ function PromiseBeat() {
   return (
     <section
       className="relative overflow-hidden min-h-[70vh] flex items-center px-6 sm:px-12"
-      style={{ background: `linear-gradient(200deg, ${NAVY_SOFT} 0%, ${NAVY} 70%)` }}
+      style={{ background: `linear-gradient(200deg, ${NAVY_SOFT}e8 0%, ${NAVY}ee 70%)` }}
     >
       <StoneVeil />
       <div className="relative max-w-[780px] mx-auto text-center py-24">
@@ -872,15 +900,18 @@ function LeadershipBeat() {
  * visual density, on purpose — it is meant to be the part you remember.
  */
 
-/** Sea green — markedly more saturated than the page's pale SAGE. */
-const SEA = '#1F5F52'
-const SEA_DEEP = '#123B33'
+/**
+ * The deep end of the page's teal range — markedly more saturated than the
+ * pale TEAL used for fills. Same family, turned up.
+ */
+const SEA = '#1C6F66'
+const SEA_DEEP = '#0E3A38'
 /**
  * The page's GOLD (#7E6318) is darkened for 11px text on white and disappears
- * against sea green. This is the same accent re-tuned for a dark ground —
- * ~7:1 on SEA_DEEP.
+ * against deep teal, so the dark grounds use the page's second gold — ~7:1 on
+ * SEA_DEEP.
  */
-const GOLD_ON_SEA = '#E3C275'
+const GOLD_ON_SEA = GOLD_LIGHT
 
 /**
  * The hero film, self-hosted and played in a normal <video> with subtitles.
@@ -959,7 +990,7 @@ function HeroVideo() {
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-7 text-center">
           <Sparkles size={26} style={{ color: GOLD_ON_SEA }} />
           <p className="text-sm font-medium text-white">Vision film not rendered yet</p>
-          <p className="text-[12px] leading-relaxed" style={{ color: '#CFE2DA' }}>
+          <p className="text-[12px] leading-relaxed" style={{ color: '#CBE4E1' }}>
             Run{' '}
             <code className="rounded px-1" style={{ background: 'rgba(255,255,255,0.12)' }}>
               node scripts/gen-vision-video.mjs
@@ -1013,7 +1044,7 @@ function VisionCornerBeat() {
           <h2 className="mt-3 font-serif text-3xl md:text-4xl text-white">
             {VISION_CORNER.heading}
           </h2>
-          <p className="mt-2 text-base md:text-lg" style={{ color: '#DCEAE4' }}>
+          <p className="mt-2 text-base md:text-lg" style={{ color: '#D8EBE8' }}>
             {VISION_CORNER.lede}
           </p>
         </motion.div>
@@ -1065,7 +1096,7 @@ function GlobalPresenceBeat() {
   return (
     <section
       className="px-6 sm:px-12 py-20 sm:py-28"
-      style={{ background: `linear-gradient(180deg, ${NAVY} 0%, ${NAVY_SOFT} 100%)` }}
+      style={{ background: `linear-gradient(180deg, ${NAVY}ee 0%, ${NAVY_SOFT}e8 100%)` }}
     >
       <div className="max-w-[820px] mx-auto">
         <motion.h2 {...reveal} className="text-center font-serif text-3xl sm:text-4xl text-[#2A2320]">
@@ -1106,7 +1137,16 @@ export default function Vision() {
   // light beats keep the exact colour the navy-and-copper beats were matched
   // against. The portal's warm-stone restyle stops at this page's edge.
   return (
-    <div className="bleed story-legacy-surface">
+    <div className="bleed story-legacy-surface relative">
+      {/*
+        A moving kitchen scene, blurred. Different treatment from Onboarding on
+        purpose: there the kitchen is meant to be seen, here it is meant to be
+        felt — blur plus a near-white veil keeps it as atmosphere behind dark
+        ink on white rather than something competing with the story.
+      */}
+      <div aria-hidden className="pointer-events-none fixed inset-0 -z-10">
+        <KitchenBackdrop veil="teal" parallax blur={14} />
+      </div>
       <MissionBeat />
       <SectionBreak />
       <FounderBeat />

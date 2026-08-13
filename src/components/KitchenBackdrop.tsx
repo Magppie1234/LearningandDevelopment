@@ -34,6 +34,13 @@ const VEILS = {
    * would need a heavier veil and would bury the scene again.
    */
   blue: 'linear-gradient(180deg, rgba(16,38,70,0.62) 0%, rgba(20,48,86,0.52) 40%, rgba(12,28,54,0.68) 100%)',
+  /**
+   * Vision Corner: white stays the base, so this is a near-white wash with the
+   * page's pale teal through the middle. Heavier than the blue veil because
+   * that page's content is dark ink on white — the backdrop is atmosphere
+   * here, not a feature.
+   */
+  teal: 'linear-gradient(180deg, rgba(255,255,255,0.90) 0%, rgba(231,241,240,0.84) 45%, rgba(255,255,255,0.92) 100%)',
 } as const
 
 export default function KitchenBackdrop({
@@ -44,9 +51,17 @@ export default function KitchenBackdrop({
    * prefers-reduced-motion along with the rotation.
    */
   parallax = false,
+  /**
+   * Softens the scene in px. Blur is what lets a backdrop stay present without
+   * competing: motion and depth survive it, but edges and detail stop pulling
+   * the eye off the content. Onboarding wants the kitchen legible and so
+   * passes none; Vision Corner wants atmosphere only and blurs it.
+   */
+  blur = 0,
 }: {
   veil?: keyof typeof VEILS
   parallax?: boolean
+  blur?: number
 }) {
   const [slide, setSlide] = useState(0)
   const reduceMotion = useReducedMotion()
@@ -59,7 +74,18 @@ export default function KitchenBackdrop({
 
   return (
     <div aria-hidden className="absolute inset-0 overflow-hidden pointer-events-none">
-      <AnimatePresence>
+      {/*
+        Blur lives on this wrapper, not on the image: the image's transform is
+        driven by framer-motion, and a style transform here would be overwritten
+        by it. Scaling up compensates for blur sampling past the edges, which
+        would otherwise feather the frame to transparent. The veil sits outside
+        this wrapper so it stays crisp.
+      */}
+      <div
+        className="absolute inset-0"
+        style={blur ? { filter: `blur(${blur}px)`, transform: 'scale(1.08)' } : undefined}
+      >
+        <AnimatePresence>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <motion.img
           key={slide}
@@ -87,7 +113,8 @@ export default function KitchenBackdrop({
           className="absolute inset-0 w-full h-full object-cover"
           draggable={false}
         />
-      </AnimatePresence>
+        </AnimatePresence>
+      </div>
       <div className="absolute inset-0" style={{ background: VEILS[veil] }} />
     </div>
   )

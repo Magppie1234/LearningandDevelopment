@@ -91,7 +91,9 @@ export default function Onboarding() {
       <header>
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
-            <p className="text-xs uppercase tracking-[0.22em] text-accent-gold">Onboarding</p>
+            {/* White, not the copper accent: this sits on the blue kitchen
+                backdrop, where the gold all but disappears. */}
+            <p className="text-xs uppercase tracking-[0.22em] text-white/75">Onboarding</p>
             <h1 className="mt-2 font-serif text-4xl font-normal text-white">
               Your first month at Magppie
             </h1>
