@@ -17,7 +17,7 @@ import {
   VISION_HERO_VIDEO,
 } from '@/data/vision'
 import { ExternalLink, MapPin, Sparkles } from 'lucide-react'
-import KitchenScene3D from '@/components/KitchenScene3D'
+import KitchenBackdrop from '@/components/KitchenBackdrop'
 
 /**
  * Vision Corner — scroll-driven story section. Beats reveal progressively on
@@ -98,41 +98,35 @@ function MissionBeat() {
           it at exactly the point where someone first looks. The hero is now
           transparent so the scene reads through it; only a light veil remains,
           for the type. */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `linear-gradient(165deg, ${NAVY}73 0%, ${NAVY_SOFT}59 55%, ${NAVY}80 100%)`,
-        }}
-      />
       {/*
-        A scrim behind the copy, not over the whole page.
-        The scene is deliberately vivid now, which means the ground under the
-        type varies as it drifts — measured, the eyebrow fell to 1.97:1 over the
-        darker bands. A page-wide veil would fix that by washing the kitchen
-        back out, which is the thing being asked for. So the readability lives
-        exactly where the words are: a soft radial pool that fades to nothing
-        well before the section edges, leaving the scene untouched around it.
+        A soft dark pool behind the copy only — the same job the white scrim
+        did on the light treatment, inverted for a dark ground. It deepens
+        where the words are and fades to nothing before the section edges, so
+        the kitchens stay visible around the type rather than being veiled a
+        second time.
       */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 flex items-center justify-center"
       >
         <div
-          className="h-[78%] w-[min(1000px,94%)]"
+          className="h-[80%] w-[min(1040px,96%)]"
           style={{
             background:
-              'radial-gradient(ellipse at center, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.80) 42%, rgba(255,255,255,0.42) 68%, rgba(255,255,255,0) 85%)',
+              'radial-gradient(ellipse at center, rgba(4,30,29,0.62) 0%, rgba(4,30,29,0.44) 45%, rgba(4,30,29,0.16) 70%, rgba(4,30,29,0) 86%)',
           }}
         />
       </div>
       <motion.div {...reveal} className="relative max-w-[880px] text-center py-24">
+        {/* Warm gold, not TEAL_INK: on a dark teal ground the teal ink
+            disappears into it, exactly as GOLD does on the deep beats. */}
         <p
           className="text-[11px] font-medium tracking-[0.35em] mb-8"
-          style={{ color: TEAL_INK }}
+          style={{ color: GOLD_LIGHT }}
         >
           VISION CORNER
         </p>
-        <h1 className="font-serif text-3xl sm:text-5xl leading-snug sm:leading-snug text-[#2A2320]">
+        <h1 className="font-serif text-3xl sm:text-5xl leading-snug sm:leading-snug text-white">
           “{VISION_MISSION}”
         </h1>
         <motion.div
@@ -141,9 +135,9 @@ function MissionBeat() {
           viewport={{ once: true }}
           transition={{ duration: 0.9, delay: 0.4 }}
           className="mx-auto mt-10 h-px w-24 origin-center"
-          style={{ backgroundColor: GOLD }}
+          style={{ backgroundColor: GOLD_LIGHT }}
         />
-        <p className="mt-6 text-sm text-[#2A2320]/76">Scroll to read our story</p>
+        <p className="mt-6 text-sm text-white/75">Scroll to read our story</p>
       </motion.div>
     </section>
   )
@@ -1156,13 +1150,17 @@ export default function Vision() {
         ink on white rather than something competing with the story.
       */}
       {/*
-        z-0, NOT -z-10. The body paints an opaque cream ground, and a negative
-        z-index puts this behind that — the scene rendered and animated into a
-        layer nothing could ever see. At z-0 it sits above the body ground and
-        below the beats, which are all positioned and come later in the tree.
+        The same backdrop Onboarding runs — real Magppie kitchens crossfading
+        under a dark veil with a slow parallax drift — in teal rather than
+        blue. Earlier attempts here (a blurred photo, then a hand-drawn
+        isometric scene) kept landing as "not changed" because they were
+        pale-on-pale; the dark veil is what makes the kitchens actually read.
+
+        z-0, NOT -z-10: the body paints an opaque cream ground, and a negative
+        z-index puts this behind it.
       */}
       <div aria-hidden className="pointer-events-none fixed inset-0 z-0">
-        <KitchenScene3D />
+        <KitchenBackdrop veil="tealDark" parallax />
       </div>
       <MissionBeat />
       <SectionBreak />

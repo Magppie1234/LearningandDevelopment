@@ -41,6 +41,15 @@ const VEILS = {
    * here, not a feature.
    */
   teal: 'linear-gradient(180deg, rgba(255,255,255,0.90) 0%, rgba(231,241,240,0.84) 45%, rgba(255,255,255,0.92) 100%)',
+  /**
+   * Vision Corner: the same treatment as Onboarding's `blue`, in the page's
+   * teal. Alphas are copied from it deliberately (0.62 / 0.52 / 0.68) rather
+   * than re-tuned — the ask was for the identical backdrop with a different
+   * palette, so only the hue changes and the kitchens read exactly as visibly
+   * as they do there.
+   */
+  tealDark:
+    'linear-gradient(180deg, rgba(10,52,50,0.62) 0%, rgba(14,68,64,0.52) 40%, rgba(6,36,35,0.68) 100%)',
 } as const
 
 export default function KitchenBackdrop({
