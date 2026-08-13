@@ -50,9 +50,28 @@ const VEILS = {
    */
   tealDark:
     'linear-gradient(180deg, rgba(10,52,50,0.62) 0%, rgba(14,68,64,0.52) 40%, rgba(6,36,35,0.68) 100%)',
+  /**
+   * Vision Corner: dark enough for the kitchen to read and for white type to
+   * sit on it, but NEUTRAL — a warm near-black rather than a hue.
+   *
+   * Deliberately not `tealDark`. The brief is explicit that the photograph's
+   * own browns and woods stay as they are, and that teal/gold belong to the
+   * foreground content rather than to a recolouring of the image. A warm
+   * background under cool-toned content is the intended contrast, not a
+   * mismatch to be corrected. Slightly lighter than `blue` (0.56 vs 0.62)
+   * because this page wants a softer presence than Onboarding's.
+   */
+  warmDim:
+    'linear-gradient(180deg, rgba(26,20,15,0.56) 0%, rgba(32,25,19,0.46) 40%, rgba(20,15,11,0.62) 100%)',
 } as const
 
 export default function KitchenBackdrop({
+  /**
+   * Override the rotation. Vision Corner leads with Magppie's own wide 3D
+   * hero visual — the asset the brief names as the best starting point —
+   * followed by real installed kitchens, all self-hosted.
+   */
+  images = KITCHENS,
   veil = 'light',
   /**
    * Slow continuous drift + scale on top of the crossfade, so the scene reads
@@ -68,6 +87,7 @@ export default function KitchenBackdrop({
    */
   blur = 0,
 }: {
+  images?: readonly string[]
   veil?: keyof typeof VEILS
   parallax?: boolean
   blur?: number
@@ -77,9 +97,9 @@ export default function KitchenBackdrop({
 
   useEffect(() => {
     if (reduceMotion) return
-    const t = setInterval(() => setSlide((s) => (s + 1) % KITCHENS.length), ROTATE_MS)
+    const t = setInterval(() => setSlide((s) => (s + 1) % images.length), ROTATE_MS)
     return () => clearInterval(t)
-  }, [reduceMotion])
+  }, [reduceMotion, images.length])
 
   return (
     <div aria-hidden className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -98,7 +118,7 @@ export default function KitchenBackdrop({
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <motion.img
           key={slide}
-          src={KITCHENS[slide]}
+          src={images[slide % images.length]}
           alt=""
           initial={{ opacity: 0, scale: parallax && !reduceMotion ? 1.14 : 1.05 }}
           animate={

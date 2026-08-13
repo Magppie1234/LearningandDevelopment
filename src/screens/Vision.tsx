@@ -64,6 +64,18 @@ const TEAL_INK = '#124F49'
 const INK = '#2A2320'
 
 /**
+ * Backdrop rotation for this page: Magppie's own wide 3D hero visual first —
+ * the asset the brief names as the best starting point — then real installed
+ * kitchens from the Wellness Spaces gallery. All self-hosted; none hotlinked.
+ */
+const VISION_BACKDROP = [
+  '/vision/kitchen-3d.jpg',
+  '/kitchen/space-1.jpg',
+  '/kitchen/space-3.jpg',
+  '/login/kitchen-01.jpg',
+] as const
+
+/**
  * A seam between beats, in the page's teal and both golds. A nine-beat scroll
  * needs an obvious edge where one section ends.
  */
@@ -113,7 +125,7 @@ function MissionBeat() {
           className="h-[80%] w-[min(1040px,96%)]"
           style={{
             background:
-              'radial-gradient(ellipse at center, rgba(4,30,29,0.62) 0%, rgba(4,30,29,0.44) 45%, rgba(4,30,29,0.16) 70%, rgba(4,30,29,0) 86%)',
+              'radial-gradient(ellipse at center, rgba(16,12,9,0.60) 0%, rgba(16,12,9,0.42) 45%, rgba(16,12,9,0.15) 70%, rgba(16,12,9,0) 86%)',
           }}
         />
       </div>
@@ -372,8 +384,16 @@ function TimelineBeat() {
         <div>
           {VISION_TIMELINE.map((m, i) => {
             const leftSide = i % 2 === 0
+            // Perspective belongs on the PARENT of the rotating element. Put it
+            // on the card itself and it applies to that card's children
+            // instead, and the unfold collapses into a flat horizontal squash
+            // with no depth at all.
             return (
-              <div key={m.year} className={cn('relative', i > 0 && 'pt-16')}>
+              <div
+                key={m.year}
+                className={cn('relative', i > 0 && 'pt-16')}
+                style={{ perspective: '1100px' }}
+              >
                 {/* Spine segment for this milestone */}
                 <motion.div
                   initial={{ scaleY: 0 }}
@@ -383,11 +403,30 @@ function TimelineBeat() {
                   className="absolute left-[19px] sm:left-1/2 top-0 bottom-0 w-px origin-top"
                   style={{ backgroundColor: GOLD }}
                 />
+                {/*
+                  The history's 3D reveal — the one place in the portal where
+                  depth is felt in the interaction rather than implied by a
+                  backdrop. Process Flow and the Onboarding cards stay flat;
+                  this is the scoped exception.
+
+                  Each milestone UNFOLDS from the timeline spine: the hinge is
+                  the card's spine-facing edge, so it swings open like a page
+                  rather than sliding or fading. `perspective` on the wrapper
+                  is what makes it read as real depth — without it the rotation
+                  flattens into a horizontal squash. The two columns hinge on
+                  opposite edges and rotate in opposite directions, so both
+                  sides open away from the same centre line.
+                */}
                 <motion.div
-                  initial={{ opacity: 0, y: 28 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, rotateY: leftSide ? -72 : 72, y: 14 }}
+                  whileInView={{ opacity: 1, rotateY: 0, y: 0 }}
                   viewport={{ once: true, amount: 0.4 }}
-                  transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 0.85, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+                  style={{
+                    transformStyle: 'preserve-3d',
+                    transformOrigin: leftSide ? 'right center' : 'left center',
+                    backfaceVisibility: 'hidden',
+                  }}
                   className={cn(
                     'relative pl-12 sm:pl-0 sm:w-[calc(50%-32px)]',
                     leftSide ? 'sm:mr-auto sm:text-right' : 'sm:ml-auto',
@@ -1151,16 +1190,20 @@ export default function Vision() {
       */}
       {/*
         The same backdrop Onboarding runs — real Magppie kitchens crossfading
-        under a dark veil with a slow parallax drift — in teal rather than
-        blue. Earlier attempts here (a blurred photo, then a hand-drawn
-        isometric scene) kept landing as "not changed" because they were
-        pale-on-pale; the dark veil is what makes the kitchens actually read.
+        with a slow parallax drift — but under a NEUTRAL dark veil, not a teal
+        one. The photograph keeps its own browns and woods; teal and gold live
+        on the content above it. Warm background under cool-toned content is
+        the intended contrast rather than a clash to be corrected.
+
+        Dark is what earlier attempts here were missing. A blurred photo, a
+        hand-drawn isometric scene and the brand's 3D render all failed the
+        same way — a light veil over a light page cannot show a photograph.
 
         z-0, NOT -z-10: the body paints an opaque cream ground, and a negative
         z-index puts this behind it.
       */}
       <div aria-hidden className="pointer-events-none fixed inset-0 z-0">
-        <KitchenBackdrop veil="tealDark" parallax />
+        <KitchenBackdrop images={VISION_BACKDROP} veil="warmDim" parallax blur={2} />
       </div>
       <MissionBeat />
       <SectionBreak />
