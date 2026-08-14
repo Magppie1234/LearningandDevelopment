@@ -1142,7 +1142,22 @@ function GlobalPresenceBeat() {
       className="px-6 sm:px-12 py-20 sm:py-28"
       style={{ background: `linear-gradient(180deg, ${NAVY}e0 0%, ${NAVY_SOFT}f2 100%)` }}
     >
-      <div className="max-w-[820px] mx-auto">
+      {/*
+        LEGIBILITY FIX, scoped to this section only.
+
+        These cards were bg-white/[0.04] — four per cent white — carrying dark
+        ink over a translucent ground over the moving kitchen photograph. Every
+        other beat on this page can afford that because its content is large
+        type; addresses cannot. A reader here wants "IMT Manesar, Haryana", and
+        a backdrop drifting underneath 12.5px text makes that genuinely hard to
+        read.
+
+        So this one section gets its own near-solid panel on top of the
+        backdrop. The kitchen still moves behind and around it — the treatment
+        elsewhere on the page is untouched — but it stops showing through the
+        location details themselves. Legibility wins here.
+      */}
+      <div className="max-w-[820px] mx-auto rounded-[20px] bg-[#FCFAF7]/97 px-5 py-10 sm:px-10 shadow-[0_18px_50px_rgba(20,15,11,0.16)]">
         <motion.h2 {...reveal} className="text-center font-serif text-3xl sm:text-4xl text-[#2A2320]">
           Two continents, one standard
         </motion.h2>
@@ -1154,7 +1169,7 @@ function GlobalPresenceBeat() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.5, delay: i * 0.07 }}
-              className="rounded-[12px] border border-white/10 bg-white/[0.04] px-4 py-4 flex items-start gap-3"
+              className="rounded-[12px] border border-[rgb(var(--rule)/0.14)] bg-white px-4 py-4 flex items-start gap-3"
             >
               <MapPin size={16} className="shrink-0 mt-0.5" style={{ color: GOLD }} />
               <div>
