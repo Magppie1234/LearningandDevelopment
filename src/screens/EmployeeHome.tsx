@@ -35,6 +35,7 @@ import ReadinessRing from '@/components/learning/ReadinessRing'
 import DataFreshness from '@/components/learning/DataFreshness'
 import ValidationTrend from '@/components/learning/ValidationTrend'
 import { buildValidationTrend, isFlat } from '@/lib/readiness-trend'
+import { canChartStoredHistory } from '@/lib/learner-dataset'
 import {
   DUE_POLICY_NOTE,
   STATUS_LABEL,
@@ -446,9 +447,17 @@ export default function EmployeeHome() {
               ) : (
                 <ValidationTrend points={trend} height={96} />
               )}
+              {/*
+                Derived from the dataset's own state, not hardcoded. The
+                caption was a fixed sentence saying no snapshots exist — true
+                today, and exactly the kind of claim that goes stale silently
+                the day the capture job starts running. Asking the dataset
+                means the page stops overclaiming on its own.
+              */}
               <p className="mt-2 text-[10px] leading-relaxed text-ink-tertiary">
-                Rebuilt from recorded evidence dates, read against today&rsquo;s requirements —
-                no point-in-time snapshots are stored yet.
+                {canChartStoredHistory()
+                  ? 'Read from stored point-in-time snapshots.'
+                  : 'Rebuilt from recorded evidence dates, read against today’s requirements — no point-in-time snapshots are stored yet.'}
               </p>
             </div>
           )}
