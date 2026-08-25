@@ -15,6 +15,7 @@ import {
   XCircle,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { MODULE_VISUALS, slug } from '@/components/learning/ModuleVisuals'
 import {
   BD_MODULES,
   BD_PASS_THRESHOLD,
@@ -61,8 +62,18 @@ function CompetencyChip({ competency }: { competency: string }) {
 /* ───────────────── content block renderer ───────────────── */
 export function Block({ block }: { block: ContentBlock }) {
   switch (block.kind) {
+    case 'visual': {
+      // Resolved from the registry so the content layer stays plain data.
+      const V = MODULE_VISUALS[block.id]
+      return V ? <V /> : null
+    }
     case 'heading':
-      return <h3 className="font-semibold text-ink-primary mt-5 mb-1">{block.text}</h3>
+      // The id lets the visual syllabus cards jump straight to the part.
+      return (
+        <h3 id={slug(block.text)} className="font-semibold text-ink-primary mt-5 mb-1 scroll-mt-24">
+          {block.text}
+        </h3>
+      )
     case 'paragraph':
       return <p className="text-[15px] leading-relaxed text-ink-secondary">{block.text}</p>
     case 'list':
@@ -463,7 +474,7 @@ export default function BdAcademy() {
           href="/academy/business-development"
           className="inline-flex items-center gap-1.5 text-sm text-ink-tertiary hover:text-ink-primary transition-colors mb-3"
         >
-          <ArrowLeft size={15} /> Business Development Executive
+          <ArrowLeft size={15} /> Presales
         </Link>
         <h1 className="font-serif text-4xl font-normal text-ink-primary">
           Wellness sales foundations

@@ -33,6 +33,12 @@ export type ContentBlock =
   | { kind: 'list'; ordered?: boolean; items: string[] }
   | { kind: 'callout'; label: string; text: string }
   | { kind: 'table'; columns: string[]; rows: string[][] }
+  /**
+   * An inline React visual, keyed by id and resolved by the Block renderer
+   * (see MODULE_VISUALS in screens/BdAcademy.tsx). Kept as an id rather than a
+   * component so the content layer stays plain serialisable data.
+   */
+  | { kind: 'visual'; id: string }
 
 export interface BdModule {
   id: string // 'bd-m1' … 'bd-m10'
@@ -298,6 +304,166 @@ export const BD_MODULES: BdModule[] = [
       },
     ],
   },
+  {
+    id: 'bd-m11',
+    number: 11,
+    title: 'Pre-Sales: Calling and Qualification',
+    competency: 'Customer Communication',
+    summary:
+      'Everything a Pre-Sales caller needs to qualify a lead properly, answer what a client asks on a first call, capture a floor plan, and hand over a client Sales can actually work with.',
+    blocks: [
+      { kind: 'heading', text: 'Start here' },
+      { kind: 'paragraph', text: 'What this module is. Everything a Pre-Sales caller needs to qualify a lead properly, answer what a client asks on a first call, capture a floor plan, and hand over a client Sales can actually work with.' },
+      { kind: 'paragraph', text: 'Who it is for. Anyone joining the Pre-Sales team, and everyone already in it doing their annual refresher.' },
+      { kind: 'paragraph', text: 'Where the answers come from. These are real questions from recorded calls, answered by the company. We know exactly which ones the team has been getting wrong and how often. That data shapes the whole module, and Part 1 is ordered by it rather than by topic.' },
+      { kind: 'paragraph', text: 'How long it takes. Around two hours for a new joiner, spread across the first month. Around an hour for the annual refresher.' },
+      { kind: 'callout', label: 'By the end of this you should be able to', text: 'Answer the price question completely, including the part most people leave out. List what is included and what is excluded, both lists, without looking. Get a floor plan out of a call that was not going to give you one. Hand over a client whose record tells the whole story without anyone having to ring you.' },
+
+      { kind: 'heading', text: 'Syllabus' },
+      { kind: 'visual', id: 'presales-syllabus' },
+      { kind: 'paragraph', text: 'Two notes on the order. Part 1 leads with price rather than with the brand, because that is where calls actually break. And Part 3 sits after the answers rather than before them, because the floor plan conversation only works once you can answer the questions that come before it.' },
+      { kind: 'heading', text: 'How to use this' },
+      { kind: 'list', items: [
+        'If you are new. Read Parts 1 to 4 in your first week, before you take a live call. Part 5 tells you what should be happening each week after that. Assessment at the end of month one.',
+        'If you are already in the role. Go to Part 6. It sends you back through Part 1 and Part 3, gives you a self-check that includes listening to your own recordings, and tells you what changed this year. Then the assessment.',
+        'If you are looking something up between calls. Part 1 for the answer. Part 2 for who it belongs to.',
+      ] },
+
+      { kind: 'heading', text: 'What this role actually does' },
+      { kind: 'paragraph', text: 'You are the first human being a client ever speaks to at Magppie. Whatever they end up believing about this company, it starts in your first thirty seconds.' },
+      { kind: 'paragraph', text: 'The job has three parts, and only three:' },
+      { kind: 'list', ordered: true, items: [
+        'Work out whether this is a real opportunity',
+        'Get the floor plan',
+        'Hand over a client who is ready to be sold to',
+      ] },
+      { kind: 'paragraph', text: 'That is it. Everything else is in service of those three. Two things are worth saying plainly at the start, because both cut against instinct.' },
+      { kind: 'callout', label: 'You are not the closer', text: 'When a call is going well and the client is engaged, there is a strong pull to keep going, to answer the deeper questions, to be the one who wins them over. Resist it. A client you over-serve on a first call arrives at Sales with half-formed expectations that somebody else now has to unpick.' },
+      { kind: 'callout', label: 'A dropped lead is not a dead lead', text: 'They are on your list for a reason. Someone who went quiet four months ago may have simply been waiting on possession of their flat. The call to a dropped lead is a different call, not a lesser one.' },
+
+      { kind: 'heading', text: 'What we know about these calls' },
+      { kind: 'paragraph', text: 'This training exists because of something specific. We reviewed recorded calls and found 46 questions that customers actually asked where the team could not answer cleanly, and every one needed real company knowledge to answer.' },
+      { kind: 'list', items: [
+        'Price came up in 90 calls. More than a third of the time, the caller did not get a clean answer',
+        'What the price includes came up in 45 calls. Nearly half of those went badly. This is the worst-performing question in the business',
+        'Which cities we serve came up in 52 calls',
+      ] },
+      { kind: 'paragraph', text: 'Those three questions alone account for a large share of every call that ended badly. They are all in Part 1. Knowing them cold is most of the job.' },
+
+      { kind: 'heading', text: 'The rule for this role' },
+      { kind: 'callout', label: 'The rule', text: 'Answer anything that helps them decide to take the next step. Anything that needs to know their kitchen goes to Sales.' },
+      { kind: 'visual', id: 'presales-answer-or-route' },
+      { kind: 'paragraph', text: 'That line does a lot of work. Someone asking "what do your kitchens cost" is deciding whether to keep talking to you, and they deserve a real answer. Someone asking "what will mine cost" needs a quotation, and that is not a phone-call answer.' },
+      { kind: 'paragraph', text: 'The same discipline the calling bot runs on applies to you: never guess a price, warranty, timeline, location, inclusion, specification or policy. If it is not in the approved answers, it does not get said. Offer the right person instead.' },
+
+      { kind: 'heading', text: 'What clients ask you' },
+      { kind: 'paragraph', text: 'Short answers. Say them naturally. Do not embellish.' },
+      { kind: 'visual', id: 'presales-price-flow' },
+      { kind: 'heading', text: 'Price, which is where most calls start' },
+      { kind: 'table', columns: ['They ask', 'You say'], rows: [
+        ['What do your kitchens cost?', 'Priced per square foot of cabinet area. For a 100 square foot kitchen, roughly ₹6 lakh for Wellness First up to roughly ₹12 lakh for Wellness Pro. Then, always: 100 square feet means the width and height of all the cabinets added together, not the floor area of the room.'],
+        ['What is included in that price?', 'Included: Silverstone cabinets and doors, plus seven accessories — cutlery tray, dish rack, dustbin, detergent holder, corner unit, bottle pull-out, pantry unit. Not included: GST, transportation and handling, installation, countertop, wall cladding, sink, faucet, appliances. We can supply the countertop and wall cladding as part of a complete solution, at additional cost.'],
+        ['How is it priced? Per square foot or running foot?', 'Per square foot of cabinet area. We use that method because it is clearer and fairer.'],
+        ['Can you give me a quote for my kitchen?', 'Yes. Share your floor plan or kitchen details and our team will prepare an estimate and quotation.'],
+        ['Any discount for my interior designer?', 'As a brand policy, our pricing is fixed and the same for everyone. No special designer discounts.'],
+        ['Do I have to pay anything before I get a design or quote?', 'No. Nothing before we give you the basic design and quotation. Payment comes in once you decide to proceed, before we take actual site measurements.'],
+        ['What are the payment terms?', 'Staggered in three stages: 50% at order booking, 30% when production drawings are finalised, 20% two weeks before dispatch. EMI is available through banks.'],
+      ] },
+      { kind: 'callout', label: 'The line most people leave out', text: 'The "cabinet area, not floor area" clarification is not optional. Skipping it is why the price question goes wrong so often. A client who thinks you mean floor area has just badly misjudged what their kitchen costs, and will find out later.' },
+
+      { kind: 'heading', text: 'The material' },
+      { kind: 'table', columns: ['They ask', 'You say'], rows: [
+        ['What kind of stone is it? Granite, marble, quartz?', 'None of those. Our own patented material, Silverstone: a sanitised porcelain stone. Natural minerals fired with silver and copper nano-materials at around 1,260°C. Cabinets, door facias, shelves, drawers, internal fixtures, countertops and wall claddings are all this material.'],
+        ['What else is in it? Wood?', 'No wood at all. Silver and copper infused into the material, which is what resists bacteria, fungus and termites. Hardware is industrial-grade steel.'],
+        ['How is it made?', 'Natural minerals blended with silver and copper at nano scale, compacted under thousands of tonnes of pressure, sintered at around 1,260°C. One solid, non-porous body. The silver and copper are inside it, not coated on, so they cannot wear off.'],
+        ['How long does it last?', '25-year guarantee on the material. Highly scratch and stain resistant, and 100% food-grade.'],
+        ['Are the drawers and shelves the same stone?', 'Yes. Cupboards, doors, shelves, drawers and most internal modular components.'],
+        ['Are wardrobes stone too?', 'Yes, entirely. About three times heavier than plywood, so more care in manufacturing and installation. Normal to use once installed.'],
+      ] },
+
+      { kind: 'heading', text: 'Where we work' },
+      { kind: 'table', columns: ['They ask', 'You say'], rows: [
+        ['Do you serve my city?', 'Yes. We provide services across cities throughout India. Installation too, across India.'],
+        ['Which showrooms are open?', 'Seven experience centres: Delhi, Hyderabad, Bangalore, Mumbai, Surat, Mohali, Coimbatore. Seven more planned in the next 12 months.'],
+        ['Have you done projects in my city?', 'Jaipur, Mumbai, Hyderabad, Bengaluru, Guwahati, Jodhpur, Nashik, Surat and all major Indian cities. More than 38,000 kitchens over 21 years.'],
+        ['Can I come and see one?', 'Yes, at any of the seven experience centres. Then book it — a booked visit is a much stronger handover than a warm conversation.'],
+      ] },
+
+      { kind: 'heading', text: 'The rest' },
+      { kind: 'table', columns: ['They ask', 'You say'], rows: [
+        ['How does the whole process work?', 'Enquiry, then a conversation with our sales team, then a visit to an experience centre. Designers create the kitchen design. Design finalised, order closed, 50% paid. Site measurements taken and technical drawings prepared, then 30% paid. Kitchen manufactured, remaining 20% paid, then dispatch and installation.'],
+        ['How long does installation take?', 'Around a week.'],
+        ['Can I get a quote before I have possession of the flat?', 'Yes, absolutely. It lets you plan well in advance. Good question to hear — it usually means they are serious.'],
+        ['Do you provide complete fittings?', 'Yes, a complete integrated solution: hardware, accessories, drawers, lighting and other components. Sink, faucet and appliances are not included.'],
+        ['What is Sunrooof? Is the ceiling included?', 'Not included in the kitchen price. Sunrooof is Magppie’s sister company: a patented lighting system that creates the impression of natural daylight indoors, fitted on the ceiling like a skylight or a wall like a window.'],
+        ['Are you related to Godrej or Reliance?', 'Sunrooof is our sister company, Satvic Movement is a daughter company. No connection to Godrej or Reliance.'],
+        ['Do you appoint dealers or franchises?', 'No conventional dealers, distributors or franchises. Our stores are company-owned and run by our own teams. We are open to city-centric joint-venture partnerships.'],
+      ] },
+
+      { kind: 'heading', text: 'What you route to Sales' },
+      { kind: 'table', columns: ['They ask about', 'Route it'], rows: [
+        ['A full charge and package breakdown', 'Quotation conversation'],
+        ['Warranty specifics by range', 'Two ranges, two answers'],
+        ['Finishes and design options for their layout', 'Depends on range and space'],
+        ['Civil work, demolition, plastering', 'We do not do it, and the scope needs explaining properly'],
+        ['Retrofitting an existing kitchen', 'Conditional'],
+        ['Design, manufacturing or installation dates for them', 'Factory commitment'],
+        ['When we start after their civil work is done', 'Site-specific'],
+        ['Local service arrangements in their city', 'Regional operations'],
+        ['Visiting a customer’s home', 'Needs the homeowner’s permission'],
+        ['Weight, density, test certificates in detail', 'Better handled with the material in front of them'],
+      ] },
+      { kind: 'callout', label: 'The line', text: '"That deserves a proper answer rather than a rough one, so I’ll have the right person come back to you. Before I do, can I get your floor plan so they have something to work with?" Note what that does — the handoff and the floor plan capture happen in the same sentence.' },
+
+      { kind: 'heading', text: 'The floor plan' },
+      { kind: 'paragraph', text: 'This is the part of the job that is actually yours, and the part nobody else can do for you. A client handed to Sales without a floor plan is a conversation. A client handed over with one is a project. The difference shows up weeks later.' },
+      { kind: 'visual', id: 'presales-floorplan' },
+
+      { kind: 'heading', text: 'The handover' },
+      { kind: 'paragraph', text: 'A sales-ready client is not just a warm client.' },
+      { kind: 'visual', id: 'presales-sales-ready' },
+
+      { kind: 'heading', text: 'The learning path' },
+      { kind: 'heading', text: 'Week 1: Learn the answers and listen' },
+      { kind: 'list', items: [
+        'Brand and product foundation: what Magppie is, what Silverstone is, what a Wellness Kitchen is',
+        'Learn Part 1 properly. Start with price, inclusions and cities, in that order, because that is where the calls actually fail',
+        'Zoho: how to log a call, update status, set next action',
+        'Listen to at least ten recorded calls. Pick out where the answer went wrong',
+        'Sit with a senior team member for a full day of live calls',
+      ] },
+      { kind: 'heading', text: 'Weeks 2 to 4: Start calling' },
+      { kind: 'list', items: [
+        'Call structure: opening, qualification, floor plan, next step',
+        'Phone and video etiquette',
+        'Objection handling at the qualification stage, which is different from the closing stage',
+        'Floor plan reading: what a plan tells you and what to ask when it does not',
+        'Working dropped leads, which needs a different opening',
+        'Response times and call cadence: how quickly a new lead gets called, and how many attempts before it is set aside',
+        'Your first live calls, reviewed afterwards with someone senior',
+      ] },
+      { kind: 'heading', text: 'Month 2' },
+      { kind: 'list', items: [
+        'The handover protocol, and what sales-ready actually means',
+        'Shadow a Sales conversation with a client you handed over. This is the most useful hour in the whole programme, because you finally see what happens to your work',
+        'Service standards and how to recover when a call goes badly',
+        'Review your own recorded calls against Part 1',
+      ] },
+
+      { kind: 'heading', text: 'Annual refresher' },
+      { kind: 'paragraph', text: 'For anyone already in the role. Under an hour. Re-read Part 1 in full, and Part 3. Then check yourself honestly:' },
+      { kind: 'list', items: [
+        'Do you still say the "cabinet area, not floor area" line every time, or have you started assuming they know?',
+        'Can you list what is included and what is excluded, both lists, without looking?',
+        'Of your last twenty handovers, how many went to Sales with a floor plan attached?',
+        'Are you logging calls during the day, or reconstructing them at 6pm?',
+        'When did you last listen to a recording of yourself?',
+        'Have the cities, the price range or the payment terms changed this year? Confirm before you say any of them again',
+      ] },
+      { kind: 'callout', label: 'What changed this year', text: 'To be filled in by Learning and Development at each annual release.' },
+      { kind: 'paragraph', text: 'Then take the assessment.' },
+    ],
+  },
 ]
 
 /* ═══════════════════════════════ QUIZ BANK ═══════════════════════════════ */
@@ -352,6 +518,26 @@ export const BD_QUIZ: BdQuizQuestion[] = [
   { id: 'bd-q28', moduleId: 'bd-m10', competency: 'Customer Communication', question: 'Which of these should trigger an immediate handoff to a human consultant?', options: ['A customer asking about the material composition', 'A customer asking for a discount or "final price"', 'A customer asking about store locations', 'A customer asking about the warranty period'], correctIndex: 1 },
   { id: 'bd-q29', moduleId: 'bd-m10', competency: 'Customer Communication', question: 'As of this document, what is the status of the Hyderabad store?', options: ['Fully open', 'Permanently closed', 'Under renovation, opening by end of February', 'Not yet planned'], correctIndex: 2 },
   { id: 'bd-q30', moduleId: 'bd-m10', competency: 'Customer Communication', question: 'What is the correct response if a customer’s city has no Magppie store?', options: ['Tell them Magppie doesn’t serve their area', 'Offer sample delivery or a video call instead', 'End the conversation', 'Give a vague answer and move on'], correctIndex: 1 },
+
+  /* ── bd-m11 · Pre-Sales — Calling and Qualification (15) ──────────────
+     Verbatim from section 4A of the Pre-Sales build brief. Single correct
+     answer each; graded like every other BD module at BD_PASS_THRESHOLD, so
+     the first passing attempt is what gets certified. */
+  { id: 'bd-q31', moduleId: 'bd-m11', competency: 'Pricing Knowledge', question: 'How is a Magppie kitchen priced?', options: ['A fixed price per kitchen', 'Per square foot of cabinet area', 'Per running foot', 'Per square foot of floor area'], correctIndex: 1 },
+  { id: 'bd-q32', moduleId: 'bd-m11', competency: 'Pricing Knowledge', question: 'What is the approved price range for a 100 sq ft kitchen?', options: ['₹3–6 lakh', '₹6 lakh (Wellness First) to ₹12 lakh (Wellness Pro)', '₹10–20 lakh', '₹12–25 lakh'], correctIndex: 1 },
+  { id: 'bd-q33', moduleId: 'bd-m11', competency: 'Pricing Knowledge', question: 'What does "100 square feet" mean — the line you must never skip?', options: ['The floor area of the room', 'The width and height of all cabinets added together', 'The total wall area', 'The countertop area'], correctIndex: 1 },
+  { id: 'bd-q34', moduleId: 'bd-m11', competency: 'Pricing Knowledge', question: 'Which of these IS included in the quoted price?', options: ['GST and installation', 'Countertop and wall cladding', 'Silverstone cabinets and doors plus seven accessories', 'Sink, faucet and appliances'], correctIndex: 2 },
+  { id: 'bd-q35', moduleId: 'bd-m11', competency: 'Pricing Knowledge', question: 'Which of these is NOT included in the quoted price?', options: ['Silverstone cabinets and doors', 'The seven listed accessories', 'Installation, countertop, sink and appliances', 'Door facias'], correctIndex: 2 },
+  { id: 'bd-q36', moduleId: 'bd-m11', competency: 'Pricing Knowledge', question: 'What are the three payment stages?', options: ['50% booking / 40% before dispatch / 10% after installation', '50% at order booking / 30% when production drawings are finalised / 20% two weeks before dispatch', '30% / 30% / 40%', '100% at booking'], correctIndex: 1 },
+  { id: 'bd-q37', moduleId: 'bd-m11', competency: 'Objection Handling', question: 'A client’s interior designer asks for a discount. The approved answer:', options: ['Offer a small designer discount', 'Pricing is fixed and the same for everyone; no designer discount', 'Route to Sales for a custom rate', 'Offer a discount on the countertop'], correctIndex: 1 },
+  { id: 'bd-q38', moduleId: 'bd-m11', competency: 'Pricing Knowledge', question: 'Does the client pay anything before getting a design or quotation?', options: ['Yes, a booking fee', 'No — nothing before the basic design and quotation; payment comes once they decide to proceed, before site measurement', 'Yes, 10% upfront', 'Yes, a site-measurement fee'], correctIndex: 1 },
+  { id: 'bd-q39', moduleId: 'bd-m11', competency: 'Product Knowledge', question: 'In one line, what is Silverstone?', options: ['A granite-quartz composite', 'A laminated engineered wood', 'A patented sanitised porcelain stone — natural minerals fired with silver and copper nano-materials at ~1,260°C', 'A marble with an anti-bacterial coating'], correctIndex: 2 },
+  { id: 'bd-q40', moduleId: 'bd-m11', competency: 'Product Knowledge', question: 'What is the guarantee on the material itself?', options: ['5 years', '10 years', '25 years', 'Lifetime'], correctIndex: 2 },
+  { id: 'bd-q41', moduleId: 'bd-m11', competency: 'Trust & Credibility', question: 'Which list names the seven open experience centres?', options: ['Delhi, Hyderabad, Bangalore, Mumbai, Surat, Mohali, Coimbatore', 'Delhi, Mumbai, Chennai, Kolkata, Pune, Jaipur, Kochi', 'Only Delhi and Mumbai', 'Delhi, Noida, Gurgaon, Mumbai, Pune, Surat, Ahmedabad'], correctIndex: 0 },
+  { id: 'bd-q42', moduleId: 'bd-m11', competency: 'Customer Communication', question: 'The rule for the Pre-Sales role — where does your answer stop?', options: ['Answer everything, you’re the expert', 'Answer anything that helps them decide the next step; anything that needs their specific kitchen goes to Sales', 'Answer nothing about price', 'Route every question to Sales'], correctIndex: 1 },
+  { id: 'bd-q43', moduleId: 'bd-m11', competency: 'Customer Communication', question: 'What must be true before a lead is "sales-ready" for handover?', options: ['The client sounded warm on the call', 'Floor plan/dimensions captured, requirement + timeline understood, budget set honestly, next step booked, and everything logged in Zoho', 'They’ve paid a deposit', 'They’ve visited an experience centre'], correctIndex: 1 },
+  { id: 'bd-q44', moduleId: 'bd-m11', competency: 'Customer Communication', question: 'A client says they’ll send the floor plan "later." Best move inside the call?', options: ['End with "send it when you can"', 'Ask what they have right now — a builder’s PDF, a photo, even rough measurements', 'Tell them no quote without it', 'Book a site visit instead'], correctIndex: 1 },
+  { id: 'bd-q45', moduleId: 'bd-m11', competency: 'Customer Communication', question: 'A caller asks something you have no approved answer for. What do you do?', options: ['Give your best guess', 'Never guess — offer to have the right person confirm and come back', 'Make up a safe-sounding number', 'End the call'], correctIndex: 1 },
 ]
 
 /* ─────────────────────────── helpers ─────────────────────────── */

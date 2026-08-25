@@ -22,7 +22,7 @@ import LearnerInsights from './LearnerInsights'
 const BD_ID = process.env.NEXT_PUBLIC_BD_ACADEMY_ID ?? 'business-development'
 const SALES_ID = process.env.NEXT_PUBLIC_SALES_ACADEMY_ID ?? 'sales'
 function academyLabel(id: string): string {
-  if (id === BD_ID) return 'Business Development'
+  if (id === BD_ID) return 'Presales'
   if (id === SALES_ID) return 'Sales'
   return id
 }

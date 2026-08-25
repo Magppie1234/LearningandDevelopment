@@ -44,7 +44,7 @@ export interface DiagramCard {
 const VIDEO_REGISTRY: WatchableVideo[] = [
   {
     academySlug: 'business-development',
-    academyLabel: 'Business Development',
+    academyLabel: 'Presales',
     moduleId: 'bd-m1',
     title: 'The Magppie Story: 50 Years to Wellness Kitchens',
     href: '/academy/business-development/modules?module=bd-m1',
@@ -57,7 +57,7 @@ const DIAGRAM_REGISTRY: DiagramCard[] = [
   {
     key: 'pitch-flow',
     label: 'The 8-stage pitch flow',
-    academyLabel: 'Business Development',
+    academyLabel: 'Presales',
     href: '/academy/business-development/modules?module=bd-m5#module-visual',
     icon: GitBranch,
     tier: 'primary',
@@ -65,7 +65,7 @@ const DIAGRAM_REGISTRY: DiagramCard[] = [
   {
     key: 'objection-tree',
     label: 'Objection decision tree',
-    academyLabel: 'Business Development',
+    academyLabel: 'Presales',
     href: '/academy/business-development/modules?module=bd-m6#module-visual',
     icon: Network,
     tier: 'primary',
@@ -73,7 +73,7 @@ const DIAGRAM_REGISTRY: DiagramCard[] = [
   {
     key: 'company-timeline',
     label: 'Company history timeline',
-    academyLabel: 'Business Development',
+    academyLabel: 'Presales',
     href: '/academy/business-development/modules?module=bd-m1#module-visual',
     icon: History,
     tier: 'secondary',

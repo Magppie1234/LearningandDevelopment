@@ -151,7 +151,7 @@ export default function BdDashboard() {
           pillColor="rgb(var(--m-accent-copper))"
           label="Course name"
           value="Wellness sales foundations"
-          sub={`${BD_MODULES.length} modules · Business Development`}
+          sub={`${BD_MODULES.length} modules · Presales`}
         />
         <KpiCard
           icon={Target}

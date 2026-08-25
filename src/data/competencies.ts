@@ -22,7 +22,7 @@ export const COMPETENCIES: Competency[] = [
   {
     id: 'business-development-product-knowledge',
     name: 'Product Knowledge',
-    academy: 'Business Development Executive',
+    academy: 'Presales',
     departmentSlug: 'business-development',
     type: 'technical',
     coreTopics: 'Full portfolio features, benefits, applications; material specifications; finish options; sizing configurations; competitive positioning',
@@ -31,7 +31,7 @@ export const COMPETENCIES: Competency[] = [
   {
     id: 'business-development-lead-qualification',
     name: 'Lead Qualification',
-    academy: 'Business Development Executive',
+    academy: 'Presales',
     departmentSlug: 'business-development',
     type: 'process',
     coreTopics: 'BANT framework; lead scoring methodology; disqualification criteria; ideal customer profile alignment; qualification documentation',
@@ -40,7 +40,7 @@ export const COMPETENCIES: Competency[] = [
   {
     id: 'business-development-calling-skills',
     name: 'Calling Skills',
-    academy: 'Business Development Executive',
+    academy: 'Presales',
     departmentSlug: 'business-development',
     type: 'behavioral',
     coreTopics: 'Cold and warm calling methodology; script development by product category; tone modulation; call planning frameworks; voicemail strategies',
@@ -49,7 +49,7 @@ export const COMPETENCIES: Competency[] = [
   {
     id: 'business-development-whatsapp-communication',
     name: 'WhatsApp Communication',
-    academy: 'Business Development Executive',
+    academy: 'Presales',
     departmentSlug: 'business-development',
     type: 'behavioral',
     coreTopics: 'Business messaging etiquette; response template library; media sharing protocols; conversation threading; after-hours norms',
@@ -58,7 +58,7 @@ export const COMPETENCIES: Competency[] = [
   {
     id: 'business-development-crm-usage',
     name: 'CRM Usage',
-    academy: 'Business Development Executive',
+    academy: 'Presales',
     departmentSlug: 'business-development',
     type: 'technical',
     coreTopics: 'Lead entry procedures; status update protocols; activity logging standards; pipeline hygiene; duplicate prevention; data quality standards',
@@ -67,7 +67,7 @@ export const COMPETENCIES: Competency[] = [
   {
     id: 'business-development-follow-up-management',
     name: 'Follow-up Management',
-    academy: 'Business Development Executive',
+    academy: 'Presales',
     departmentSlug: 'business-development',
     type: 'process',
     coreTopics: 'Touchpoint cadence design; persistence protocols; escalation triggers; multi-channel sequencing; nurture campaign alignment',
@@ -76,7 +76,7 @@ export const COMPETENCIES: Competency[] = [
   {
     id: 'business-development-objection-handling',
     name: 'Objection Handling',
-    academy: 'Business Development Executive',
+    academy: 'Presales',
     departmentSlug: 'business-development',
     type: 'behavioral',
     coreTopics: 'Objection taxonomy (price, timing, competition, authority); response frameworks; stall vs. objection differentiation; role-play with peer review',
@@ -85,7 +85,7 @@ export const COMPETENCIES: Competency[] = [
   {
     id: 'business-development-appointment-booking',
     name: 'Appointment Booking',
-    academy: 'Business Development Executive',
+    academy: 'Presales',
     departmentSlug: 'business-development',
     type: 'process',
     coreTopics: 'Scheduling techniques; calendar management; confirmation protocols; reminder systems; no-show recovery procedures',
@@ -94,7 +94,7 @@ export const COMPETENCIES: Competency[] = [
   {
     id: 'business-development-competitor-analysis',
     name: 'Competitor Analysis',
-    academy: 'Business Development Executive',
+    academy: 'Presales',
     departmentSlug: 'business-development',
     type: 'technical',
     coreTopics: 'Competitive intelligence gathering; competitor product mapping; differentiation messaging; positioning strategies; battle card usage',
@@ -103,7 +103,7 @@ export const COMPETENCIES: Competency[] = [
   {
     id: 'business-development-reporting-standards',
     name: 'Reporting Standards',
-    academy: 'Business Development Executive',
+    academy: 'Presales',
     departmentSlug: 'business-development',
     type: 'process',
     coreTopics: 'Daily activity reporting; weekly pipeline review; monthly performance dashboards; KPI definitions; variance analysis; manager presentation formats',
