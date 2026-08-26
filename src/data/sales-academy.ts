@@ -630,6 +630,226 @@ export const SALES_MODULES: SalesModule[] = [
       },
     ],
   },
+
+  /* ── 3.12 Client Ownership (Sales Training doc) ────────────────────────
+     Source: content/source-docs/Sales_Training.docx — "Sales — Client
+     Ownership Training". Rendered faithfully; the doc's final "Before this
+     goes live" section is an L&D note and is deliberately NOT included.
+
+     OVERLAP, FLAGGED NOT RESOLVED: this module states the payment split as
+     50/30/20 because its source doc states it plainly. Module sa-m6 still
+     carries [CONFIRM PAYMENT SPLIT] and holds its split questions ungraded.
+     The conflict is now one-sided in favour of 50/30/20 but has NOT been
+     closed out here — that is a call for the process owner, not this file.
+     Module sa-m6 also prices at Rs. 8,400-10,800/sq.ft, where this doc says
+     Rs. 6-12 lakh per 100 sq ft of CABINET area. Both remain visible. */
+  {
+    id: 'sa-m12',
+    number: 12,
+    title: 'Client Ownership — From Handover to Installed Kitchen',
+    summary:
+      'Every approved answer in the business, plus the process and the pressure points, for the person who owns a client from handover to installed kitchen.',
+    topics: ['pricing', 'payment-terms', 'warranty', 'materials', 'objection-handling', 'process-timeline', 'handoff-protocol'],
+    blocks: [
+      { kind: 'visual', id: 'sales-syllabus' },
+
+      { kind: 'heading', text: 'Start here' },
+      { kind: 'paragraph', text: 'What this module is. Every approved answer in the business, plus the process and the pressure points, for the person who owns a client from handover to installed kitchen.' },
+      { kind: 'paragraph', text: 'Who it is for. Anyone joining Sales, and everyone already in it doing their annual refresher.' },
+      { kind: 'callout', label: 'Scope note', text: 'Written for the person who takes a qualified client from Pre-Sales and owns them through design, quotation, negotiation and closure, whether that happens at an experience centre or over a call. If Sales is split into separate in-store and online roles, this divides cleanly at Part 4 and should become two modules.' },
+      { kind: 'paragraph', text: 'Where the answers come from. All 46 are real client questions from recorded calls, answered by the company. This module carries the complete set rather than a subset, because Store Managers and Pre-Sales can pass a hard question to you and you cannot pass it anywhere.' },
+      { kind: 'paragraph', text: 'How long it takes. Around three hours for a new joiner, spread across the first three months. Around an hour for the annual refresher.' },
+      { kind: 'paragraph', text: 'By the end of this you should be able to:' },
+      { kind: 'list', items: [
+        'Answer any of the 46 without reaching for a document',
+        'State both lists, included and excluded, cold',
+        'Explain the guarantee correctly for both ranges, including where they are the same',
+        'Take a client through all three payment stages with nobody surprised by anything',
+        'Recognise when a price objection is actually an arithmetic problem',
+      ] },
+
+      { kind: 'heading', text: 'What this role actually does' },
+      { kind: 'paragraph', text: 'Store Managers own the experience. Pre-Sales owns the first conversation. You own the client.' },
+      { kind: 'paragraph', text: 'That word is doing real work. Owning a client means that from the moment they are handed to you until their kitchen is installed and working, you are the person who knows where things stand. Not the designer, not the factory, not the installer. You.' },
+      { kind: 'paragraph', text: 'It also means you are the only person in this chain who has to answer every question. A Store Manager can hand a hard question to you. Pre-Sales can hand a hard question to you. You cannot hand it anywhere. That is why this document contains all 46 approved answers rather than a subset, and why knowing them properly is not optional.' },
+      { kind: 'callout', label: 'The one thing you may never do', text: 'Guess. Everything you say becomes a commitment the company has to honour. If a question falls outside the approved answers, the correct move is to say you will confirm and come back, and then actually confirm. That is not weakness. Improvising a number and being wrong about it two months later, in front of a client who has already paid 50%, is much worse.' },
+
+      { kind: 'heading', text: 'Part 1: The complete approved answers' },
+      { kind: 'paragraph', text: 'All 46. Read them once end to end. Then keep this open.' },
+
+      { kind: 'heading', text: 'Pricing and quotations' },
+      { kind: 'list', items: [
+        'What do your kitchens cost? — Priced per square foot of cabinet area. 100 square foot kitchen: roughly Rs. 6 lakh for Wellness First, up to roughly Rs. 12 lakh for Wellness Pro. Always add: 100 square feet means the width and height of all cabinets added together, not the floor area of the room.',
+        'What is included and what is not? — Included: Silverstone cabinets and doors, plus seven accessories (cutlery tray, dish rack, dustbin, detergent holder, corner unit, bottle pull-out, pantry unit). Not included: GST, transportation and handling, installation, countertop, wall cladding, sink, faucet, appliances. We can supply countertop and wall cladding as part of a complete solution, at additional cost.',
+        'Can you quote from my floor plan? — Yes. Share the floor plan or kitchen details and we will prepare an estimate and quotation.',
+        'Is it per square foot or running foot? — Per square foot of cabinet area. We use that method because it is clearer and fairer.',
+        'Explain the charges and how pricing is calculated. — Per square foot of cabinet area; 100 square feet runs roughly Rs. 6 lakh (Wellness First) to Rs. 12 lakh (Wellness Pro); that covers Silverstone cabinets and doors and the seven accessories; GST, transport and handling, installation, countertop, wall cladding, sink, faucet and appliances are additional.',
+        'Any discount for interior designers? — Brand policy is fair and transparent pricing. Prices are fixed and apply equally to everyone, so no special designer discounts.',
+      ] },
+
+      { kind: 'heading', text: 'Payment' },
+      { kind: 'list', items: [
+        'What are the payment terms? — Three stages: 50% at order booking, 30% when production drawings are finalised, 20% two weeks before dispatch. EMI available through banks.',
+        'Do I pay before design or measurement? — No. Nothing before the basic design and quotation. Once you decide to proceed, payment is required before we take actual site measurements.',
+      ] },
+
+      { kind: 'heading', text: 'Warranty and after-sales' },
+      { kind: 'visual', id: 'sales-guarantee' },
+      { kind: 'list', items: [
+        'What about termites in the wall behind the shelves? — Silverstone is termite, bacteria and fungus resistant, guaranteed 25 years. The manufacturing-defect guarantee varies by range, but the termite guarantee is 25 years either way.',
+        'Paid service continues after the complimentary visits.',
+      ] },
+
+      { kind: 'heading', text: 'Materials' },
+      { kind: 'list', items: [
+        'What else besides stone? Wood? Hardware? — Silverstone for cabinets, door facias, shelves, drawers, internal modular fixtures, countertops and wall claddings. Infused with silver and copper, which is what resists bacteria, fungus and termites. No wood at all. Hardware is industrial-grade steel.',
+        'What kind of stone? Granite, marble, quartz? — None of those, and not conventional engineered stone either. Our own patented material, Silverstone: a specially sanitised porcelain stone. Natural materials fired with silver and copper nano-materials at around 1,260°C.',
+        'How durable is it? Does the polish hold? — 25-year guarantee. Highly scratch and stain resistant. 100% food-grade.',
+        'Is the ceiling or Sunrooof included? What is it? — Sunrooof lighting is not included in the kitchen price. Sunrooof is Magppie’s sister company, and many clients take it alongside their kitchen. A patented lighting system creating the impression of natural daylight indoors, fitted on a ceiling like a skylight or a wall like a window.',
+        'Are cupboards, doors, shelves and drawers all the same material? — Yes, and most internal modular components too.',
+        'Are wardrobes stone? Are they heavy? — Yes, entirely Silverstone. Around three times heavier than plywood, so more care during manufacturing and installation. Very easy to use once installed.',
+        'How is it manufactured? — Similar process to porcelain stone. Natural minerals blended with silver and copper at nano scale, compacted under thousands of tonnes of hydraulic pressure, sintered at around 1,260°C. Fuses into one solid non-porous body. Silver and copper sit inside the material rather than as a surface coating, so they cannot wear off.',
+        'Do you manufacture or import? — We manufacture Silverstone in India. Hardware is imported from Germany, using Magppie’s patented technology, through specialised facilities there.',
+        'Can I see MTC reports or a material list? — Every kitchen is dispatched with a named Bill of Materials. Available test certificates can be provided. We encourage every client to personally examine and test the material before ordering.',
+        'What is the weight and density? — Around 2.2 tonnes per cubic metre. Harder to handle during manufacturing and installation, no difference in daily use.',
+        'Do you use laminate or fabric? — No. Silverstone provides the durability and finish on its own, with no lamination needed.',
+      ] },
+
+      { kind: 'heading', text: 'Product range and inclusions' },
+      { kind: 'list', items: [
+        'Do you provide complete fittings? — Yes, a complete integrated solution: hardware, accessories, drawers, lighting and other components. Countertop and wall cladding available at additional cost. Sink, faucet and appliances not included, and can come from a specialist agency of their choice.',
+        'Is the sink or basin included? — No. Sink, basin, faucets and water fittings are not included. A specialist agency of their choice handles those.',
+        'Can I see display kitchens or samples first? — Yes. Experience centres in Delhi, Mumbai, Bangalore, Hyderabad, Surat, Mohali and Coimbatore.',
+      ] },
+
+      { kind: 'heading', text: 'Customisation and design' },
+      { kind: 'list', items: [
+        'What finishes and design options are there? — Wellness Pro offers multiple design and door-finish options. Wellness First is more standardised, with four design options.',
+      ] },
+
+      { kind: 'heading', text: 'Installation and site work' },
+      { kind: 'list', items: [
+        'Do you do civil work? Demolition, plastering? — No. We do not undertake civil work such as demolition, wall breaking, plastering or structural modification. A specialist civil or interior agency handles that.',
+        'Factory-made or built on site? — Fully manufactured at the Magppie factory, installed on site. Arrives flat-packed with most hardware pre-assembled. An installation team of typically three to four engineers assembles cabinets, door facias and lighting on site.',
+        'Do you install Sunrooof? — Yes, Sunrooof comes with installation. Requires around 12 inches of space between the ceiling and the lighting system.',
+        'Can you install into my existing kitchen? — Yes, if you are replacing your existing kitchen with a Magppie kitchen. We do not provide installation-only services for kitchens made by other brands.',
+      ] },
+
+      { kind: 'heading', text: 'Timelines' },
+      { kind: 'list', items: [
+        'How long does installation take? — Around a week for a typical Wellness Kitchen.',
+        'When do you start after civil work? — Once the kitchen civil work is complete and the electrical lines, plumbing lines and flooring are ready.',
+        'How long does design take? How are appliances handled? — Initial design around a week, assuming no major changes. Typically one round of changes taking around three more days, so generally finalised within 10 days. You select the appliances and our design team integrates them into the design.',
+        'How long is manufacturing? — Normally around 75 to 90 days. For an urgent requirement we can sometimes bring it to around 60 days.',
+        'When do I get the quotation and design? — First quotation and rough design generally within five days.',
+        'Is the showroom open? When is my city? — Seven open now: Delhi, Hyderabad, Bangalore, Mumbai, Surat, Mohali, Coimbatore. Seven more planned within the next 12 months.',
+      ] },
+
+      { kind: 'heading', text: 'Coverage and locations' },
+      { kind: 'list', items: [
+        'Do you serve my city? — Yes, services across cities throughout India.',
+        'Do you install in Chennai, Kochi, Mumbai, Jaipur, Jodhpur? — Yes, installation across cities throughout India.',
+        'Modular kitchen services all over India? — Yes, across India.',
+        'Can I visit a real installed kitchen? — Yes, wherever we have an executed project in your city. Subject to the homeowner’s permission.',
+        'Who handles service locally? — Regional service centres across North, South and West. Service teams operate from those centres and travel to the cities they serve.',
+      ] },
+
+      { kind: 'heading', text: 'Company credentials' },
+      { kind: 'list', items: [
+        'Have you done projects in my city? — Jaipur, Mumbai, Hyderabad, Bengaluru, Guwahati, Jodhpur, Nashik, Surat and all major Indian cities. More than 38,000 kitchens over 21 years across India.',
+        'Are you connected to Sunrooof, Godrej or Reliance? — Sunrooof is our sister company, Satvic Movement is a daughter company. Not associated with Godrej or Reliance.',
+      ] },
+
+      { kind: 'heading', text: 'Process and business model' },
+      { kind: 'list', ordered: true, items: [
+        'Enquiry online, then a conversation with a sales representative',
+        'Visit an experience centre',
+        'Designers create the kitchen design',
+        'Design finalised, order closed, 50% paid',
+        'Site measurements taken, technical drawings prepared',
+        'Drawings frozen, 30% paid, drawings go to the factory',
+        'Kitchen manufactured, remaining 20% paid',
+        'Factory dispatches, our team installs on site',
+      ] },
+      { kind: 'list', items: [
+        'Can I get a quote before possession? — Yes, so you can plan well in advance.',
+        'Can I become a dealer or partner? — We do not appoint conventional dealers or distributors in other cities. Business is managed by the parent company through our own operations and teams. We are open to city-centric joint-venture partnerships.',
+        'Do you have franchises or authorised representatives? — No conventional franchisees, dealers or distributors. Stores are primarily company-owned and run by our own teams.',
+      ] },
+      { kind: 'callout', label: 'Escalation', text: 'Anyone seriously interested in a joint venture goes up, not sideways.' },
+
+      { kind: 'heading', text: 'Part 2: The five that actually lose deals' },
+      { kind: 'paragraph', text: 'Across the recorded calls, these performed worst. Not because they are hard, but because they are answered loosely.' },
+      { kind: 'table', columns: ['Question', 'Call volume', 'What goes wrong'], rows: [
+        ['What does it cost', '90 calls', 'More than a third got no clean answer. There is a clean answer. It is in Part 1.'],
+        ['What is included', '45 calls', 'Nearly half went badly. The worst-performing question in the business. No way to answer it well without knowing both lists cold.'],
+        ['Which cities do you serve', '52 calls', 'The answer is short and it is yes.'],
+        ['Can you quote from my floor plan', '30 calls', 'The answer is yes, and it should end with you having the floor plan.'],
+        ['Per square foot or running foot', '20 calls', 'Per square foot of cabinet area, and here is why that is fairer.'],
+      ] },
+      { kind: 'callout', label: 'The payoff', text: 'Five answers. Learn only these five properly and you fix more than half of every conversation that currently goes wrong.' },
+
+      { kind: 'heading', text: 'Part 3: The things a client will push on' },
+      { kind: 'paragraph', text: 'Approved answers give you the facts. These are the moments where the facts are not the problem.' },
+      { kind: 'visual', id: 'sales-objections' },
+
+      { kind: 'heading', text: 'Part 4: Owning the client through the process' },
+      { kind: 'paragraph', text: 'Where the money moves is where the relationship is either built or damaged. There are three payment moments and each has a conversation attached.' },
+      { kind: 'visual', id: 'sales-journey-gates' },
+      { kind: 'paragraph', text: 'Between those points, the parts most often mishandled:' },
+      { kind: 'list', items: [
+        'Design takes about ten days, including one round of changes. Say ten, not one week, because one round of changes is normal rather than exceptional.',
+        'Civil work is not ours. Say this early and clearly. A client discovering it late feels misled, even though it was always true.',
+        'Appliances are selected by the client and integrated by our design team. That order matters.',
+        'Installation needs electrical, plumbing and flooring finished. Flag it well before it becomes the reason for a delay.',
+      ] },
+
+      { kind: 'heading', text: 'Part 5: The learning path for a new joiner' },
+      { kind: 'heading', text: 'Weeks 1 and 2: Know the product' },
+      { kind: 'list', items: [
+        'Brand foundation: what Magppie is, what a Wellness Kitchen is, the founder’s story',
+        'Material science: what Silverstone is, how it is made, why silver and copper are inside it rather than on it',
+        'The two ranges, and what actually differs between Wellness First and Wellness Pro',
+        'Learn Part 1. Start with the five in Part 2',
+        'Spend a day at an experience centre with the material in front of you',
+      ] },
+      { kind: 'heading', text: 'Weeks 3 and 4: Know the process' },
+      { kind: 'list', items: [
+        'End to end from enquiry to installation, including which team does what',
+        'The three payment stages and what each one gates',
+        'What Pre-Sales hands you, and what a good handover contains',
+        'CRM: how records move, what you must log',
+        'Sit in on live client conversations without speaking',
+      ] },
+      { kind: 'heading', text: 'Month 2: Start selling' },
+      { kind: 'list', items: [
+        'Running a client conversation end to end',
+        'The objections in Part 3, practised out loud',
+        'Quotation preparation',
+        'Working with designers',
+        'Your first clients, with someone senior reviewing afterwards',
+      ] },
+      { kind: 'heading', text: 'Month 3: Own it' },
+      { kind: 'list', items: [
+        'Take a client from handover to closure',
+        'Handle a live objection unaided',
+        'Sit with the installation team for a day. Seeing a kitchen go in changes how you sell it',
+        'Review your own recorded conversations against Part 1',
+      ] },
+
+      { kind: 'heading', text: 'Part 6: Annual refresher' },
+      { kind: 'paragraph', text: 'For anyone already in the role. Around an hour. Re-read Part 1 in full, and Part 3. Then check yourself honestly:' },
+      { kind: 'list', items: [
+        'Can you say both lists, included and excluded, without looking?',
+        'Do you still open the price conversation with the cabinet-area clarification, or have you started assuming?',
+        'Can you state the guarantee correctly for both ranges, including the difference between the defect guarantee and the termite guarantee?',
+        'Have you offered a 60-day timeline recently? Was it genuinely an urgent case?',
+        'Think of your last lost deal. Which question in Part 1 was involved?',
+        'Have prices, cities, timelines or payment terms changed this year? Confirm before you quote any of them again.',
+      ] },
+      { kind: 'callout', label: 'What changed this year', text: '(to be filled in by L and D at each annual release)' },
+    ],
+  },
 ]
 
 /* ═══════════════════════════════ QUIZ BANK ═══════════════════════════════ */
@@ -1020,6 +1240,27 @@ export const SALES_QUIZ: SalesQuizQuestion[] = [
     correctIndex: 0,
     keyPending: true,
   },
+
+  /* ── sa-m12 Client Ownership (Sales Training doc, section 4B) ──────────
+     16 questions, all graded. The payment-split question here IS graded
+     (50/30/20) because its source doc states it plainly — unlike sa-m6,
+     whose split questions stay keyPending pending the process owner. */
+  { id: 'sa-q-co1', moduleId: 'sa-m12', topic: 'pricing', question: 'How is a Magppie kitchen priced?', options: ['Fixed price per kitchen', 'Per square foot of cabinet area', 'Per running foot', 'Per square foot of floor area'], correctIndex: 1 },
+  { id: 'sa-q-co2', moduleId: 'sa-m12', topic: 'pricing', question: 'The 100 sq ft price range, and what ‘100 sq ft’ means:', options: ['Rs. 6–12 lakh; width + height of all cabinets summed (not floor area)', 'Rs. 6–12 lakh; the floor area of the room', 'Rs. 10–20 lakh; the countertop area', 'Rs. 3–6 lakh; the wall area'], correctIndex: 0 },
+  { id: 'sa-q-co3', moduleId: 'sa-m12', topic: 'pricing', question: 'Which is the correct ‘included’ list?', options: ['Silverstone cabinets and doors + seven accessories', 'Cabinets, countertop, sink and appliances', 'Everything except GST', 'Cabinets and installation'], correctIndex: 0 },
+  { id: 'sa-q-co4', moduleId: 'sa-m12', topic: 'pricing', question: 'Which group is entirely EXCLUDED from the quoted price?', options: ['The seven accessories', 'GST, transport/handling, installation, countertop, wall cladding, sink, faucet, appliances', 'Door facias', 'Drawers and shelves'], correctIndex: 1 },
+  { id: 'sa-q-co5', moduleId: 'sa-m12', topic: 'payment-terms', question: 'The three payment stages and what they gate:', options: ['50% booking / 40% dispatch / 10% installation', '50% at order booking / 30% at drawing finalisation (drawings freeze and go to the factory) / 20% two weeks before dispatch', '40% / 40% / 20%', '60% booking / 20% / 20%'], correctIndex: 1 },
+  { id: 'sa-q-co6', moduleId: 'sa-m12', topic: 'warranty', question: 'The warranty, stated correctly:', options: ['Flat 25-year guarantee on everything, 25 complimentary services', 'Manufacturing defects: 5 yr (First) / 25 yr (Pro); termite, bacteria and fungus: 25 yr on both; complimentary services: 1 (First) / 5 (Pro)', '10 yr on both ranges', '5 yr on both ranges, no termite cover'], correctIndex: 1 },
+  { id: 'sa-q-co7', moduleId: 'sa-m12', topic: 'objection-handling', question: 'The one thing a Sales owner may never do:', options: ['Offer a visit', 'Guess — everything you say becomes a commitment the company must honour', 'Discuss price', 'Mention Sunrooof'], correctIndex: 1 },
+  { id: 'sa-q-co8', moduleId: 'sa-m12', topic: 'objection-handling', question: 'A client says ‘that’s more than I expected.’ What do you check first?', options: ['Whether they can get a loan', 'Whether they’ve misunderstood the square footage — many price objections are arithmetic', 'Which competitor quoted lower', 'Whether to offer a discount'], correctIndex: 1 },
+  { id: 'sa-q-co9', moduleId: 'sa-m12', topic: 'objection-handling', question: '‘Can you do anything on the price?’ Best handling:', options: ['Offer a small discount to close', 'Pricing is fixed for everyone; move the conversation to scope — what a complete solution includes, which range fits', 'Route to your manager', 'Match a competitor’s price'], correctIndex: 1 },
+  { id: 'sa-q-co10', moduleId: 'sa-m12', topic: 'process-timeline', question: 'Manufacturing timeline:', options: ['30–45 days always', 'Around 75–90 days; ~60 possible for genuine urgent cases (an exception, not a lever)', '6 months', '2 weeks'], correctIndex: 1 },
+  { id: 'sa-q-co11', moduleId: 'sa-m12', topic: 'materials', question: '‘Will the silver wear off over time?’ Correct answer:', options: ['It may fade after some years', 'Silver and copper are infused inside the material, not coated on, so they cannot wear off', 'We reapply the coating during service visits', 'Only the surface layer has silver'], correctIndex: 1 },
+  { id: 'sa-q-co12', moduleId: 'sa-m12', topic: 'objection-handling', question: 'A client wants to see an installed kitchen. What can you promise?', options: ['A visit on a fixed date next week', 'Yes, where there’s a project in their city, subject to the homeowner’s permission — never promise a date you don’t control', 'Only showroom visits, never homes', 'A visit anywhere in India tomorrow'], correctIndex: 1 },
+  { id: 'sa-q-co13', moduleId: 'sa-m12', topic: 'materials', question: 'Do you manufacture or import?', options: ['Everything is imported from Germany', 'Silverstone is manufactured in India; hardware is imported from Germany', 'Everything is made in India', 'Silverstone imported, hardware made in India'], correctIndex: 1 },
+  { id: 'sa-q-co14', moduleId: 'sa-m12', topic: 'process-timeline', question: 'Civil work (demolition, plastering) — what’s true?', options: ['We include it in the price', 'We don’t do civil work; a specialist agency handles it — flag this early so the client isn’t surprised later', 'We do it at extra cost', 'Only for Wellness Pro'], correctIndex: 1 },
+  { id: 'sa-q-co15', moduleId: 'sa-m12', topic: 'payment-terms', question: 'What happens when technical drawings are ‘frozen’ (the 30% stage)?', options: ['Nothing changes yet', 'Drawings lock and go to the factory; the client should understand this before signing, not after', 'The client can still change the layout freely', 'It’s only a formality'], correctIndex: 1 },
+  { id: 'sa-q-co16', moduleId: 'sa-m12', topic: 'objection-handling', question: 'A client asks a question you have no approved answer for. What do you do?', options: ['Give your best estimate to keep momentum', 'Say you’ll confirm and come back — then actually confirm; never improvise a number', 'Route it back to Pre-Sales', 'Tell them it’s not possible'], correctIndex: 1 },
 ]
 
 /* ═══════════════════════════════ HELPERS ═══════════════════════════════ */
