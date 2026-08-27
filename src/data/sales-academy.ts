@@ -792,6 +792,7 @@ export const SALES_MODULES: SalesModule[] = [
       { kind: 'heading', text: 'Part 3: The things a client will push on' },
       { kind: 'paragraph', text: 'Approved answers give you the facts. These are the moments where the facts are not the problem.' },
       { kind: 'visual', id: 'sales-objections' },
+      { kind: 'visual', id: 'sales-scenarios' },
 
       { kind: 'heading', text: 'Part 4: Owning the client through the process' },
       { kind: 'paragraph', text: 'Where the money moves is where the relationship is either built or damaged. There are three payment moments and each has a conversation attached.' },

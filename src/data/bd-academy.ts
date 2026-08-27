@@ -353,6 +353,7 @@ export const BD_MODULES: BdModule[] = [
       { kind: 'heading', text: 'The rule for this role' },
       { kind: 'callout', label: 'The rule', text: 'Answer anything that helps them decide to take the next step. Anything that needs to know their kitchen goes to Sales.' },
       { kind: 'visual', id: 'presales-answer-or-route' },
+      { kind: 'visual', id: 'presales-sort-it' },
       { kind: 'paragraph', text: 'That line does a lot of work. Someone asking "what do your kitchens cost" is deciding whether to keep talking to you, and they deserve a real answer. Someone asking "what will mine cost" needs a quotation, and that is not a phone-call answer.' },
       { kind: 'paragraph', text: 'The same discipline the calling bot runs on applies to you: never guess a price, warranty, timeline, location, inclusion, specification or policy. If it is not in the approved answers, it does not get said. Offer the right person instead.' },
 

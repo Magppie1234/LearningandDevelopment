@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import ModuleBackdrop from '@/components/ModuleBackdrop'
+import ModuleBackdrop, { VEIL_TEAL } from '@/components/ModuleBackdrop'
 import BdAcademy from '@/screens/BdAcademy'
 
 // BdAcademy reads useSearchParams (?module=…) for deep-linking, which Next
@@ -8,7 +8,7 @@ export default function Page() {
   return (
     <Suspense fallback={null}>
       {/* Magppie's 3D kitchen render, fixed behind the module content. */}
-      <ModuleBackdrop />
+      <ModuleBackdrop veil={VEIL_TEAL} />
       <BdAcademy />
     </Suspense>
   )

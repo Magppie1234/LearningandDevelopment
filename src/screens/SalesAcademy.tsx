@@ -14,6 +14,7 @@ import {
   XCircle,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import ModuleReader from '@/components/learning/ModuleReader'
 import {
   SALES_MODULES,
   SALES_PASS_THRESHOLD,
@@ -267,9 +268,10 @@ function ModuleView({
         <div className="mt-6">
           {tab === 'read' ? (
             <div className="space-y-3.5">
-              {module.blocks.map((b, i) => (
-                <Block key={i} block={b} />
-              ))}
+              <ModuleReader
+                blocks={module.blocks}
+                renderBlock={(b, i) => <Block key={i} block={b} />}
+              />
               <div className="pt-4">
                 <button
                   type="button"

@@ -35,6 +35,17 @@ export const VEIL_STONE =
  * kitchen actually reads, then closing to near-opaque so text lower down sits
  * on flat colour rather than on the render.
  */
+/**
+ * Light blue -> teal for the module pages: calm and airy, never dark, and it
+ * ties them to the onboarding page's blue rather than leaving three different
+ * backdrop moods across the portal. ~50% at the top so the kitchen shows
+ * through softly, closing near-opaque so long-form text below sits on flat
+ * colour. Section panels are solid on top of this, so body copy never
+ * actually renders over the photograph.
+ */
+export const VEIL_TEAL =
+  'linear-gradient(180deg, rgba(186,220,236,0.52) 0%, rgba(196,228,231,0.80) 40%, rgba(214,236,236,0.93) 100%)'
+
 export const VEIL_BLUE =
   'linear-gradient(180deg, rgba(214,234,246,0.62) 0%, rgba(223,239,248,0.86) 42%, rgba(233,244,250,0.95) 100%)'
 

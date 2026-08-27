@@ -15,6 +15,7 @@ import {
   XCircle,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import ModuleReader from '@/components/learning/ModuleReader'
 import { MODULE_VISUALS, slug } from '@/components/learning/ModuleVisuals'
 import {
   BD_MODULES,
@@ -352,9 +353,10 @@ function ModuleView({
       <div className="mt-6">
         {tab === 'read' ? (
           <div className="space-y-3.5">
-            {module.blocks.map((b, i) => (
-              <Block key={i} block={b} />
-            ))}
+            <ModuleReader
+              blocks={module.blocks}
+              renderBlock={(b, i) => <Block key={i} block={b} />}
+            />
 
             {bdModuleHasVisual(module.id) && (
               <div className="pt-2 scroll-mt-20" id="module-visual">

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Check, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { ScenarioPractice, SortIt } from '@/components/learning/ModuleExercises'
 
 /**
  * Inline visuals for the Pre-Sales and Sales modules.
@@ -19,9 +20,9 @@ import { cn } from '@/lib/utils'
  * routed-away side.
  */
 
-const GOLD = '#9c7a1b'
+const GOLD = '#7a5f13' // darkened from #9c7a1b: 3.9:1 failed AA at 10px
 const GOLD_SOFT = '#f5efdf'
-const GREEN = '#4e8c63'
+const GREEN = '#3d7350' // darkened from #4e8c63: white pill text was 4.0:1
 const GREEN_SOFT = '#e6f1e9'
 
 /* ── shared shells ─────────────────────────────────────────────────────── */
@@ -495,4 +496,7 @@ export const MODULE_VISUALS: Record<string, () => React.ReactElement> = {
   'sales-journey-gates': () => <JourneyWithGates />,
   'sales-objections': () => <ObjectionCards />,
   'sales-guarantee': () => <GuaranteeComparison />,
+  // Practice exercises — built from the same module docs as the visuals above.
+  'presales-sort-it': () => <SortIt />,
+  'sales-scenarios': () => <ScenarioPractice />,
 }
