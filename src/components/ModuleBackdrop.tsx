@@ -25,10 +25,20 @@ import KitchenScene3D from '@/components/KitchenScene3D'
  */
 
 /** Warm-stone scrim — matches the portal ground rather than Vision's teal. */
-const VEIL =
+export const VEIL_STONE =
   'linear-gradient(180deg, rgb(var(--m-cream)/0.90) 0%, hsl(var(--background)/0.94) 45%, hsl(var(--background)/0.97) 100%)'
 
-export default function ModuleBackdrop() {
+/**
+ * Light-blue scrim for Onboarding. Cool and airy against the portal's warm
+ * stone — a deliberate departure, since a new joiner's first screen is the one
+ * place a different mood is welcome. Kept translucent at the top so the
+ * kitchen actually reads, then closing to near-opaque so text lower down sits
+ * on flat colour rather than on the render.
+ */
+export const VEIL_BLUE =
+  'linear-gradient(180deg, rgba(214,234,246,0.62) 0%, rgba(223,239,248,0.86) 42%, rgba(233,244,250,0.95) 100%)'
+
+export default function ModuleBackdrop({ veil = VEIL_STONE }: { veil?: string } = {}) {
   const [paused, setPaused] = useState(false)
 
   useEffect(() => {
@@ -54,7 +64,7 @@ export default function ModuleBackdrop() {
       aria-hidden
       className={`fixed inset-0 -z-10 pointer-events-none${paused ? ' backdrop-paused' : ''}`}
     >
-      <KitchenScene3D blur={4} veil={VEIL} />
+      <KitchenScene3D blur={4} veil={veil} />
       <style>{`.backdrop-paused .kitchen3d-drift { animation: none; }`}</style>
     </div>
   )

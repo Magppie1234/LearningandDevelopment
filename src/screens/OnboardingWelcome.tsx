@@ -86,10 +86,10 @@ export default function OnboardingWelcome() {
 function Marker({ icon: Icon, label, pending }: { icon: typeof Video; label: string; pending?: boolean }) {
   return (
     <span
-      className={cn(
-        'inline-flex items-center gap-1.5 text-[11px]',
-        pending ? 'text-ink-tertiary/70' : 'text-ink-tertiary',
-      )}
+      // Pending markers used to be dimmed to /70, which fell to 3.06:1 —
+      // under AA. The "(soon)" word already carries the distinction, so the
+      // colour does not need to (and shouldn't be the only signal anyway).
+      className="inline-flex items-center gap-1.5 text-[11px] text-ink-tertiary"
     >
       <Icon size={12} aria-hidden />
       {label}
@@ -103,39 +103,54 @@ function DayBox({ day, open, onClick }: { day: OnboardingDay; open: boolean; onC
   // A "done" tick would come from the quiz store once questions exist; with no
   // questions supplied there is nothing that can legitimately be marked passed.
   const done = false
+  const bandInk = day.ink === 'light' ? '#FFFFFF' : '#26201B'
   return (
     <button
       type="button"
       onClick={onClick}
       aria-expanded={open}
+      // Same construction as the checklist's phase cards: rounded-2xl, a 2px
+      // border in the item's own colour, a filled header band, and FLAT —
+      // no shadow, no gradient standing in for depth.
       className={cn(
-        'flex h-full flex-col items-start rounded-2xl border bg-parchment p-5 text-left transition-all',
-        open
-          ? 'border-accent-copper shadow-[0_0_0_2px_rgba(184,112,63,0.18)]'
-          : 'border-hairline/12 hover:-translate-y-0.5 hover:shadow-elevated',
+        'flex h-full w-full flex-col overflow-hidden rounded-2xl border-2 bg-parchment text-left transition-transform',
+        open ? 'translate-y-[-2px]' : 'hover:translate-y-[-2px]',
       )}
+      style={{ borderColor: day.color }}
     >
-      <div className="flex w-full items-center justify-between gap-2">
-        <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-accent-copper">
+      <span
+        className="flex items-baseline gap-x-3 px-4 py-3"
+        style={{ backgroundColor: day.color }}
+      >
+        <span className="font-serif text-2xl" style={{ color: bandInk }}>
           {day.day}
         </span>
         {done && (
-          <span className="grid h-5 w-5 place-items-center rounded-full bg-[#e6f1e9]" aria-label="Completed">
-            <Check size={12} style={{ color: '#4e8c63' }} />
+          <span
+            className="ml-auto grid h-5 w-5 place-items-center rounded-full"
+            style={{ backgroundColor: 'rgb(255 255 255 / 0.85)' }}
+            aria-label="Completed"
+          >
+            <Check size={12} style={{ color: day.color }} />
           </span>
         )}
-      </div>
-      <h2 className="mt-2 text-[15.5px] font-semibold leading-snug text-ink-primary">{day.title}</h2>
-      <p className="mt-1 text-[13px] leading-relaxed text-ink-secondary">{day.blurb}</p>
-      <div className="mt-auto flex flex-wrap items-center gap-x-3 gap-y-1 pt-4">
-        <Marker icon={Video} label="Video" pending={day.video.pending} />
-        <Marker icon={FileText} label="Document" pending={day.doc.pending} />
-        {assessment ? (
-          <Marker icon={ClipboardCheck} label="Assessment" pending={assessment.questionsPending} />
-        ) : (
-          <Marker icon={ArrowRight} label="Role academy" />
-        )}
-      </div>
+      </span>
+
+      <span className="flex flex-1 flex-col p-4">
+        <span className="text-[15.5px] font-semibold leading-snug text-ink-primary">
+          {day.title}
+        </span>
+        <span className="mt-1 text-[13px] leading-relaxed text-ink-secondary">{day.blurb}</span>
+        <span className="mt-auto flex flex-wrap items-center gap-x-3 gap-y-1 pt-4">
+          <Marker icon={Video} label="Video" pending={day.video.pending} />
+          <Marker icon={FileText} label="Document" pending={day.doc.pending} />
+          {assessment ? (
+            <Marker icon={ClipboardCheck} label="Assessment" pending={assessment.questionsPending} />
+          ) : (
+            <Marker icon={ArrowRight} label="Role academy" />
+          )}
+        </span>
+      </span>
     </button>
   )
 }
@@ -153,10 +168,13 @@ function Pending({ label, note }: { label: string; note?: string }) {
 function DayPanel({ day, onClose }: { day: OnboardingDay; onClose: () => void }) {
   const assessment = onboardingAssessment(day.assessmentId)
   return (
-    <section className="rounded-2xl border border-hairline/12 bg-parchment p-5 sm:p-7">
+    <section className="rounded-2xl border-2 bg-parchment p-5 sm:p-7" style={{ borderColor: day.color }}>
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-accent-copper">
+          <p
+            className="text-[10px] font-bold uppercase tracking-[0.16em]"
+            style={{ color: day.color }}
+          >
             {day.day}
           </p>
           <h2 className="mt-1 font-serif text-2xl text-ink-primary">{day.title}</h2>

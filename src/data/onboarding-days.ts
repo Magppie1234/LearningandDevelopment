@@ -47,6 +47,16 @@ export interface OnboardingDay {
   day: string
   title: string
   blurb: string
+  /**
+   * Card colour, taken from the Onboarding Checklist's Soft Greens palette so
+   * the two pages read as one family. Deliberately the palette's deeper,
+   * fuller end rather than its pale end — these are three confident cards, not
+   * a wash — but still the same low-saturation family, never a rainbow.
+   * `ink` is stated per day rather than guessed from the hex at render time,
+   * exactly as the checklist does it.
+   */
+  color: string
+  ink: 'light' | 'dark'
   video: OnboardingVideo
   doc: OnboardingDoc
   /** Assessment id, or null for a day that ends in an action instead. */
@@ -59,6 +69,8 @@ export const ONBOARDING_DAYS: OnboardingDay[] = [
   {
     id: 'day-1',
     day: 'Day 1',
+    color: '#6F8899', // soft slate-blue — the checklist's heavier-phase blue
+    ink: 'light',
     title: 'Welcome & the essentials',
     blurb: 'Meet the company, then the policies and conduct standards everyone works to.',
     video: {
@@ -78,6 +90,8 @@ export const ONBOARDING_DAYS: OnboardingDay[] = [
   {
     id: 'day-2',
     day: 'Day 2',
+    color: '#6E8A6B', // deeper sage
+    ink: 'light',
     title: 'Vision & culture',
     blurb: 'Where Magppie is going, and the standards behind how we get there.',
     video: {
@@ -95,6 +109,8 @@ export const ONBOARDING_DAYS: OnboardingDay[] = [
   {
     id: 'day-3',
     day: 'Day 3',
+    color: '#8CA687', // medium sage — too light for white, so dark ink here
+    ink: 'dark',
     title: 'Your role & next steps',
     blurb: 'Meet your team, pick up the handover, and start your role academy.',
     video: {

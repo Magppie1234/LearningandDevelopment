@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
+import KitchenVideoBackdrop from '@/components/onboarding/KitchenVideoBackdrop'
 import OnboardingWelcome from '@/screens/OnboardingWelcome'
 import Onboarding from '@/screens/Onboarding'
 
@@ -19,6 +20,9 @@ export default function Page() {
   const [view, setView] = useState<'welcome' | 'checklist'>('welcome')
   return (
     <div className="space-y-6">
+      {/* Magppie's own kitchen footage under a light-blue tint, behind the
+          whole page. Sits below content and never takes pointer events. */}
+      <KitchenVideoBackdrop />
       <div
         className="inline-flex rounded-full bg-[rgb(var(--rule)/0.05)] p-1"
         role="tablist"

@@ -52,6 +52,9 @@ function PortalLayoutBody({ children }: { children: React.ReactNode }) {
 
   const isHome = pathname === '/'
   const isStory = pathname === '/vision'
+  // Onboarding paints its own full-page kitchen; the header band would be a
+  // second, competing kitchen layer on top of it.
+  const ownsBackdrop = isStory || pathname.startsWith('/onboarding')
   const navMatch = navMatchForPath(pathname)
   const navItem = navMatch?.item
   const allowed = canAccessPath(role, pathname)
@@ -190,7 +193,7 @@ function PortalLayoutBody({ children }: { children: React.ReactNode }) {
               here rather than per-page. Our Story is excluded: it keeps its
               own design, and it already opens on a full-bleed kitchen of its
               own that this would sit behind and fight with. */}
-          {!isStory && <KitchenHeaderBackdrop />}
+          {!ownsBackdrop && <KitchenHeaderBackdrop />}
           <div className="mx-auto w-full max-w-[1400px] space-y-6">
             {/* Only shown when the viewer has actually opted into sample
                 records. It used to render unconditionally, which made it
