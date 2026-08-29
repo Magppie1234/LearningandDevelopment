@@ -58,9 +58,18 @@ export default function PipelineBoard({
         <h2 id="board-heading" className="mt-1.5 font-serif text-2xl sm:text-3xl text-ink-primary">
           How a lead becomes an order
         </h2>
+        {/* This used to claim the stage names were "the CRM's own, so what you
+            see here is what you see on the record". They are not: of 7,295
+            deals in the mirrored CRM, none uses these names. Saying so on the
+            page matters more than saying it in a comment — a learner who
+            trusted that sentence would go looking for "Qualified" on a record
+            and not find it. */}
         <p className="mt-2 text-[13.5px] text-ink-secondary max-w-[64ch]">
-          The seven pipeline stages, left to right, with the touchpoints recorded at each. Stage
-          names are the CRM&apos;s own, so what you see here is what you see on the record.
+          A generic seven-stage funnel, left to right, with the touchpoints recorded at each. These
+          are teaching labels, not the stage names on a Magppie record — the live CRM uses its own,
+          more operational set (&ldquo;Sent for Approval&rdquo;, &ldquo;Final Handover&rdquo;, and
+          around fifty more). Learn the shape of the journey here; read the stage itself off the
+          record.
         </p>
 
         <div className="mt-7 overflow-x-auto pb-2 -mx-1 px-1">
@@ -179,7 +188,7 @@ export default function PipelineBoard({
                 {STAGES_WITHOUT_TOUCHPOINTS.length} of {BOARD.length} stages have no touchpoint
                 data:
               </strong>{' '}
-              {STAGES_WITHOUT_TOUCHPOINTS.join(', ')}. The portal holds the CRM stage list and the
+              {STAGES_WITHOUT_TOUCHPOINTS.join(', ')}. The portal holds this funnel and the
               BD/Sales step definitions, but nothing links the two — so these columns are empty
               rather than filled with a guess at which steps belong where.
             </p>

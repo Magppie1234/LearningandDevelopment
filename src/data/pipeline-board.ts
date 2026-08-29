@@ -9,9 +9,25 @@ import { SALES_FLOW } from '@/data/sales-flow'
  * TWO SOURCES, BOTH REAL, AND ONE GAP BETWEEN THEM — worth stating plainly
  * because it shapes what this page can honestly show:
  *
- *  1. The columns are `CRM_STAGES` from the call-intelligence taxonomy. That
- *     is the canonical pipeline the rest of the portal already scores against,
- *     so the stage names here match what appears on the CRM record.
+ *  1. The columns are `CRM_STAGES` from the call-intelligence taxonomy.
+ *
+ *     CORRECTION (29 Aug 2026): this file used to claim the names "match what
+ *     appears on the CRM record". They do not. Checked against the mirrored
+ *     Zoho data: of 7,295 Deals carrying a Stage, ZERO use any of New /
+ *     Contacted / Qualified / Design / Quotation / Negotiation / Won / Lost.
+ *     The live pipeline is ~57 operational values ("Sent for Approval",
+ *     "Final Handover", "PD Approvals", "Price Discussion", …) with no
+ *     canonical ordering stored anywhere.
+ *
+ *     `CRM_STAGES` in fact belongs to Sunroof Call Intelligence — a different
+ *     product, whose own dataset module is labelled DEMO DATA ONLY. It is a
+ *     generic funnel vocabulary, not Magppie's kitchen pipeline.
+ *
+ *     Left in place rather than swapped: the real stage list has no stored
+ *     order, so authoring a sequence would be inventing process truth — the
+ *     exact thing point 3 below refuses to do. Treat these columns as an
+ *     illustrative funnel, not as this business's stages, until the BD/Sales
+ *     process owner supplies the canonical ordered list.
  *
  *  2. The cards are steps from the BD and Sales process flows, together with
  *     the fields those steps actually capture (`disp`).
