@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Check, ChevronDown, Download, RotateCcw, X } from 'lucide-react'
 import {
   DRESS_CODE_DECK,
+  DRESS_CODE_PDF,
   DRESS_CODE_SECTIONS,
   DRESS_CODE_SELF_CHECK,
   type PolicySection,
@@ -53,13 +54,24 @@ export default function DressCodePolicy() {
           Part of the New Joiner Orientation Series. Read it through once, then use the quick
           reference and self-check whenever you need them.
         </p>
-        <a
-          href={DRESS_CODE_DECK}
-          download
-          className="mt-4 inline-flex min-h-[44px] items-center gap-2 rounded-full border border-hairline/20 px-4 text-[13px] font-semibold text-ink-primary transition-colors hover:bg-[rgb(var(--rule)/0.05)]"
-        >
-          <Download size={15} aria-hidden /> Download the full policy
-        </a>
+        <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
+          <a
+            href={DRESS_CODE_PDF}
+            download
+            className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-hairline/20 px-4 text-[13px] font-semibold text-ink-primary transition-colors hover:bg-[rgb(var(--rule)/0.05)]"
+          >
+            <Download size={15} aria-hidden /> Download the full policy (PDF)
+          </a>
+          {/* Kept visible rather than hidden: for an official policy it should
+              be obvious that a signed-off source document exists. */}
+          <a
+            href={DRESS_CODE_DECK}
+            download
+            className="inline-flex min-h-[44px] items-center text-[12.5px] text-ink-secondary underline underline-offset-4 hover:text-ink-primary"
+          >
+            Original slide deck
+          </a>
+        </div>
       </header>
 
       {DRESS_CODE_SECTIONS.map((s, i) => (

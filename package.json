@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "ingest:training-doc": "tsx scripts/ingest-training-doc.ts",
-    "validate:ci": "tsx scripts/validate-call-intelligence.ts"
+    "validate:ci": "tsx scripts/validate-call-intelligence.ts",
+    "build:dress-code-pdf": "tsx scripts/build-dress-code-pdf.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

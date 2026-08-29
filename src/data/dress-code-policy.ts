@@ -28,6 +28,13 @@ export interface PolicySection {
   footnote?: string
 }
 
+/**
+ * The reader-facing download: an A4 PDF generated from THIS module by
+ * scripts/build-dress-code-pdf.ts, so the file and the page can never drift.
+ * The original deck stays alongside it for provenance — an official policy
+ * should be traceable to the document HR actually signed off.
+ */
+export const DRESS_CODE_PDF = '/policies/Dress_Code_Policy_MAGPPIE.pdf'
 export const DRESS_CODE_DECK = '/policies/Dress_Code_Policy_MAGPPIE.pptx'
 
 export const DRESS_CODE_SECTIONS: PolicySection[] = [
