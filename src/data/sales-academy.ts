@@ -7,10 +7,31 @@
  *     Four Phases, showroom flow step list, source statuses).
  *
  * DO-NOT-GUESS FLAGS (leave visible; never resolve silently):
- *   [CONFIRM PAYMENT SPLIT] — AI Bot doc: 50% advance / 40% before dispatch /
- *     10% after installation. Notion "50/30/20 Operating System" + Sales
- *     Manager Script: 50% advance / 30% design approval / 20% pre-dispatch.
- *     Quiz questions on the split carry keyPending and are NOT graded.
+ *   [PAYMENT SPLIT — RESOLVED 29 Aug 2026] 50 / 30 / 20.
+ *     The conflict was: AI Bot doc 50% advance / 40% before dispatch / 10%
+ *     after installation, vs Notion "50/30/20 Operating System" + Sales
+ *     Manager Script 50 / 30 / 20. Settled against the live Zoho CRM, whose
+ *     Payment_Milestones records are configured as 50% "Order Booking
+ *     Payment" / 30% "Production Payment" / 20% "Dispatch Payment" — i.e. the
+ *     system the business actually bills on, and the milestone NAMES match the
+ *     Notion wording too. sa-q18 is graded again.
+ *     LIMIT OF THE EVIDENCE: the CRM mirror held one kitchen deal with a full
+ *     milestone set (plus one unrelated Sunroof/rafters job on a bespoke
+ *     50/13/25/12 schedule). Strong, not exhaustive — if the process owner
+ *     says otherwise, change it here and in sa-m6.
+ *   [PRICE BASIS — STILL OPEN] sa-m6 quotes Rs. 8,400-10,800/sq.ft;
+ *     sa-m12 quotes Rs. 6-12 lakh per 100 sq ft of CABINET area; sa-m6 also
+ *     says a 10x10 kitchen runs Rs. 12-15 lakh. Most likely these measure
+ *     different things (cabinet area vs floor area), but NO source says so,
+ *     so nothing was edited to match.
+ *     Checked against the CRM and it did NOT settle it: across 1,463 real
+ *     deals carrying both Cabinet_Area_Sqft and Total_Amount, realised value
+ *     per 100 sq ft of cabinet area runs p25 7.7 / median 11.8 / p75 16.3
+ *     lakh — ABOVE both quoted ranges. That is expected rather than damning:
+ *     Total_Amount includes countertop, backsplash, accessories, appliances
+ *     and GST, which the quoted ranges explicitly exclude. So it cannot be
+ *     used to correct the copy — it only shows the quoted ranges describe a
+ *     narrower scope than a deal's total value. Needs the pricing owner.
  *   [CONFIRM YEAR] — first SilverStone kitchen: AI Bot doc says late 2016;
  *     Notion Brand Story says 2018.
  *   [VERIFY: Red Dot award] — in the original Material Science doc and Brand
@@ -293,7 +314,7 @@ export const SALES_MODULES: SalesModule[] = [
           'Wellness / premium justification',
           'The 15-year value frame (lifetime cost vs wood)',
           'Pricing',
-          'Payment terms [CONFIRM PAYMENT SPLIT]',
+          'Payment terms (50 / 30 / 20)',
           'Closure intent',
         ],
       },
@@ -304,8 +325,8 @@ export const SALES_MODULES: SalesModule[] = [
       },
       {
         kind: 'callout',
-        label: '[CONFIRM PAYMENT SPLIT]',
-        text: 'The payment-terms stage carries the unresolved 50/40/10 (AI Bot doc) vs 50/30/20 (Notion) conflict. See Module 6 — the quiz does not test a specific split.',
+        label: 'Payment terms',
+        text: 'Payment terms are 50% at order booking, 30% at production, 20% before dispatch. (This was an open 50/40/10 vs 50/30/20 conflict between source documents; it was settled against the live CRM’s own payment milestones.)',
       },
     ],
   },
@@ -400,23 +421,24 @@ export const SALES_MODULES: SalesModule[] = [
         label: 'THE PRICE ANCHOR (VERBATIM)',
         text: 'Wood material < Rs. 100/sq.ft.; SilverStone material ~Rs. 500/sq.ft.; Magppie kitchen Rs. 8,400–10,800/sq.ft. (all-inclusive); branded wood kitchen: similar price, but toxic + high maintenance.',
       },
-      { kind: 'heading', text: 'Payment milestones — UNRESOLVED CONFLICT' },
+      { kind: 'heading', text: 'Payment milestones' },
       {
         kind: 'table',
-        columns: ['Source', 'Claimed split'],
+        columns: ['Milestone', 'Share', 'What it gates'],
         rows: [
-          ['AI Bot Master Training Document ("Single Source of Truth")', '50% advance · 40% before dispatch · 10% after installation'],
-          ['Notion "50/30/20 Operating System" + Sales Manager Script', '50% advance · 30% design approval · 20% pre-dispatch'],
+          ['Order booking', '50%', 'Starts the engagement and moves the project into design.'],
+          ['Production', '30%', 'Drawings freeze and go to the factory.'],
+          ['Before dispatch', '20%', 'Falls due roughly two weeks before dispatch.'],
         ],
       },
       {
         kind: 'callout',
-        label: '[CONFIRM PAYMENT SPLIT] — DO NOT TELL CUSTOMERS EITHER SPLIT AS FACT',
-        text: 'These cannot both be right. Until leadership resolves it, do not quote a specific split to a customer — say the wellness consultant will confirm the payment schedule during the design phase. The quiz question on this is built but its answer key is held; it is not graded.',
+        label: 'How this was settled',
+        text: 'Two source documents disagreed: the AI Bot doc said 50 / 40 / 10, while the Notion "50/30/20 Operating System" and the Sales Manager Script said 50 / 30 / 20. It was settled against the live CRM, which is configured with exactly these three milestones — "Order Booking Payment" 50%, "Production Payment" 30%, "Dispatch Payment" 20%. That is the schedule the business actually bills on, so it is the one you quote.',
       },
       {
         kind: 'paragraph',
-        text: 'What the milestones unlock (per the Notion 50/30/20 page): each payment milestone transfers the project between teams — the advance starts the engagement, the mid-milestone gates design/production, and the final milestone precedes dispatch/installation. The exact percentages await [CONFIRM PAYMENT SPLIT].',
+        text: 'What the milestones unlock: each payment milestone transfers the project between teams — the 50% starts the engagement and moves it into design, the 30% freezes drawings and releases them to the factory, and the 20% precedes dispatch and installation.',
       },
     ],
   },
@@ -625,8 +647,8 @@ export const SALES_MODULES: SalesModule[] = [
       },
       {
         kind: 'callout',
-        label: '[CONFIRM PAYMENT SPLIT]',
-        text: 'The "50% handover" milestone is the one point both payment-split sources agree on (50% advance). What follows it (40/10 vs 30/20) remains unresolved — see Module 6.',
+        label: 'The 50% handover',
+        text: 'The "50% handover" is the order-booking milestone — the first of the three (50 / 30 / 20). It is the point at which the project transfers to Design. See Module 6 for the full schedule.',
       },
     ],
   },
@@ -636,13 +658,16 @@ export const SALES_MODULES: SalesModule[] = [
      Ownership Training". Rendered faithfully; the doc's final "Before this
      goes live" section is an L&D note and is deliberately NOT included.
 
-     OVERLAP, FLAGGED NOT RESOLVED: this module states the payment split as
-     50/30/20 because its source doc states it plainly. Module sa-m6 still
-     carries [CONFIRM PAYMENT SPLIT] and holds its split questions ungraded.
-     The conflict is now one-sided in favour of 50/30/20 but has NOT been
-     closed out here — that is a call for the process owner, not this file.
-     Module sa-m6 also prices at Rs. 8,400-10,800/sq.ft, where this doc says
-     Rs. 6-12 lakh per 100 sq ft of CABINET area. Both remain visible. */
+     PAYMENT SPLIT — now consistent with sa-m6. Both modules state 50/30/20
+     and both grade it; see the file header for how the conflict was settled
+     against the live CRM.
+
+     PRICE BASIS — STILL UNRESOLVED, deliberately. sa-m6 prices at
+     Rs. 8,400-10,800/sq.ft; this module says Rs. 6-12 lakh per 100 sq ft of
+     CABINET area. These are probably two different measurements rather than a
+     contradiction, but no source states so, and the CRM's own realised figures
+     do not settle it either (see header). Both remain visible; neither was
+     edited to match the other. Do not reconcile them by arithmetic. */
   {
     id: 'sa-m12',
     number: 12,
@@ -1092,18 +1117,20 @@ export const SALES_QUIZ: SalesQuizQuestion[] = [
     id: 'sa-q18',
     moduleId: 'sa-m6',
     topic: 'payment-terms',
-    question:
-      '[KEY HELD — CONFIRM PAYMENT SPLIT] What is the standard payment milestone split?',
+    question: 'What is the standard payment milestone split?',
     options: [
       '50% advance · 40% before dispatch · 10% after installation',
-      '50% advance · 30% design approval · 20% pre-dispatch',
+      '50% at order booking · 30% at production · 20% before dispatch',
       '100% advance',
       '25% × 4 equal milestones',
     ],
-    // Placeholder — NOT graded. Sources conflict (AI Bot doc: option A;
-    // Notion 50/30/20: option B). Resolve [CONFIRM PAYMENT SPLIT] first.
-    correctIndex: 0,
-    keyPending: true,
+    // Now graded. Resolved against the live Zoho CRM, whose Payment_Milestones
+    // records carry exactly 50% "Order Booking Payment" / 30% "Production
+    // Payment" / 20% "Dispatch Payment" — the system the business actually
+    // runs on, agreeing with Notion + the Sales Manager Script against the
+    // AI Bot doc's 50/40/10. See the header note for the evidence and its
+    // limits.
+    correctIndex: 1,
   },
 
   // ── sa-m7 Approved Language ──
