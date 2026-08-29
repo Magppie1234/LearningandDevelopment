@@ -1,71 +1,120 @@
 /**
- * MAGPPIE Dress Code Policy — content lifted verbatim from
- * public/policies/Dress_Code_Policy_MAGPPIE.pptx (11 slides, L&D New Joiner
- * Orientation Series).
+ * MAGPPIE Dress Code Policy — L&D New Joiner Orientation Series.
  *
- * This is an official HR policy, so the wording is the deck's, not a
- * paraphrase. Where the deck's slide layout put a label and its body in
- * separate text runs they are joined here, and the two "Grooming tips" asides
- * are kept with the section they sat beside — no meaning is added, removed or
- * softened. If HR revises the deck, re-extract rather than editing prose here.
+ * Rebuilt 29 Aug 2026 from the UPDATED deck. This is not a patch of the
+ * previous version: wording changed in several places (e.g. "well-fitted &
+ * pressed" → "well-fitted and ironed"; men's and women's client-meeting lists
+ * were both revised; "deep necklines" now also covers off-shoulders) and a few
+ * points are new ("Blazers as appropriate", linen pants, "big checks").
+ *
+ * This is an official HR policy, so the wording here is the deck's, not a
+ * paraphrase. The interface may reorganise it; nothing may reword it. If HR
+ * revises the deck again, re-extract rather than editing prose here, and
+ * regenerate the PDF with `npm run build:dress-code-pdf`.
  */
+
+/** Icon key, resolved to a lucide component by the renderer. */
+export type PolicyIcon = 'badge' | 'shirt' | 'ruler' | 'users' | 'scissors' | 'hand' | 'droplet' | 'wind'
 
 export interface PolicyPoint {
   label?: string
+  text: string
+  icon?: PolicyIcon
+}
+
+export interface PolicyColumn {
+  heading: string
+  /** Shown under the heading, e.g. who the column applies to. */
+  note?: string
+  items: string[]
+}
+
+/** One Do paired with the Don't that sits opposite it (section 6). */
+export interface DoDontPair {
+  doItem: string
+  dontItem: string
+}
+
+export interface ComplianceStage {
+  label: string
   text: string
 }
 
 export interface PolicySection {
   id: string
-  /** Small caps eyebrow, as on the slide. */
-  eyebrow?: string
+  eyebrow: string
   title: string
   intro?: string
-  quote?: string
+  /** Set apart and typeset larger than body copy. */
+  pullQuote?: string
   points?: PolicyPoint[]
-  /** Two-column groups, used by Men / Women / Do's & Don'ts. */
-  columns?: { heading: string; items: string[] }[]
+  /** Renders `points` as icon cards rather than a list. */
+  pointsAsCards?: boolean
+  columns?: PolicyColumn[]
+  pairs?: DoDontPair[]
+  stages?: ComplianceStage[]
+  /** Highlighted line under the main content. */
+  highlight?: string
+  /** Quieter closing note. */
   footnote?: string
 }
 
 /**
- * The reader-facing download: an A4 PDF generated from THIS module by
- * scripts/build-dress-code-pdf.ts, so the file and the page can never drift.
- * The original deck stays alongside it for provenance — an official policy
- * should be traceable to the document HR actually signed off.
+ * The generated A4 PDF — built from THIS module by
+ * scripts/build-dress-code-pdf.ts, so the download can never drift from the
+ * page.
+ *
+ * NOTE: the original .pptx is deliberately NOT linked any more. The copy below
+ * comes from the UPDATED deck, and the .pptx still in public/policies/ is the
+ * superseded one — offering it beside current policy would let a new joiner
+ * download outdated rules. Re-add a deck link only when the new .pptx is
+ * supplied.
  */
 export const DRESS_CODE_PDF = '/policies/Dress_Code_Policy_MAGPPIE.pdf'
-export const DRESS_CODE_DECK = '/policies/Dress_Code_Policy_MAGPPIE.pptx'
 
 export const DRESS_CODE_SECTIONS: PolicySection[] = [
   {
     id: 'philosophy',
     eyebrow: 'Our philosophy',
     title: 'Why the dress code matters at MAGPPIE',
-    quote:
-      'Our workplace environment should reflect professionalism, mutual respect, and comfort for everyone.',
     intro:
       'At MAGPPIE, every interaction is a reflection of who we are — a luxury brand built on precision, care, and comfort. Our dress code isn’t about restricting who you are; it’s simply an extension of the same elegance and comfort we promise every client, worn by the people who bring it to life.',
+    pullQuote:
+      'Culture isn’t just what we say — it’s what we choose to wear, every single day.',
     points: [
-      { label: 'Why it matters', text: 'Builds trust with every client interaction' },
+      { text: 'Builds trust with every client interaction' },
       { text: 'Reflects your own professionalism and confidence' },
       { text: 'Protects the reputation you and MAGPPIE share' },
     ],
-    footnote:
-      'Culture isn’t just what we say — it’s what we choose to wear, every single day.',
   },
   {
     id: 'principles',
     eyebrow: 'General principles',
     title: 'For every team member',
+    pointsAsCards: true,
     points: [
-      { label: 'Professional & presentable', text: 'Attire should be professional and presentable at all times.' },
-      { label: 'Neat & modest', text: 'Dress in a manner that is neat, modest, and appropriate for a professional workplace.' },
-      { label: 'Well-fitted & pressed', text: 'Clean, well-fitted attire that’s put together.' },
-      { label: 'Respectful & comfortable', text: 'Maintains a respectful, comfortable environment for all colleagues.' },
+      {
+        icon: 'badge',
+        label: 'Professional and presentable',
+        text: 'Attire should be professional and presentable at all times.',
+      },
+      {
+        icon: 'shirt',
+        label: 'Neat and modest',
+        text: 'Dress in a manner that is neat, modest, and appropriate for a professional workplace.',
+      },
+      {
+        icon: 'ruler',
+        label: 'Well-fitted and ironed',
+        text: 'Clean, well-fitted attire that looks put together.',
+      },
+      {
+        icon: 'users',
+        label: 'Respectful and comfortable',
+        text: 'Maintains a respectful, comfortable environment for all colleagues.',
+      },
     ],
-    footnote:
-      'When in doubt: choose the more professional, understated option. It’s easy to remember, and guides judgment gently.',
+    highlight: 'When in doubt: choose the more professional, understated option.',
   },
   {
     id: 'men',
@@ -75,25 +124,26 @@ export const DRESS_CODE_SECTIONS: PolicySection[] = [
       {
         heading: 'Everyday attire',
         items: [
-          'Collared shirts (long or short sleeved), tucked into trousers, pants, or chinos',
-          'Smart casuals — Polo T-shirts with smart jeans (for non-client-dealing members only)',
+          'Collared shirts, long or short sleeved, tucked into trousers, linen pants or chinos',
+          'Smart casuals — polo T-shirts with smart jeans, for non-client-dealing members only',
           'Clean, well-fitted clothing that looks put together',
           'Closed shoes or neat sneakers',
+          'Blazers as appropriate',
         ],
       },
       {
-        heading: 'Client meetings (Sales team & client-facing roles)',
+        heading: 'Client meetings',
+        note: 'For the Sales team and client-facing roles',
         items: [
-          'Blazers or suits, with ties as appropriate',
-          'Collared shirts in solid colours or subtle textures (avoid loud prints), tucked in',
-          'Formal trousers or well-fitted chinos in neutral tones — navy, charcoal, beige, black',
-          'Leather shoes or loafers, well-maintained, with a matching belt',
-          'Trimmed hair/beard, minimal accessories',
+          'Collared shirts in solid colours or subtle textures, tucked in. Avoid loud prints and big checks',
+          'Formal trousers, linen pants or well-fitted chinos in neutral tones — navy, charcoal, beige, black',
+          'Leather shoes or loafers, well maintained, with a matching belt',
+          'Trimmed hair and beard, minimal accessories',
         ],
       },
     ],
     footnote:
-      'Grooming tip: neat hair and well-maintained facial hair — attention to detail makes all the difference.',
+      'Neat hair and well-maintained facial hair — attention to detail makes all the difference.',
   },
   {
     id: 'women',
@@ -104,95 +154,120 @@ export const DRESS_CODE_SECTIONS: PolicySection[] = [
         heading: 'Everyday attire',
         items: [
           'Formal tops, shirts, tunics or formal dresses',
-          'Ethnic wear is warmly welcomed — saris, salwar kameez, and similar styles are a beautiful part of our workplace',
+          'Ethnic wear is warmly welcomed — saris, salwar kameez and similar styles are a beautiful part of our workplace',
         ],
       },
       {
-        heading: 'Client meetings (Sales team & client-facing roles)',
+        heading: 'Client meetings',
+        note: 'For the Sales team and client-facing roles',
         items: [
-          'Blazers or suits, with ties as appropriate',
-          'Blouses or formal shirts, kurtas with trousers, or well-fitted formal dresses (knee-length or longer), in sober colours',
-          'Saree or salwar-kameez as an optional traditional-wear choice, if it fits your brand culture',
-          'Closed-toe flats or low heels — practical for walking client homes or active sites',
+          'Formal shirts, kurtas with trousers, or well-fitted formal dresses longer than knee length, in sober colours',
+          'Saree or salwar-kameez as an optional traditional-wear choice',
+          'Blazers as appropriate',
+          'Closed-toe flats or heels — practical for walking or active sites',
           'Minimal jewellery and makeup, hair neatly tied back',
         ],
       },
     ],
     footnote:
-      'Grooming tip: neat and well-maintained hair, with minimal or no makeup/accessories, as per personal choice, and comfortable footwear.',
+      'Neat and well-maintained hair, with minimal or no makeup and accessories, as per personal choice, and comfortable footwear.',
   },
   {
     id: 'grooming',
     eyebrow: 'Grooming standards',
     title: 'Presenting yourself with polish',
+    pointsAsCards: true,
     points: [
-      { label: 'Hair', text: 'Neat, well-maintained hair, styled appropriately for a professional setting.' },
-      { label: 'Nails', text: 'Trimmed, clean nails. If nail polish is worn, keep it neat and chip-free.' },
-      { label: 'Personal hygiene', text: 'Maintain good personal hygiene, including managing body odour through daily hygiene and deodorant use.' },
-      { label: 'Fragrance & breath', text: 'Keep breath fresh; use mild fragrances and avoid overpowering perfumes or deodorants.' },
+      {
+        icon: 'scissors',
+        label: 'Hair',
+        text: 'Neat, well-maintained hair, styled appropriately for a professional setting.',
+      },
+      {
+        icon: 'hand',
+        label: 'Nails',
+        text: 'Trimmed, clean nails. If nail polish is worn, keep it neat and chip-free.',
+      },
+      {
+        icon: 'droplet',
+        label: 'Personal hygiene',
+        text: 'Maintain good personal hygiene, including managing body odour through daily hygiene and deodorant use.',
+      },
+      {
+        icon: 'wind',
+        label: 'Fragrance and breath',
+        text: 'Keep breath fresh, use mild fragrances, avoid overpowering perfumes or deodorants.',
+      },
     ],
     footnote:
-      'Grooming reflects professionalism: kept simple and gender-neutral, it protects the dignity of our brand and of everyone who represents it.',
+      'Grooming reflects professionalism. Kept simple and gender-neutral, it protects the dignity of our brand and of everyone who represents it.',
   },
   {
     id: 'dos-donts',
     eyebrow: 'Quick reference',
     title: 'Do’s and Don’ts',
-    columns: [
+    pairs: [
       {
-        heading: 'Do',
-        items: [
-          'Clean, well-fitted, ironed clothing',
-          'Collared shirts, formal tops or professional dresses',
-          'Ethnic wear — sarees, salwar kameez, co-ord sets',
-          'Business formal for client meetings',
-          'Solid colours or subtle patterns',
-          'Polished, role-appropriate footwear',
-          'Neat hair and well-maintained grooming',
-        ],
+        doItem: 'Clean, well-fitted, ironed clothing',
+        dontItem: 'Excessively short or cropped clothing, ripped jeans',
       },
       {
-        heading: 'Don’t',
-        items: [
-          'Excessively short/cropped clothing, ripped jeans',
-          'Garments with very deep necklines',
-          'Overly casual, unkempt or wrinkled attire',
-          'Polo T-shirts + jeans for client-facing roles',
-          'Loud prints, oversized graphics, big visible logos',
-          'Bulky, overly casual or distracting footwear',
-          'Casual/lounge attire on video calls while working remotely',
-        ],
+        doItem: 'Collared shirts, formal tops or professional dresses',
+        dontItem: 'Garments with deep necklines, off-shoulders',
+      },
+      {
+        doItem: 'Ethnic wear — sarees, salwar kameez, co-ord sets',
+        dontItem: 'Overly casual, unkempt or wrinkled attire',
+      },
+      {
+        doItem: 'Business formal for client meetings',
+        dontItem: 'Polo T-shirts and jeans for client-facing roles',
+      },
+      {
+        doItem: 'Solid colours or subtle patterns',
+        dontItem: 'Loud prints, oversized graphics, big visible logos',
+      },
+      {
+        doItem: 'Polished, role-appropriate footwear',
+        dontItem: 'Bulky, overly casual or distracting footwear',
+      },
+      {
+        doItem: 'Neat hair and well-maintained grooming',
+        dontItem: 'Casual or lounge attire on video calls while working remotely',
       },
     ],
   },
   {
     id: 'compliance',
-    eyebrow: 'Compliance & accountability',
+    eyebrow: 'Compliance and corrective measures',
     title: 'What’s expected, and what happens if something’s off',
-    intro:
-      'This dress code applies to every team member, every working day. Adherence reflects your professionalism and your respect for colleagues and clients — and it upholds the image our guests trust MAGPPIE for.',
     points: [
       {
-        text: 'Failure to adhere to the dress code may result in corrective action — so if you’re ever unsure what’s appropriate, ask before you dress, not after.',
+        text: 'This dress code applies to every team member, every working day. Adherence reflects your professionalism and your respect for colleagues and clients, and it upholds the image our guests trust MAGPPIE for.',
       },
       {
-        text: 'In case of a grey area, discuss with your manager or HR. We’d always rather clarify upfront than correct after the fact.',
+        text: 'Failure to adhere may result in corrective action — so if you’re ever unsure what’s appropriate, ask before you dress, not after.',
       },
       {
-        label: 'Stage 1 — Verbal feedback',
-        text: 'If something doesn’t align with our guidelines, HR will offer a quick, private conversation to help you course-correct. It’s a simple, respectful heads-up — not a formal mark against you.',
+        text: 'In a grey area, discuss with your manager or HR. We’d always rather clarify upfront than correct after the fact.',
+      },
+    ],
+    stages: [
+      {
+        label: 'Verbal feedback',
+        text: 'If something doesn’t align with our guidelines, HR will offer a quick, private conversation to help you course-correct. It’s a simple, respectful heads-up, not a formal mark against you.',
       },
       {
-        label: 'Stage 2 — Written feedback',
+        label: 'Written feedback',
         text: 'If the same concern comes up again, HR will share written feedback outlining the guideline and next steps. This may include a brief request to go home, change, and return — simply so you can meet clients at your best, never as a penalty.',
       },
     ],
     footnote:
-      'This process exists to protect the trust our clients place in MAGPPIE — not to penalize anyone. Our goal is always to guide with care, so every team member feels confident representing our brand.',
+      'This process exists to protect the trust our clients place in MAGPPIE, not to penalise anyone. Our goal is always to guide with care, so every team member feels confident representing our brand.',
   },
 ]
 
-/** Slide 10, "Before you head out". */
+/** The closing self-check. Not scored, not stored, gates nothing. */
 export const DRESS_CODE_SELF_CHECK = [
   'Is my outfit clean and fitted?',
   'Is it appropriate for my role today?',
