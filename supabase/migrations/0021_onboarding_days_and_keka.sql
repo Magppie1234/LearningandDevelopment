@@ -45,6 +45,9 @@ create table if not exists onboarding_days (
 );
 alter table onboarding_days enable row level security;
 -- Onboarding content is the same for everyone; any signed-in user may read it.
+-- Postgres has no `create policy if not exists`, so drop-then-create keeps this
+-- migration re-runnable alongside the `if not exists` guards above.
+drop policy if exists onboarding_days_read on onboarding_days;
 create policy onboarding_days_read on onboarding_days
   for select to authenticated using (true);
 
@@ -81,6 +84,7 @@ create table if not exists onboarding_keka_videos (
   unique (title)
 );
 alter table onboarding_keka_videos enable row level security;
+drop policy if exists onboarding_keka_videos_read on onboarding_keka_videos;
 create policy onboarding_keka_videos_read on onboarding_keka_videos
   for select to authenticated using (true);
 
