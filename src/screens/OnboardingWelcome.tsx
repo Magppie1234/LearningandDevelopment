@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { ArrowRight, Check, ClipboardCheck, FileText, Video, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import KekaModal from '@/components/onboarding/KekaModal'
+import DressCodePolicy from '@/components/onboarding/DressCodePolicy'
 import {
   ONBOARDING_DAYS,
   onboardingAssessment,
@@ -171,10 +172,7 @@ function DayPanel({ day, onClose }: { day: OnboardingDay; onClose: () => void })
     <section className="rounded-2xl border-2 bg-parchment p-5 sm:p-7" style={{ borderColor: day.color }}>
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
-          <p
-            className="text-[10px] font-bold uppercase tracking-[0.16em]"
-            style={{ color: day.color }}
-          >
+          <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-ink-secondary">
             {day.day}
           </p>
           <h2 className="mt-1 font-serif text-2xl text-ink-primary">{day.title}</h2>
@@ -227,7 +225,7 @@ function DayPanel({ day, onClose }: { day: OnboardingDay; onClose: () => void })
                 className="aspect-video w-full border-0"
               />
               {day.doc.note && (
-                <p className="bg-cream/60 px-3 py-2 text-[11.5px] text-ink-tertiary">{day.doc.note}</p>
+                <p className="bg-cream px-3 py-2 text-[11.5px] text-ink-secondary">{day.doc.note}</p>
               )}
             </div>
           ) : (
@@ -241,6 +239,18 @@ function DayPanel({ day, onClose }: { day: OnboardingDay; onClose: () => void })
           )}
         </div>
       </div>
+
+      {day.id === 'day-1' && (
+        <div className="mt-6 border-t border-hairline/10 pt-6">
+          <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.14em] text-ink-tertiary">
+            Policies in this section
+          </p>
+          <p className="mb-4 text-[13px] text-ink-secondary">
+            Read alongside the HR Policies &amp; Code of Conduct briefing above.
+          </p>
+          <DressCodePolicy />
+        </div>
+      )}
 
       <div className="mt-6 border-t border-hairline/10 pt-5">
         {assessment ? (

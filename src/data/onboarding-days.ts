@@ -193,7 +193,11 @@ export const ONBOARDING_ASSESSMENTS: OnboardingAssessment[] = [
     id: 'onb-hr-conduct',
     title: 'HR & Code of Conduct assessment',
     questionsPending: true,
-    questions: [], // ← Day 1 questions slot in here.
+    // ← Day 1 questions slot in here. If HR wants the Dress Code Policy tested
+    // too, the obvious candidates are client-meeting attire and the two-stage
+    // corrective process (verbal, then written) — but NO questions have been
+    // supplied for either, so none are written here.
+    questions: [],
   },
   {
     id: 'onb-vision',
